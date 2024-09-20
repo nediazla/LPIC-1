@@ -14,20 +14,12 @@
     - [YUM](#yum)
     - [RPM](#rpm)
   - [102.6 Linux como sistema virtualizado](#1026-linux-como-sistema-virtualizado)
-# Tema 102: Instalación de Linux y gestión de paquetes
-
-- [ ] 102.1 Diseño del esquema de particionado del disco duro duro
-- [ ] 102.2 Instalar un gestor de arranque
-- [ ] 102.3 Gestión de librerías compartidas
-- [ ] 102.4 Gestión de paquetes Debian
-- [ ] 102.5 Gestión de paquetes RPM y YUM
-- [ ] 102.6 Linux como sistema virtualizado
 
 ## 102.1 Diseño del esquema de particionado del disco
 
 ### LVM - Logical volumen manager
 
-Nos permite crear grupos de discos o particiones que pueden ser montadas en un o varios sistemas de ficheros(fylesystems).
+Nos permite crear grupos de discos o particiones que pueden ser montadas en un o varios sistemas de ficheros(`fylesystems`).
 
 - Se puede utilizar para montar cualquier punto EXCEPTO /boot.
 - Nos ofrece la flexibilidad de redimensionar los volúmenes ya creados.
@@ -38,12 +30,8 @@ Ejemplo de las capas de un grupo LVM.
 ![LVM](img/lvm.png)
 
 `psv`: Lista los volumenes fisicos que existen en un gru po LVM.
-
 `vgs`: list los grupos de volumenes que hay un en grupo LVM.
-
 `lvs`: Lista los volumenes *logicos* que hay en un grupo LVM.
-
-
 ## 102.2 Instalar un gestor de arranque
 
 Legacy Grub
@@ -118,14 +106,13 @@ Es importante entender la diferencia entre MBR y GPT.
 Ficheros que podemos encontrar en la caprta de arranque en un sistema ubuntu
 
 ```
- sergio@Lenovo-ideapad-710S-Plus-13IKB  ~  sudo ls /boot/efi/EFI/ubuntu
-BOOTX64.CSV  fw  fwupx64.efi  grub.cfg	grubx64.efi  mmx64.efi	shimx64.efi
+xnoxos@ubuntu:~$ sudo ls /boot/efi/EFI/ubuntu
+[sudo] password for xnoxos: 
+BOOTX64.CSV  grub.cfg  grubx64.efi  mmx64.efi  shimx64.efi
 ```
 
->Distribuciones Red Hat = grub2-\<comando>
-
->Distribuciones debian = grub-\<comando> 
-
+>Distribuciones Red Hat = `grub2-\<comando>`
+>Distribuciones debian = `grub-\<comando>` 
 
 `grub2-editenv list` - Muestra la entrada por defecnto del fichero de configuración.
 
@@ -135,13 +122,14 @@ BOOTX64.CSV  fw  fwupx64.efi  grub.cfg	grubx64.efi  mmx64.efi	shimx64.efi
 .(En sistemas Debian)
 
 Cambiamos el fichero de grub
-
->nano /etc/default/grub
+```
+nano /etc/default/grub
+```
 
 Actualzamos el fichero de grub
-
->sudo update-grub
-
+```
+sudo update-grub
+```
 ---
 
 

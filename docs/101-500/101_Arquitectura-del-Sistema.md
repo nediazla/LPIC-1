@@ -399,39 +399,103 @@ S01cups              S01rsync
 `upstart`: es el demononio de arranque de ubunto desarrollado en 2006 y mas adelante utilizado en distribuciones Red Hat, debian y fedora. 
 
 Ha diferencia de init, **upstart** ofrece arranques de servicios asincronos, reduciendo el tiempo de arranque.
+### init vs upstart
+Hemos sacado mucho partido a sysvinit en Debian, pero sus límites se han hecho notar desde hace tiempo; de hecho, fueron estos límites los que llevaron a escribir upstart en primer lugar.
 
-init vs upstart
+Sysvinit carece de supervisión de servicios. Si bien /etc/inittab proporciona esta capacidad, la gestión de /etc/inittab es bastante restrictiva. Upstart elimina la necesidad de un manejo complicado de archivos PID para todos los servicios. Hay complementos que permiten realizar la supervisión de servicios sobre sysvinit, como runit, pero está claro que son complementos.
 
+Sysvinit no realiza un seguimiento de las dependencias entre servicios. Insserv/startpar lo proporciona sobre sysvinit, pero nuevamente se trata de un complemento, y solo maneja dependencias en el momento del arranque/apagado (es decir, durante los cambios de nivel de ejecución) y no puede manejar ninguna interdependencia de servicio complicada en tiempo de ejecución. Upstart expresa esta información en el formato de configuración de servicio nativo, de forma clara y concisa.
+
+Sysvinit requiere scripts de shell complejos para cada servicio. Si bien parte de la complejidad se ha abstraído en ayudantes comunes (funciones lsb; start-stop-daemon), tener que representar el manejo de inicio/parada de cada servicio como un programa es una desventaja grave. Los trabajos de Upstart son simples, declarativos, fáciles de mantener y fáciles de modificar localmente según sea necesario. También eliminan la molestia de larga data de update-rc.d reactivando servicios a espaldas del administrador en la actualización.
+
+Sysvinit es lineal. Dejó de ser una buena opción para la gestión de arranque en Debian en el momento en que Debian adoptó udev. Hay muchas condiciones de carrera que persisten en Debian hoy en día cuando se arranca con sysvinit, y aunque pueden ser reparables, la complejidad para arreglarlas con sysvinit es muy alta. Es mejor cambiar a un sistema de inicio que esté diseñado para trabajar junto con el núcleo basado en eventos y udev.
 
 
 ## 101.3 Cambiar los niveles de ejecución / objetivos de arranque y apagar o reiniciar el sistema
 
-**Runlevel**: son los diferentes estados que el sistema puede ejecutar
+La inicialización del sistema es el proceso de ejecutar scripts que preparan el sistema operativo para su funcionamiento. Existen varios estilos diferentes de inicialización del sistema, utilizados en diferentes familias e incluso en diferentes versiones del sistema operativo.
 
+El método clásico de inicialización del sistema operativo es la inicialización estilo SysV (prácticamente no se utiliza en OCLinux moderno). El demonio clave es init `sbin/init`, que es el proceso principal que inicia todos los demás. Puede ver el árbol de procesos y ver el padre usando el comando `pstree` (para centos necesita instalar el paquete `psmisc`)
 
-| Runleve | Proposito                                  |
-| ------- | ------------------------------------------ |
-| 0       | halt                                       |
-| 1       | Single user mode                           |
-| 2       | multi-user mode (sin red)                  |
-| 3       | multi-user mode( con red)                  |
-| 4       | no utilizado(para entornos personalizados) |
-| 5       | multi-user, con red y entorno gráfico      |
-| 6       | reboot                                     |
- 
+La inicialización estilo `SysV` opera con el concepto de nivel de ejecución, que representa los siguientes modos de inicio del sistema operativo:
 
-`systemd`: Es un conjunto de bloques básicos de compilación para un sistema Linux. Proporciona un gestor de sistemas y servicios que se ejecuta como PID 1 e inicia el resto del sistema.
+0 – apagado;
+1 – modo de usuario único;
+2 – Valor predeterminado de Debian/Ubuntu (GUI o CUI);
+3 – RedHat/Suse por defecto (modo CUI_);_
+4 – WildCard (modo programado);
+5 – RedHat/Suse por defecto (modo GUI_);_
+6 – reiniciar.
 
-`systemctl`: Puede utilizarse para introspeccionar y controlar el estado del sistema "systemd" y el administrador de servicios.
-- [usos de systemctl](https://wiki.archlinux.org/title/Systemd_(Espa%C3%B1ol))
+La configuración de arranque predeterminada se especifica en el archivo `/etc/inittab` (archivo de configuración de inicialización del sistema), por ejemplo:
 
-`telinit`: comando para cambiar el modo de arranque
+id** :3: ** `initdefault` :  (el nivel de arranque predeterminado es el tercero);
 
-cat /etc/inittab
+Todos los scripts utilizados para iniciar servicios se encuentran en el directorio `/etc/init`, por ejemplo:
 
-[1]: https://linux.die.net/man/8/procinfo
-[2]: https://www.maketecheasier.com/differences-between-uefi-and-bios/
-[3]: http://manpages.ubuntu.com/manpages/xenial/man8/lspci.8.html
-[4]: https://linux.die.net/sag/dev-fs.html
-[5]: https://www.kernel.org/doc/html/latest/filesystems/index.html?highlight=filesystem
-[6]:https://help.ubuntu.com/community/Grub2#File_Structure
+`/etc/init. d/network restart`  _(reiniciar el servicio de red);_
+
+El directorio `/etc` contiene los directorios `rc0.d`, `rc1.d` (etc.), que contienen conjuntos de scripts (más precisamente, enlaces a scripts) que se utilizan al cambiar a diferentes modos de funcionamiento, por ejemplo en `rc.3.d` hay scripts ejecutándose en el nivel de ejecución **3**.
+
+Algunos scripts (nombre que comienza con "S") inician demonios y otros (nombre que comienza con "K") los detienen.
+
+Para trabajar con niveles de ejecución, utilice los siguientes comandos:
+
+`init` o `telinit`: cambia al modo de inicio;
+nivel de ejecución: descubre el modo de funcionamiento actual;
+detener: apagar el sistema operativo;
+reiniciar: reinicie la PC;
+Apagar: apaga la PC.
+
+Para controlar demonios, use el comando `service daemon_name` con claves (no todos los demonios pueden tener todos los comandos enumerados en la configuración; a menudo puede ver un script diferido con solo los comandos de inicio y detención):
+
+empezar - empezar;
+**estado** - mostrar estado;
+detener - detener;
+reiniciar - reiniciar;
+
+recargar: recarga el archivo de configuración del servicio.
+
+Un estilo de inicialización más moderno es `systemd`. Ahora se utiliza en la mayoría de las distribuciones de Linux modernas (Centos 7.0 y superiores, Ubuntu 15.10 y superiores), debido a la velocidad de arranque (paralelización del lanzamiento de demonios) y la tolerancia automática a fallas (monitoreo del estado de los demonios). Utiliza el concepto de unidades (`units`), que pueden ser servicios (`.service`), puntos de montaje (`.mount`), dispositivos (`.device`) o sockets (`.socket`).
+
+Los módulos (unidades) creados automáticamente después de instalar paquetes de software se encuentran en el directorio `/usr/lib/systemd/`. También puede colocar unidades en el directorio `/etc/systemd/system/` (para el sistema operativo en su conjunto) o `/etc/systemd/user/` (para los usuarios).
+
+Para administrar unidades, use la utilidad systemctl, por ejemplo:
+
+- **`systemctl list-units`** (mostrar unidades en ejecución);
+- **`systemctl start network.service`** (iniciar demonio de red);
+- **`systemctl status crond`** (muestra el estado del demonio del programador).
+
+En lugar de nivel de ejecución, `systemd` utiliza el concepto de objetivo, pero a diferencia de los niveles de ejecución, no están numerados y algunos de ellos pueden ejecutarse simultáneamente; Los destinos son compatibles con la inicialización de sysV, por lo que puede usar el comando `telinit` para cambiar a un modo de ejecución diferente.
+
+La utilidad systemctl también se utiliza para controlar los modos de funcionamiento, por ejemplo:
+
+`systemctl isolate reboot.target` (ejecutar reinicio objetivo);
+`systemctl set-default -f multi-user.target` (establece el destino multiusuario como modo de inicio predeterminado);
+También puedes usar systemctl para controlar la energía, por ejemplo:
+
+**`systemctl restart`** _ (reiniciar PC);_
+**`systemctl poweroff`**_ (apaga la PC)._
+
+Una característica importante de systemd es el sistema de registro flexible, que recopila información de varias fuentes y la asocia con varias unidades. Ejemplos de su uso:
+
+`journalctl –f` _ (ver mensajes en tiempo real);_
+`journalctl -n10` _ (ver los 10 últimos mensajes);_
+`journalctl _UID=70` _ (muestra todos los mensajes, incluido el usuario con ID=70);_
+
+___
+
+Desde una perspectiva histórica, observamos que el sistema de inicialización del sistema es un advenedizo, que depende de su trabajo de los eventos que ocurren en el sistema operativo. Se usó en ubuntu desde la versión 6.10 a la 15.04, y en muchas otras distribuciones que ahora usan systemd.
+
+`Upstart` opera con los conceptos de un servicio, que se mantiene en un modo de operación constante, y una tarea, que se realiza una sola vez. Durante el proceso de inicialización, `upstart` lee la configuración de los archivos de configuración (trabajos) en el directorio `/etc/init/`.
+
+Cada tarea representa scripts para iniciar demonios con diferentes criterios y condiciones de ejecución.
+
+Los niveles de inicialización o modos de funcionamiento utilizados son los mismos que en el `sysV` clásico, por lo que los comandos `runlevel` y `telinit` siguen funcionando. La sintaxis para gestionar energía y servicios también es similar a la clásica.
+
+El nivel de inicialización predeterminado se especifica en el archivo `/etc/init/rc-sysinit.conf`
+
+Para controlar la inicialización de estilo advenedizo, utilice la utilidad `initctl`, por ejemplo:
+
+`initctl start networking` _(iniciar el servicio de red);_
+`initctl list` _(mostrar una lista de servicios);_
