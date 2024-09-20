@@ -145,25 +145,27 @@ El comando **modprobe** sirve para añadir o eliminar modulos del kernel de linu
 
 Para eliminar manualmente un driver podemos utilizar `modprobe -r` y para mostrar la información podemos utilizar `modprobe -c`. Con la opcion -v podemos ver lo que se ejecutado y con -n las opciones completadas con exito.
 
-Añadir un modulo:
-
+### Añadir un modulo:
 Vamos a añadir el módulo de bluetooth de este equipo, lo primero es comprobar que tenemos los módulos de los Drivers compilados:
 
 ```
-xnoxos@ubuntu:~$ ls /lib/modules/5.6.0/build/drivers/bluetooth/*.ko
-
+xnoxos@ubuntu:~$ ls /lib/modules/6.8.0-40-generic/kernel/drivers/bluetooth/
+ath3k.ko        bt3c_cs.ko      btmtk.ko      btrsi.ko    hci_bcm4377.ko
+bcm203x.ko      btbcm.ko        btmtksdio.ko  btrtl.ko    hci_nokia.ko
+bfusb.ko        btintel.ko      btmtkuart.ko  btsdio.ko   hci_uart.ko
+bluecard_cs.ko  btmrvl.ko       btnxpuart.ko  btusb.ko    hci_vhci.ko
+bpa10x.ko       btmrvl_sdio.ko  btqca.ko      dtl1_cs.ko  virtio_bt.ko
 
 ```
 
 En esta caso vemos que disponemos de varios modules pertenecientes a varios fabricantes, para nuestra prueba cargaremos el módulo del Bluetooth de Atheos _ath3k.ko_ 
 
-Lo ideal es probar que el módulo se puede cargar correctamente con la opción de _–dry-run_ y _–verbose_ para ver cual serian las acciones a tomar pero sin efectuarlas en realidad 
+Lo ideal es probar que el módulo se puede cargar correctamente con la opción de `–dry-run` y `–verbose` para ver cual serian las acciones a tomar pero sin efectuarlas en realidad 
 
 ```
 xnoxos@ubuntu:~$ modprobe --dry-run --verbose ath3k
+insmod /lib/modules/6.8.0-40-generic/kernel/drivers/bluetooth/ath3k.ko 
 ```
-
-![modprobe](https://www.seguinet.es/wp-content/uploads/2020/04/addmod_2.jpg)
 
 Una vez comprobado que si añadimos el módulo encontrará todas sus dependencias y no generará ningún error procedemos a cargarlo
 
@@ -171,31 +173,76 @@ Una vez comprobado que si añadimos el módulo encontrará todas sus dependencia
 
 Y comprobamos que el módulo esta cargado correctamente listando los módulos con el comando **lsmod**:
 
-![](https://www.seguinet.es/wp-content/uploads/2020/04/addmod_3.jpg)
+```
+xnoxos@ubuntu:~ lsmod | grep ath3k
+```
 
 También podremos ver la información el módulo con el comando **modinfo**:
+```
+xnoxos@ubuntu:~$ modinfo ath3k
+filename:       /lib/modules/6.8.0-40-generic/kernel/drivers/bluetooth/ath3k.ko
+firmware:       ath3k-1.fw
+license:        GPL
+version:        1.0
+description:    Atheros AR30xx firmware driver
+author:         Atheros Communications
+srcversion:     A6C59810234C24ABA01660F
+alias:          usb:v0489pE03Cd*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v0489pE036d*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v0489pE02Cd*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v13D3p3490d*dc*dsc*dp*ic*isc*ip*in*
+alias:          usb:v13D3p3487d*dc*dsc*dp*ic*isc*ip*in*
+```
 
-![modinfo](https://www.seguinet.es/wp-content/uploads/2020/04/addmod_3.jpg)
-
-Al reiniciar el módulo no se vuelve a cargar, si queremos que los cambios sean permanentes tendremos que añadir el nombre del módulo en el fichero **_/etc/modules_** 
+Al reiniciar el módulo no se vuelve a cargar, si queremos que los cambios sean permanentes tendremos que añadir el nombre del módulo en el fichero **_`/etc/modules`_** 
 
 **_Quitar módulos_**
 
 Lo primero es ver bajo que nombre está el módulo cargado, para ello disponemos del comando _lsmod_ o podemos ver el contenido del archivo _/proc/modules_. Como ejemplo vamos a quitar el modulo de cdrom de nuestro equipo.
 
 Buscamos el nombre el módulo
-
-`#lsmod |grep cdrom`
-
-![lsmod](https://www.seguinet.es/wp-content/uploads/2020/04/addmod_5.jpg)
+```
+lsmod |grep cdrom
+```
 
 Ahora que sabemos que el nombre del modulo es _cdrom_ procederemos a descargarlo con el siguiente comando:
+```
+modprobe -r cdrom
+```
 
-`#modprobe -r cdrom`
+Al reiniciar el sistema se volverá a cargar el módulo, si queremos evitar que un módulo en concreto se vuelva a cargar deberemos agregar la siguiente línea _blacklist [nombre_modulo]_ en el fichero _`/etc/modprobe.d/blacklist.conf`_  
+```
+xnoxos@ubuntu:~$ cat /etc/modprobe.d/blacklist.conf 
+# This file lists those modules which we don't want to be loaded by
+# alias expansion, usually so some other driver will be loaded for the
+# device instead.
 
-Al reiniciar el sistema se volverá a cargar el módulo, si queremos evitar que un módulo en concreto se vuelva a cargar deberemos agregar la siguiente línea _blacklist [nombre_modulo]_ en el fichero _/etc/modprobe.d/blacklist.conf_  
+# evbug is a debug tool that should be loaded explicitly
+blacklist evbug
 
-![modprobe](https://www.seguinet.es/wp-content/uploads/2020/04/addmod_6.jpg)
+# these drivers are very simple, the HID drivers are usually preferred
+blacklist usbmouse
+blacklist usbkbd
+
+# replaced by e100
+blacklist eepro100
+
+# replaced by tulip
+blacklist de4x5
+
+# causes no end of confusion by creating unexpected network interfaces
+blacklist eth1394
+
+# snd_intel8x0m can interfere with snd_intel8x0, doesn't seem to support much
+# hardware on its own (Ubuntu bug #2011, #6810)
+blacklist snd_intel8x0m
+
+# Conflicts with dvb driver (which is better for handling this device)
+blacklist snd_aw2
+
+# replaced by p54pci
+blacklist prism54
+```
 
 Para los módulos que se «autocargan» en el Kernel no les afecta la configuración del fichero blacklist.conf, para evitar su carga se deberá realizar los siguientes pasos:
 
@@ -222,7 +269,7 @@ depends:
 retpoline:      Y
 intree:         Y
 vermagic:       4.4.0-143-generic SMP mod_unload modversions 686 retpoline
-
+...
 ```
 
 ### lspci y lsusb
@@ -317,7 +364,6 @@ El fichero  `/etc/inittab`  era el el antiguo fichero utilizado por el demonio S
 El demonio Upstart init(8) no usa este fichero,  sin embargo lee la configuracion de los ficheros alojados el el directorio /etc/init. 
 
 `śystemd`: es el gestor de systema y de servicios, es el primer proceso en arrancar y tiene el PID (1)
-
 
 Ejemplo del proceso del sistema de arranque:
 
