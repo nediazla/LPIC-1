@@ -75,34 +75,30 @@ Los exámenes se realizan de forma presencial en centros asociados o centros Pea
 
 ### Documentación oficial Linux
 
-[LPI](https://www.lpi.org/our-certifications/lpic-1-overview/)
-[The Linux Document Project](http://www.tldp.org/)
-[GNU Project](http://www.gnu.org/doc/)
-[Man pages](https://linux.die.net/man/)
-[Free Software Directory](https://directory.fsf.org/wiki/Main_Page)
-
+- [LPI](https://www.lpi.org/our-certifications/lpic-1-overview/)
+- [The Linux Document Project](http://www.tldp.org/)
+- [GNU Project](http://www.gnu.org/doc/)
+- [Man pages](https://linux.die.net/man/)
+- [Free Software Directory](https://directory.fsf.org/wiki/Main_Page)
 ### Blog's
 
-[Blog de contenido Linux](http://www.linuxlinks.com)
-
+- [Blog de contenido Linux](http://www.linuxlinks.com)
 ### Videos
 
-[Lista de reproducción de youtube LPIC-1](https://www.youtube.com/watch?v=Fov9nM-AbSw&list=PLD_mb6U5Xp95cX_CDO3Cg-p8370lPwRR2)
-[The Linux man](https://www.youtube.com/channel/UCVQ7kPpJJ2FA_iYl8Wtx0SA)
+- [Lista de reproducción de youtube LPIC-1](https://www.youtube.com/watch?v=Fov9nM-AbSw&list=PLD_mb6U5Xp95cX_CDO3Cg-p8370lPwRR2)
+- [The Linux man](https://www.youtube.com/channel/UCVQ7kPpJJ2FA_iYl8Wtx0SA)
 ### Cursos de pago por suscripción online
 
-[Openwebminars LPIC-1 ](https://openwebinars.net/carreras/certificacion-lpic-1/)
-[Linux Academy](https://linuxacademy.com/cp/modules/view/id/214)
-
+- [Openwebminars LPIC-1 ](https://openwebinars.net/carreras/certificacion-lpic-1/)
+- [Linux Academy](https://linuxacademy.com/cp/modules/view/id/214)
 ### Mas información
 
-[Free Software Fundation](https://www.fsf.org/)
-
+- [Free Software Fundation](https://www.fsf.org/)
 ### Distribuciones
 
-[ArchLinux](https://wiki.archlinux.org/index.php/Main_page_(Espa%C3%B1ol)
-[Ubuntu](https://ubuntu.com/download)
-[Kali](https://www.kali.org/get-kali/#kali-platforms)
-[Debian](https://www.debian.org/distrib/index.es.html)
-[Centos](https://www.centos.org/download/)
-[LinuxFreedom](http://linuxfreedom.com/Distros/)
+- [ArchLinux](https://wiki.archlinux.org/index.php/Main_page_(Espa%C3%B1ol)
+- [Ubuntu](https://ubuntu.com/download)
+- [Kali](https://www.kali.org/get-kali/#kali-platforms)
+- [Debian](https://www.debian.org/distrib/index.es.html)
+- [Centos](https://www.centos.org/download/)
+- [LinuxFreedom](http://linuxfreedom.com/Distros/)
