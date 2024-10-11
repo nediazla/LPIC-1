@@ -96,7 +96,7 @@ Los exámenes se realizan de forma presencial en centros asociados o centros Pea
 - [Free Software Fundation](https://www.fsf.org/)
 ### Distribuciones
 
-- [ArchLinux](https://wiki.archlinux.org/index.php/Main_page_(Espa%C3%B1ol)
+- [ArchLinux](https://wiki.archlinux.org/index.php/Main_page_(Espa%C3%B1ol))
 - [Ubuntu](https://ubuntu.com/download)
 - [Kali](https://www.kali.org/get-kali/#kali-platforms)
 - [Debian](https://www.debian.org/distrib/index.es.html)
