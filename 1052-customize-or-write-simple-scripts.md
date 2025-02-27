@@ -1,19 +1,19 @@
-# 105.2. Customize or write simple scripts
+# 105.2. Personalizar o escribir scripts sencillos
 
-**Weight: **4
+**Peso: **4
 
-**Description: **Candidates should be able to customize existing scripts, or write simple new Bash scripts.
+**Descripción: **Los candidatos deben poder personalizar scripts existentes o escribir nuevos scripts Bash simples.
 
-**Key Knowledge Areas:**
+**Áreas de conocimiento clave:**
 
-* Use standard sh syntax (loops, tests)
-* Use command substitution
-* Test return values for success or failure or other information provided by a command
-* Perform conditional mailing to the superuser
-* Correctly select the script interpreter through the shebang (#!) line
-* Manage the location, ownership, execution and suid-rights of scripts
+* Utilizar la sintaxis sh estándar (bucles, pruebas)
+* Utilizar la sustitución de comandos
+* Probar los valores de retorno para comprobar si se han realizado correctamente o no, u otra información proporcionada por un comando
+* Realizar envíos condicionales al superusuario
+* Seleccionar correctamente el intérprete de scripts mediante la línea shebang (#!)
+* Gestionar la ubicación, la propiedad, la ejecución y los derechos suid de los scripts
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * for
 * while
@@ -23,11 +23,11 @@
 * seq
 * exec
 
- This  lesson is all about shell scripting in linux and we start writing some simple scripts. We can put almost every command we use, inside a shell script. But before starting there are some notes to consider.
+Esta lección trata sobre scripts de shell en Linux y comenzaremos a escribir algunos scripts simples. Podemos poner casi todos los comandos que usamos dentro de un script de shell. Pero antes de comenzar, hay algunas notas que debemos tener en cuenta.
 
 ### shebang (#!)
 
-In Linux and opensource world script files are very important. There are different type of scripting language used to write script files. As file extension is just a label for a script,  **shebang** (file script file interpreter line )is used to specify the scripting language. 
+En Linux y en el mundo del código abierto, los archivos de script son muy importantes. Existen diferentes tipos de lenguajes de script que se utilizan para escribir archivos de script. Como la extensión de archivo es solo una etiqueta para un script, **shebang** (file script file interpreter line) se utiliza para especificar el lenguaje de script.
 
 ```
 #!/bin/bash
@@ -35,15 +35,15 @@ In Linux and opensource world script files are very important. There are differe
 echo "Hello World!
 ```
 
-Beside that, there are different kinds of shell and You can’t guarantee which shell your potential users might prefer.  shebang   makes scripts portable to all shell environments by  instructing  the shell to run your script in a particular shell.
+Además de eso, hay diferentes tipos de shell y no puedes garantizar qué shell preferirán tus potenciales usuarios. shebang hace que los scripts sean portables a todos los entornos de shell al indicarle al shell que ejecute tu script en un shell en particular.
 
-> `#` and  `!` makes this line special because `#` is used as comment line in bash.
+> `#` y `!` hacen que esta línea sea especial porque `#` se usa como línea de comentario en bash.
 
-The shebang line must be the first line of your script, and the rest of the line contains the path to the shell that your program must run under.
+La línea shebang debe ser la primera línea de tu script y el resto de la línea contiene la ruta al shell en el que debe ejecutarse tu programa.
 
 ### variables
 
-In prior sections in this series, we  learned how to define a variable  `VARIABLE="value" `.  We can do the same thing in a script, as an example:
+En secciones anteriores de esta serie, aprendimos cómo definir una variable `VARIABLE="value" `. Podemos hacer lo mismo en un script, como ejemplo:
 
 ```
 #!/bin/bash
@@ -52,32 +52,30 @@ MYNAME="payam"
 echo "Hello $MYNAME!"
 ```
 
-We have  assigned string values to variables. Bash supports shell arithmetic using integers. 
+Hemos asignado valores de cadena a las variables. Bash admite la aritmética de shell utilizando números enteros.
 
-{% hint style="info" %}
 **declare**
 
-The **declare** is a builtin command of the **bash** shell. It is used to declare shell variables and functions, set their attributes and display their values.`  -i  `make a VARIABLE to have 'integer' attribute.
+**declare** es un comando incorporado del shell **bash**. Se utiliza para declarar variables y funciones del shell, establecer sus atributos y mostrar sus valores.` -i `haz que una VARIABLE tenga el atributo 'entero'.
 
 ```
 user1@ubuntu16-1:~/sandbox$ declare VAR1="hello"
 user1@ubuntu16-1:~/sandbox$ declare -i VAR2="42"
 ```
 
-**`-p` **displays the options and attributes of each variable name if it is used with name arguments:
+**`-p` **muestra las opciones y atributos de cada nombre de variable si se utiliza con argumentos de nombre:
 
 ```
 user1@ubuntu16-1:~/sandbox$ declare -p VAR1 VAR2
 declare -- VAR1="hello"
 declare -i VAR2="42"
 ```
-{% endhint %}
 
-### command substitution
+### sustitución de comandos
 
-Sometimes we might need to use the result of a command for another command or a variable. 
+A veces, es posible que necesitemos utilizar el resultado de un comando para otro comando o una variable.
 
-If we  surround a command with `$(` and `)`, or with a pair of backticks,  we can substitute the command’s output as input to another command. This technique is called _command substitution_. 
+Si rodeamos un comando con `$(` y `)`, o con un par de comillas invertidas, podemos sustituir la salida del comando como entrada de otro comando. Esta técnica se denomina _sustitución de comandos_.
 
 ```
 $(command)
@@ -97,9 +95,8 @@ user1@ubuntu16-1:~/sandbox$ echo $MYSPACE
 8.0K .
 ```
 
-### executing scripts
-
-Inorder to run a shell script, the script should be  executabe.
+### Ejecución de scripts
+Para ejecutar un script de shell, el script debe ser ejecutable.
 
 ```
 user1@ubuntu16-1:~/sandbox$ ls -l
@@ -111,15 +108,15 @@ total 4
 -rwxrwxr-x 1 user1 user1 32 فوریه  4 14:14 script1
 ```
 
-> Another way of executing a script is giving our script name as a parammeter to `sh` or `bash` commands. `sh ./script1` or `bash ./script1`
+> Otra forma de ejecutar un script es dar nuestro nombre de script como parámetro a los comandos `sh` o `bash`. `sh ./script1` o `bash ./script1`
 
-### locating scripts
+### localización de scripts
 
-if our script is executable we can locate  that in 3 ways:
+Si nuestro script es ejecutable podemos localizarlo de 3 formas:
 
-* We can  use `./scriptname` if we are in the same directory
-* We can use absolute path `/home/user1/sandbox/scriptname`
-* putting our script in one of `$PATH` directories or editting `PATH` variable.
+* Podemos usar `./scriptname` si estamos en el mismo directorio
+* Podemos usar la ruta absoluta `/home/user1/sandbox/scriptname`
+* poniendo nuestro script en uno de los directorios `$PATH` o editando la variable `PATH`.
 
 ```
 user1@ubuntu16-1:~/sandbox$ ./script1 
@@ -139,11 +136,11 @@ user1@ubuntu16-1:~$ script1
 Hello World
 ```
 
-### conditioning
+### condicionamiento
 
-In order to write useful programs, we almost always need the ability to check conditions and change the behavior of the program accordingly. Conditional statements give us this ability. 
+Para escribir programas útiles, casi siempre necesitamos la capacidad de verificar condiciones y cambiar el comportamiento del programa en consecuencia. Las declaraciones condicionales nos brindan esta capacidad.
 
-The simplest form is the **if** statement, which has the genaral form:
+La forma más simple es la declaración **if**, que tiene la forma general:
 
 ### if
 
@@ -158,7 +155,7 @@ else
 fi
 ```
 
-> the esle part is optional and can be ommited.
+> la parte else es opcional y puede omitirse.
 
 ```
 #!/bin/bash
@@ -174,9 +171,8 @@ else
 fi
 ```
 
-> The actual checking of the condition is done by `test` command which is writter as `test EXPRESSION` it is the same as `[ EXPRESSION ].`
-
-Expressions take the following forms:
+> La comprobación real de la condición se realiza mediante el comando `test`, que se escribe como `test EXPRESIÓN`, es lo mismo que `[EXPRESSION].`
+Las expresiones adoptan las siguientes formas:
 
 | Expression            | Meaning                                       |
 | --------------------- | --------------------------------------------- |
@@ -197,7 +193,7 @@ Expressions take the following forms:
 
 ### read
 
-`read` command read a line from the standard input.
+El comando `read` lee una línea de la entrada estándar.
 
 ```
 #!/bin/bash
@@ -213,13 +209,13 @@ else
 fi
 ```
 
-### loops
+### bucles
 
-The purpose of loops is to repeat the same, or similar code a number of times. This number of times could be specified to a certain number, or the number of times could be dictated by a certain condition being met. There are usually a number of different types of loops  including for loops, while loops and‌ ... .
+El propósito de los bucles es repetir el mismo código o uno similar varias veces. Esta cantidad de veces se puede especificar en un número determinado, o la cantidad de veces se puede determinar en función de que se cumpla una determinada condición. Por lo general, existen distintos tipos de bucles, incluidos los bucles for, while y... .
 
 ### for
 
-The `for` loop processes each item in a sequence
+El bucle `for` procesa cada elemento de una secuencia
 
 ```
 for VAR in LIST;
@@ -229,9 +225,8 @@ do
 done
 ```
 
-> please py attention to syntax  `;` , `do` , `done` .
-
-> LIST can be a list of strings, an array or output of commands, etc
+> Preste atención a la sintaxis `;` , `do` , `done` .
+> LIST puede ser una lista de cadenas, una matriz o la salida de comandos, etc.
 
 ```
 #!/bin/bash
@@ -244,7 +239,7 @@ done
 
 ### **seq**
 
-**seq is a very usefull command. **it generates squence of numbers for loop from FIRST to LAST in steps of INCREMENT. 
+**seq es un comando muy útil. **Genera una secuencia de números para un bucle del PRIMERO al ÚLTIMO en pasos de INCREMENTO.
 
 ```
 seq [OPTION]... LAST
@@ -272,7 +267,7 @@ user1@ubuntu16-1:~/sandbox$ seq 1 3 10
 10
 ```
 
-seq in for loop :
+secuencia en bucle for:
 
 ```
 user1@ubuntu16-1:~/sandbox$ for i in $(seq 1 3); do echo $i; done
@@ -281,9 +276,9 @@ user1@ubuntu16-1:~/sandbox$ for i in $(seq 1 3); do echo $i; done
 3
 ```
 
-> We can also define a range with {START..END..INCREMENT} syntax and it would do the same thing.
+> También podemos definir un rango con la sintaxis {START..END..INCREMENT} y haría lo mismo.
 
-for loop works with strings too:
+El bucle for también funciona con cadenas:
 
 ```
 #!/bin/bash
@@ -296,7 +291,7 @@ done
 
 ### while
 
-while loops evaluate a condition each time the loop starts and execute the command list if the condition is true. If the condition is not initially true, the commands are never executed.
+Los bucles while evalúan una condición cada vez que se inicia el bucle y ejecutan la lista de comandos si la condición es verdadera. Si la condición no es verdadera inicialmente, los comandos nunca se ejecutan.
 
 ```
 while [condition]
@@ -320,30 +315,26 @@ do
 done
 ```
 
-> The **let** is a builtin command and  used to evaluate arithmetic expressions on shell variables. What does it mean ? Without let MYVAR=MYVAR-1 whould have "3-1" value as string! 
+> El **let** es un comando incorporado y se utiliza para evaluar expresiones aritméticas en variables de shell. ¿Qué significa? Sin let MYVAR=MYVAR-1 tendría el valor "3-1" como cadena.
 
-> If you want to use a variable value in an arithmetic expression, you don’t need to use `$` before the variable name, although you can if you want.
+> Si desea utilizar un valor de variable en una expresión aritmética, no necesita utilizar `$` antes del nombre de la variable, aunque puede hacerlo si lo desea.
 
-{% hint style="danger" %}
-**infinite loops**
+**bucles infinitos**
 
-if the condition of while loop is never met, it goes running for ever, that is called infinite loop and we have to use ctrl+c to break that! 
+Si la condición del bucle while nunca se cumple, continúa ejecutándose para siempre, eso se llama bucle infinito y tenemos que usar Ctrl+C para romperlo.
 
-infinite loops are not that much bad ! The OS is an infinite loop which constantly checks for input and response accordingly.
-{% endhint %}
+¡Los bucles infinitos no son tan malos! El SO es un bucle infinito que verifica constantemente la entrada y la respuesta correspondiente.
 
-{% hint style="info" %}
 **until**\
-until loops execute the command list and evaluate a condition each time the loop ends. If the condition is true, the loop is executed again. Even if the condition is not initially true, the commands execute at least once.
-{% endhint %}
+Los bucles till ejecutan la lista de comandos y evalúan una condición cada vez que finaliza el bucle. Si la condición es verdadera, el bucle se ejecuta nuevamente. Incluso si la condición no es verdadera inicialmente, los comandos se ejecutan al menos una vez.
 
 ### exec <a href="mailing-notifications-to-root" id="mailing-notifications-to-root"></a>
 
- **exec** command in Linux is used to execute a command from the bash itself. This command does not create a new process it just replaces the bash with the command to be executed. If the exec command is successful, it does not return to the calling process. try `exec BLAH `and `exec ls` and compare results.
+El comando **exec** en Linux se utiliza para ejecutar un comando desde el propio bash. Este comando no crea un nuevo proceso, solo reemplaza el bash con el comando que se va a ejecutar. Si el comando exec es exitoso, no regresa al proceso que lo llamó. Pruebe con `exec BLAH` y `exec ls` y compare los resultados.
 
-### Mailing notifications to root <a href="mailing-notifications-to-root" id="mailing-notifications-to-root"></a>
+### Notificaciones por correo al usuario root <a href="mailing-notifications-to-root" id="mailing-notifications-to-root"></a>
 
-For sending mail first we need to have `mailutils` installed. Then we can send mail:
+Para enviar correo primero necesitamos tener instalado `mailutils`. Luego podemos enviar correo:
 
 ```
 root@ubuntu16-1:~# mail root@localhost
@@ -352,25 +343,18 @@ Subject: test mail!
 this is my first email!
 ```
 
-Suppose your script is running an administrative task on your system in the dead of night while you’re sound asleep. What happens when something goes wrong? Fortunately, it’s easy to mail error information or log files to yourself or to another administrator or to root. Simply pipe the message to the `mail` command, and use the `-s` option to add a subject line, 
+Supongamos que su script está ejecutando una tarea administrativa en su sistema en medio de la noche mientras usted está profundamente dormido. ¿Qué sucede cuando algo sale mal? Afortunadamente, es fácil enviar por correo electrónico información de error o archivos de registro a usted mismo, a otro administrador o al usuario root. Simplemente envíe el mensaje al comando `mail` y use la opción `-s` para agregar una línea de asunto.
 
 ```
 user1@ubuntu16-1:~$ echo "Body!" | mail -s "Subject" root@localhost
 ```
 
-> If you need to mail a log file, use the `<` redirection function to redirect it as input to the `mail` command. If you need to send several files, you can use `cat` to combine them and pipe the output to `mail`. 
+> Si necesita enviar un archivo de registro por correo, use la función de redirección `<` para redirigirlo como entrada al comando `mail`. Si necesita enviar varios archivos, puede usar `cat` para combinarlos y canalizar la salida a `mail`.
 
-{% hint style="info" %}
-**bash scripting cheatsheet**
+**Hoja de trucos de scripts de bash**
 
-I also encourage you to visit my bash scripting cheatsheet at: [https://borosan.gitbook.io/bash-scripting/](https://borosan.gitbook.io/bash-scripting/)
-{% endhint %}
+También le recomiendo que visite mi hoja de trucos de scripts de bash en: [https://borosan.gitbook.io/bash-scripting/](https://borosan.gitbook.io/bash-scripting/)
 
-.
-
-.
-
-.
 
 [https://developer.ibm.com/tutorials/l-lpic1-105-2/](https://developer.ibm.com/tutorials/l-lpic1-105-2/)
 

@@ -67,7 +67,7 @@ Some of the more important files and directories are :
 
 **/proc/cpuinfo: **Information about the processor, such as its type, make, model, and performance.
 
-```
+```bash
 root@ubuntu16-1:~# cat /proc/cpuinfo 
 processor    : 0
 vendor_id    : GenuineIntel
@@ -99,7 +99,7 @@ power management:
 
 **/proc/filesystems : **Filesystems configured into the kernel.
 
-```
+```bash
 root@blackfox:~# cat /proc/filesystems 
 nodev	sysfs
 nodev	rootfs
@@ -140,7 +140,7 @@ nodev	binfmt_misc
 
 **/proc/interrupts: **Shows which interrupts are in use, and how many of each there have been.
 
-```
+```bash
 root@ubuntu16-1:~# cat /proc/interrupts 
             CPU0       
    0:          7   IO-APIC    2-edge      timer
@@ -211,7 +211,7 @@ root@ubuntu16-1:~# cat /proc/interrupts
 
 **/proc/meminfo : **Information about memory usage, both physical and swap.
 
-```
+```bash
 root@ubuntu16-1:~# cat /proc/meminfo 
 MemTotal:         994868 kB
 MemFree:          114032 kB
@@ -271,7 +271,7 @@ The way /proc virtual directory organize processes get noticed by developers and
 
 sysfs introduced to specifically store system information and its components (mostly attached and installed hardware). An as it was planned for that its seems more organized and more standardize than procfs.
 
-```
+```bash
 root@ubuntu16-1:~# ls -l /sys/
 total 0
 drwxr-xr-x   2 root root 0 Oct 24 06:07 block
@@ -308,11 +308,9 @@ udev is a replacement for the Device File System (DevFS) starting with the Linux
 1. The linux kernel initiates the device loading and next sends out messages (uevents) to the udev daemon.
 2. udev daemon catches the event and decide how to handle based on the attributes that it has received in the event. udev load required kernel module with necessary information using **modprobe**.
 
-{% hint style="success" %}
 what is modprobe?
 
 **modprobe** is an intelligent command for listing, inserting as well as removing modules from the kernel.( Will be explained )
-{% endhint %}
 
 3 . udev next reads its rules . udev allows us to ban devices based on their properties, like vendor ID and device ID, ... .
 
@@ -321,7 +319,7 @@ what is modprobe?
 
 Lets see it in action, we use and then attach a usb storage:
 
-```
+```bash
 root@ubuntu16-1:~# udevadm monitor 
 monitor will print the received events for:
 UDEV - the event which udev sends out after rule processing
@@ -367,13 +365,11 @@ UDEV  [12771.063716] add      /module/nls_iso8859_1 (module)
 
 udev write device information to the /sys virtual directory. Also udev works as an Hardware Abstaraction Layer(HAL) and creates device file entries under /dev directory in a structured way.
 
-{% hint style="success" %}
 What is HAL? In computers, a **hardware abstraction layer** (**HAL**) is a **layer** of programming that allows a computer OS to interact with a **hardware** device at a general or **abstract level** rather than at a detailed **hardware level**.
-{% endhint %}
 
 another example:
 
-```
+```bash
 root@ubuntu16-1:~# udevadm info --query=all --name=/dev/sdb
 P: /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-1:1.0/host33/target33:0:0/33:0:0:0/block/sdb
 N: sdb
@@ -421,7 +417,7 @@ This directory contains the **device files** for every hardware device attached 
 
  These days, it has been replaced by udev, a daemon that manages the contents of /dev in a temporary filesystem, **(**or by devtmpfs, which is a lightweight replacement for devfs that is used in some minimal systems).
 
-```
+```bash
 root@ubuntu16-1:~# ls /dev/
 agpgart          hwrng               port      tty10  tty33  tty56      ttyS2    vcs1
 autofs           initctl             ppp       tty11  tty34  tty57      ttyS20   vcs2
@@ -454,7 +450,7 @@ Actually they are files and pointers to the under laying device hardware. Try`ls
 
 There are some common device names in .in linux World :
 
-```
+```bash
 Name    Device
 cdrom    CD drive
 console    Special entry for the currently used console.
@@ -484,8 +480,6 @@ video*    For use with a graphics card supporting video.
 ```
 
 with the special thanks of udev (as a Hardware Abstraction Layer) and the names it provides.
-
-{% hint style="info" %}
 ### /sys vs /dev
 
 * The /sys filesystem (sysfs) contains files that provide information about devices: whether it's powered on, the vendor name and model, what bus the device is plugged into, etc. It's of interest to applications that manage devices.
@@ -494,16 +488,11 @@ with the special thanks of udev (as a Hardware Abstraction Layer) and the names 
 A metaphor is that /sys provides access to the packaging, while /dev provides access to the content of the box.
 
 The reason for /dev existing independently of /sys is partly historical: /dev dates back to the dawn of Unix, while /sys is a much more recent invention. If Linux was designed today with no historical background, /dev/sda might be /sys/block/sda/content.
-{% endhint %}
-
-{% hint style="success" %}
 #### pesudo File Systems
 
 'Pseudo-' means false, pretend. So "pseudo-filesystem" means a filesystem that doesn't have actual files – rather, it has virtual entries that the filesystem itself makes up on the spot.
 
 /dev, /proc and /sys are virtual "pseudo-filesystems" (not existing on harddisk, but only in RAM – so they do not consume any harddisk space and are completely created on boot).
-{% endhint %}
-
 ### dbus
 
 D-Bus is a message bus system, a simple way for applications to talk to one another. Beside all of dbus benefits it can read information form /dev folder and relate them with user desktop programs using signals. In fact dbus make a kind of middle layer which keeps programs a way from difficulties of dealing with /dev and /sys directories.
@@ -511,12 +500,11 @@ D-Bus is a message bus system, a simple way for applications to talk to one anot
 **Notice : **udev and dbus can work in all distributions because sysfs has made required information standardize.
 
 From the administrative perspective there are some ls utilities ( lsusb, lspci , ... ) to show more information about the hardware which has been attached to our system. Lets take a quick look at them:
-
 ### lsusb
 
 The lsusb command allows you to display information about USB buses and devices that are attached to them.
 
-```
+```bash
 root@ubuntu16-1:~# lsusb
 Bus 001 Device 002: ID 0951:1625 Kingston Technology DataTraveler 101 II
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
@@ -527,7 +515,7 @@ Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
 
 lsusb has some options:
 
-```
+```bash
 root@ubuntu16-1:~# lsusb --help
 Usage: lsusb [options]...
 List USB devices
@@ -551,7 +539,7 @@ List USB devices
 
 We can also use the `-v` command-line option to display more verbose output:
 
-```
+```bash
 root@ubuntu16-1:~# lsusb -v
 
 [output truncated]
@@ -586,7 +574,7 @@ Device Descriptor:
 
 `-t` tells lsusb to dump the physical USB device hierarchy as a tree. This overrides the v option.
 
-```
+```bash
 root@ubuntu16-1:~# lsusb -t
 /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=uhci_hcd/2p, 12M
     |__ Port 1: Dev 2, If 0, Class=Human Interface Device, Driver=usbhid, 12M
@@ -597,7 +585,7 @@ root@ubuntu16-1:~# lsusb -t
 
 `-V`or `--version` Print version information on standard output, then exit successfully.
 
-```
+```bash
 root@ubuntu16-1:~# lsusb -V
 lsusb (usbutils) 007
 ```
@@ -608,7 +596,7 @@ try `usb-devices` , it will give us more detailed info.
 
 lscpu reports information about the cpu and processing units. It does not have any further options or functionality.
 
-```
+```bash
 root@ubuntu16-1:~# lscpu
 Architecture:          x86_64
 CPU op-mode(s):        32-bit, 64-bit
@@ -642,7 +630,7 @@ lshw is a general purpose utility, that reports detailed and brief information a
 
 Do remember that the lshw command executed by root (superuser):
 
-```
+```bash
 root@ubuntu16-1:~# lshw --help
 Hardware Lister (lshw) - B.02.17
 usage: lshw [-format] [-options ...]
@@ -669,7 +657,7 @@ options can be
 
 Lets try lshw -short :
 
-```
+```bash
 root@ubuntu16-1:~# lshw -short
 H/W path             Device      Class       Description
 ========================================================
@@ -697,7 +685,7 @@ H/W path             Device      Class       Description
 
 lspci is a utility for displaying information about PCI buses in the system and devices connected to them.By default, it shows a brief list of devices.
 
-```
+```bash
 root@ubuntu16-1:~# lspci
 00:00.0 Host bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX Host bridge (rev 01)
 00:01.0 PCI bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX AGP bridge (rev 01)
@@ -723,7 +711,7 @@ root@ubuntu16-1:~# lspci
 
 All of lspci switches:
 
-```
+```bash
 root@ubuntu16-1:~# lspci --help
 lspci: invalid option -- '-'
 Usage: lspci [<switches>]
@@ -767,7 +755,7 @@ PCI access options:
 
 The `-t` option will display the output in tree format with information about bus, and how devices are connected to those buses. The output will be only using the numerical ids:
 
-```
+```bash
 root@ubuntu16-1:~# lspci -t
 -[0000:00]-+-00.0
            +-01.0-[01]--
@@ -800,7 +788,7 @@ root@ubuntu16-1:~# lspci -t
 
 lspci has a very helpful switch to know the name of the kernel module that will be handling the operations of a particular device. (this option will work only on Kernel 2.6 version and above):
 
-```
+```bash
 root@ubuntu16-1:~# lspci -k
 00:00.0 Host bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX Host bridge (rev 01)
     Subsystem: VMware Virtual Machine Chipset
@@ -878,14 +866,14 @@ lets try a tool in order to see whether these modules have been loaded.
 
 lsmod is a very simple program with no options.
 
-```
+```bash
 root@ubuntu16-1:~# lsmod --help
 Usage: lsmod
 ```
 
 it nicely formats the contents of the file /proc/modules, which contains information about the status of all currently-loaded Linux Kernel Modules (LKMs).
 
-```
+```bash
 root@ubuntu16-1:~# lsmod
 Module                  Size  Used by
 nls_iso8859_1          16384  1
@@ -961,18 +949,17 @@ fjes                   77824  0
 
 try `cat /proc/modules` and compare the results.
 
-There is nothing like Drivers in linux and as we said, udev is responsible for calling related module with required information using modprobe.
-
+No hay nada parecido a los controladores en Linux y, como dijimos, udev es responsable de llamar al módulo relacionado con la información requerida usando modprobe.
 ### modprobe
 
-modprobe intelligently adds or removes a module from the Linux kernel. For demonstration lets remove and add e1000 module which is for Ethernet car on my system:
+Modprobe agrega o elimina de forma inteligente un módulo del núcleo Linux. Para demostrarlo, eliminemos y agreguemos el módulo e1000, que es para el vehículo Ethernet en mi sistema:
 
 ```
 root@ubuntu16-1:~# modprobe -r e1000
 root@ubuntu16-1:~# modprobe e1000
 ```
 
-and we would get disconnected and then connected again. modprobe has a long list of options try`modprobe --help` to see them.
+y nos desconectaríamos y luego nos conectaríamos nuevamente. modprobe tiene una larga lista de opciones, pruebe `modprobe --help` para verlas.
 
 Sources:
 

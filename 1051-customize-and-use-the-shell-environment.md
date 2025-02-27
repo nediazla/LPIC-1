@@ -1,19 +1,17 @@
-# 105.1. Customize and use the shell environment
+## **105.1 Personalizar y utilizar el entorno de shell**
 
-## **105.1 Customize and use the shell environment**
+**Peso**: 4
 
-**Weight**: 4
+**Descripción:** Los candidatos deben poder personalizar los entornos de shell para satisfacer las necesidades de los usuarios. Los candidatos deben poder modificar los perfiles globales y de usuario.
 
-**Description:** Candidates should be able to customize shell environments to meet users’ needs. Candidates should be able to modify global and user profiles.
+**Áreas de conocimiento clave:**
 
-**Key Knowledge Areas:**
+* Establecer variables de entorno (p. ej., PATH) al iniciar sesión o al crear un nuevo shell
+* Escribir funciones de Bash para secuencias de comandos de uso frecuente
+* Mantener directorios básicos para nuevas cuentas de usuario
+* Establecer la ruta de búsqueda de comandos con el directorio adecuado
 
-* Set environment variables (e.g. PATH) at login or when spawning a new shell
-* Write Bash functions for frequently used sequences of commands
-* Maintain skeleton directories for new user accounts
-* Set command search path with the proper directory
-
-**The following is a partial list of the used files, terms and utilities:**
+**La siguiente es una lista parcial de los archivos, términos y utilidades utilizados:**
 
 * source
 * /etc/bash.bashrc
@@ -32,51 +30,50 @@
 * lists
 
 
+Ya hemos hablado sobre las variables de entorno en la sección "103-1". En esta sección queremos hablar sobre los perfiles de usuario y los perfiles de todo el sistema, y ​​cómo interactúan cuando el usuario inicia sesión.
 
-We have already talk about environment variables in section "103-1". In this section we want to talk about user profiles and system wide profile , and how they interact when user log on.
+### Shell de inicio de sesión y shell sin inicio de sesión
 
-### Login shell and Non login shell
+El programa shell, por ejemplo Bash, utiliza una colección de scripts de inicio para crear un entorno. Cada script tiene un uso específico y afecta al entorno de inicio de sesión de forma diferente. Cada script ejecutado posteriormente puede anular los valores asignados por scripts anteriores.
 
-The shell program, for example Bash, uses a collection of startup scripts to create an environment. Each script has a specific use and affects the login environment differently. Every subsequent script executed can override the values assigned by previous scripts.
+El inicio se configura de forma diferente para los shells de inicio de sesión y los shells sin inicio de sesión.
 
-Startup is configured differently for Login shells and Non login shells. 
-
-1. **Login shells** : If you open a shell or terminal (or switch to one), and it asks you to log in (Username? Password?) before it gives you a prompt, it's a login shell.
-2. **Non login shells **: If it doesn't ask you log in (like _gnome-terminal_), and lets you use it straight away, it's a non-login shell (GUI)
+1. **Shells de inicio de sesión**: si abre un shell o terminal (o cambia a uno) y le pide que inicie sesión (¿Nombre de usuario? ¿Contraseña?) antes de mostrarle un mensaje, es un shell de inicio de sesión.
+2. **Shells sin inicio de sesión**: si no le pide que inicie sesión (como _gnome-terminal_) y le permite usarlo directamente, es un shell sin inicio de sesión (GUI)
 
 ![](assets/custshell-loginshelvsnon.jpg)
 
-#### Adding global configuration for login shell
+#### Agregar configuración global para el shell de inicio de sesión
 
 ### /etc/profile
 
-/etc/profile contains Linux system wide environment and startup programs. It is used by all users with bash, ksh, sh shell. It only runs for login shell.  
+/etc/profile contiene el entorno de todo el sistema Linux y los programas de inicio. Lo utilizan todos los usuarios con shell bash, ksh y sh. Solo se ejecuta para el shell de inicio de sesión.
 
 ### /etc/profile.d
 
-if you need to customize the login environment for all users on your system,  you can use /etc/profile, but as  the distribution files in /etc, such as /etc/profile, can be modified by system updates, so it is better not to edit them directly. Rather, create additional files in /etc/profile.d.
+Si necesita personalizar el entorno de inicio de sesión para todos los usuarios de su sistema, puede utilizar /etc/profile, pero como los archivos de distribución en /etc, como /etc/profile, pueden modificarse con las actualizaciones del sistema, es mejor no editarlos directamente. En su lugar, cree archivos adicionales en /etc/profile.d.
 
-#### adding global configs for non-login (interactive) shell
+#### agregar configuraciones globales para shell sin inicio de sesión (interactivo)
 
-### /etc/bash.bashrc &  /etc/bashrc
+### /etc/bash.bashrc y /etc/bashrc
 
-You can use /etc/bash.bashrc ( or /etc/bashrc )\[based on your distro] for adding global configs and global  aliases.
+Puede utilizar /etc/bash.bashrc (o /etc/bashrc) [según su distribución] para agregar configuraciones globales y alias globales.
 
-#### user specfic configs
+#### configuraciones específicas del usuario
 
 ### /home/user/.bash_profile  &  /home/user/.bashrc
 
- `~/.bash_profile` and `~/.bashrc` are shell scripts that contain shell commands. These files are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly. As we mentioned`~/.bash_profile` is executed for login shells and `~/.bashrc` is executed for interactive non-login shells.
+`~/.bash_profile` y `~/.bashrc` son scripts de shell que contienen comandos de shell. Estos archivos se ejecutan en el contexto de un usuario cuando se abre un nuevo shell o cuando un usuario inicia sesión para que su entorno esté configurado correctamente. Como mencionamos, `~/.bash_profile` se ejecuta para shells de inicio de sesión y `~/.bashrc` se ejecuta para shells interactivos que no son de inicio de sesión.
 
- This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), the `~/.bash_profile` script is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, the `~/.bashrc` script is executed. 
+Esto significa que cuando un usuario inicia sesión (a través de nombre de usuario y contraseña) en la consola (ya sea localmente o de forma remota a través de algo como SSH), el script `~/.bash_profile` se ejecuta antes de que se le devuelva al usuario el símbolo del sistema inicial. Después de eso, cada vez que se abre un nuevo shell, se ejecuta el script `~/.bashrc`.
 
-> Most of the time PATH and env vars go into the in \~/.bash_profile and aliases go into the \~/.bashrc.
+> La mayoría de las veces, las variables PATH y de entorno van a \~/.bash_profile y los alias van a \~/.bashrc.
 
-### Aliases
+### Alias
 
-In bash, you can define aliases for commands. You use aliases to provide an alternative name for a command, to provide default parameters for the command, or sometimes to construct a new or more-complex command.
+En bash, puedes definir alias para los comandos. Los alias se utilizan para proporcionar un nombre alternativo para un comando, para proporcionar parámetros predeterminados para el comando o, a veces, para construir un comando nuevo o más complejo.
 
- You set aliases or list aliases with the `alias` command and remove them with the `unalias` command.
+Los alias se establecen o se enumeran con el comando `alias` y se eliminan con el comando `unalias`.
 
 ```bash
 ### list aliases
@@ -101,7 +98,7 @@ total 472
 ...
 ```
 
-in order to make aliases permanent for user they are defined in `/home/user/.bashrc` :
+Para que los alias sean permanentes para el usuario, se definen en `/home/user/.bashrc`:
 
 ```
 ...
@@ -112,11 +109,11 @@ alias l='ls -CF'
 ...
 ```
 
->  Another common use of aliases is for the root user. The `cp`, `rm`, and `mv` commands are usually aliased to include the `-i` parameter, to help prevent accidental destruction of files.
+> Otro uso común de los alias es para el usuario root. Los comandos `cp`, `rm` y `mv` suelen tener alias que incluyen el parámetro `-i` para ayudar a prevenir la destrucción accidental de archivos.
 
 ### /etc/skel
 
-You might be wondering how files like \~/.bash_profile, \~/.bashrc, or \~/.bash_logout got created in your home directory. These are skeleton files that are copied from /etc/skel.
+Quizás te preguntes cómo se crearon archivos como \~/.bash_profile, \~/.bashrc o \~/.bash_logout en tu directorio personal. Estos son archivos esqueleto que se copian desde /etc/skel.
 
 ```
 root@ubuntu16-1:~# ls -1a /etc/skel/
@@ -130,9 +127,9 @@ examples.desktop
 
 ### .bash_logout
 
-The file .bash_logout is read and executed every time a login shell exits. It clears the screen whenever you log out. Without .bash_logout whatever you were working on could be visible for the next user!
+El archivo .bash_logout se lee y se ejecuta cada vez que se sale de un shell de inicio de sesión. Limpia la pantalla cada vez que se cierra la sesión. Sin .bash_logout, ¡el siguiente usuario podría ver todo aquello en lo que estaba trabajando!
 
-```
+```bash
 root@ubuntu16-1:~# cat /etc/skel/.bash_logout 
 # ~/.bash_logout: executed by bash(1) when login shell exits.
 
@@ -145,9 +142,9 @@ fi
 
 ### . and source
 
- If a script runs in a child shell, any variables it might export are lost when it returns to the parent.
+Si un script se ejecuta en un shell secundario, cualquier variable que pueda exportar se pierde cuando regresa al shell principal.
 
-```
+```bash
 root@ubuntu16-1:~# cat .profile 
 # ~/.profile: executed by Bourne-compatible login shells.
 
@@ -160,11 +157,11 @@ fi
 mesg n || true
 ```
 
- So if .profile runs the \~/.bashrc script, why aren’t the variables and functions that are exported from \~/.bashrc lost? The answer is that you run the script in the current environment by using the `source` (or `.`) command. 
+Entonces, si .profile ejecuta el script \~/.bashrc, ¿por qué no se pierden las variables y funciones que se exportan desde \~/.bashrc? La respuesta es que ejecuta el script en el entorno actual utilizando el comando `source` (o `.`).
 
-### Shell functions
+### Funciones de shell
 
-Aliases are useful, but what happens if you want to handle parameters? Aliases expand only the first word, and everything else on the command line is appended to the expansion. If you want to run a command with some parameters and then process the output somehow, you are out of luck with an alias. In this case, you need a shell function.
+Los alias son útiles, pero ¿qué sucede si desea manejar parámetros? Los alias expanden solo la primera palabra y todo lo demás en la línea de comandos se agrega a la expansión. Si desea ejecutar un comando con algunos parámetros y luego procesar la salida de alguna manera, no podrá hacerlo con un alias. En este caso, necesita una función de shell.
 
 ```
 myfunc() {
@@ -184,18 +181,16 @@ root@ubuntu16-1:~# myfunc "payam"
 hello payam
 ```
 
-Shell functions have a couple of advantages over aliases:
+Las funciones de Shell tienen un par de ventajas sobre los alias:
 
-* You can handle parameters.
-* You can use programming constructs, such as testing and looping, to enhance your processing.
+* Puede manejar parámetros.
+* Puede usar construcciones de programación, como pruebas y bucles, para mejorar su procesamiento.
 
-{% hint style="info" %}
-We can use `unset `command inorder to unset our defined function.
-{% endhint %}
+Podemos usar el comando `unset `para anular la configuración de nuestra función definida.
 
-### lists
+### listas
 
-Shell supports a different type of variable called an array variable. This can hold multiple values at the same time. Arrays provide a method of grouping a set of variables. Instead of creating a new name for each variable that is required, you can use a single array variable that stores all the other variables.
+Shell admite un tipo diferente de variable llamada variable de matriz. Esta puede contener múltiples valores al mismo tiempo. Las matrices proporcionan un método para agrupar un conjunto de variables. En lugar de crear un nuevo nombre para cada variable que se requiere, puede usar una única variable de matriz que almacene todas las demás variables.
 
 ```
 array_name=(value1 ... valuen)
@@ -210,7 +205,7 @@ root@ubuntu16-1:~# echo ${mylist[2]}
 linux
 ```
 
-Another example:
+Otro ejemplo:
 
 ```
 root@ubuntu16-1:~# mylist2=("we are" "learning" "lpic 1-102 exam")
@@ -218,13 +213,7 @@ root@ubuntu16-1:~# echo ${mylist2[2]}
 lpic 1-101 exam
 ```
 
-Keep your eyes on syntax!
-
-.
-
-.
-
-.
+¡Mantén tus ojos en la sintaxis!
 
 [http://howtolamp.com/articles/difference-between-login-and-non-login-shell/](http://howtolamp.com/articles/difference-between-login-and-non-login-shell/)
 
@@ -238,6 +227,3 @@ Keep your eyes on syntax!
 
 [https://www.tutorialspoint.com/unix/unix-using-arrays.htm](https://www.tutorialspoint.com/unix/unix-using-arrays.htm)
 
-With the special thanks of shawn powers.
-
-.

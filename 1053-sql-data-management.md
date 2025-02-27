@@ -1,15 +1,15 @@
-# 105.3. SQL data management
+# 105.3. Gestión de datos SQL
 
-**Weight: **2
+**Peso: **2
 
-**Description: **Candidates should be able to query databases and manipulate data using basic SQL commands. This objective includes performing queries involving joining of 2 tables and/or subselects.
+**Descripción: **Los candidatos deben poder consultar bases de datos y manipular datos utilizando comandos SQL básicos. Este objetivo incluye la realización de consultas que impliquen la unión de 2 tablas y/o subselecciones.
 
-**Key Knowledge Areas:**
+**Áreas de conocimiento clave:**
 
-* Use of basic SQL commands
-* Perform basic data manipulation
+* Uso de comandos SQL básicos
+* Realizar manipulación básica de datos
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * insert
 * update
@@ -21,32 +21,30 @@
 * order by
 * join
 
- So far in this series of tutorials, we used flat text files to store data. Flat text files can be suitable for small amounts of data, but they are not good for storing large amounts of data or to querying that data. Over the years, several kinds of databases were developed for that purpose, the most common is now the **relational database**. 
+Hasta ahora, en esta serie de tutoriales, hemos utilizado archivos de texto sin formato para almacenar datos. Los archivos de texto sin formato pueden ser adecuados para pequeñas cantidades de datos, pero no son buenos para almacenar grandes cantidades de datos o para consultarlos. A lo largo de los años, se han desarrollado varios tipos de bases de datos para ese fin; la más común es ahora la **base de datos relacional**.
 
-Several relational database systems exist today, including commercial products such as   Oracle Database and IBM DB2®, and open source projects such as MySQL, PostgreSQL SQLite, and MariaDB (a fork of MySQL). Relational databases use SQL as a data definition and query language.
+En la actualidad existen varios sistemas de bases de datos relacionales, incluidos productos comerciales como Oracle Database e IBM DB2®, y proyectos de código abierto como MySQL, PostgreSQL SQLite y MariaDB (una bifurcación de MySQL). Las bases de datos relacionales utilizan SQL como lenguaje de consulta y definición de datos.
 
-{% hint style="info" %}
-SQL (pronounced "ess-que-el") stands for Structured Query Language. SQL is used to communicate with a database. it is the standard language for relational database management systems. SQL statements are used to perform tasks such as update data on a database, or retrieve data from a database.
-{% endhint %}
+SQL (pronunciado "ess-que-el") significa lenguaje de consulta estructurado. SQL se utiliza para comunicarse con una base de datos. Es el lenguaje estándar para los sistemas de gestión de bases de datos relacionales. Las sentencias SQL se utilizan para realizar tareas como actualizar datos en una base de datos o recuperar datos de una base de datos.
 
-### Databases, tables, columns, and rows <a href="databases-tables-columns-and-rows" id="databases-tables-columns-and-rows"></a>
+### Bases de datos, tablas, columnas y filas <a href="databases-tables-columns-and-rows" id="databases-tables-columns-and-rows"></a>
 
- A relational database consists of a set of _tables_. Think of each _row_ of data in the table as a record, with each _column_ of the table corresponding to the fields in the record for the corresponding row. The data in a column is all of the same _type_— such as character, integer, date, or binary data (such as images).
+Una base de datos relacional consta de un conjunto de _tablas_. Piense en cada _fila_ de datos de la tabla como un registro, y cada _columna_ de la tabla corresponde a los campos del registro de la fila correspondiente. Los datos de una columna son todos del mismo _tipo_, como caracteres, números enteros, fechas o datos binarios (como imágenes).
 
-We are not going to install MySQL or create some databases from zero, our focus is on SQL and we use existing Data Base (ubuntu16.04):
+No vamos a instalar MySQL ni a crear bases de datos desde cero, nos centraremos en SQL y utilizaremos una base de datos existente (ubuntu16.04):
 
-![](.gitbook/assets/sql-mydata.jpg)
+![](assets/sql-mydata.jpg)
 
-#### MySQL command line
+#### Línea de comandos MySQL
 
-mysql has simple SQL shell command line which we use to ineteractivly connect to a mysql-server. 
+MySQL tiene una línea de comandos SQL simple que usamos para conectarnos de manera interactiva a un servidor MySQL.
 
 ```
 # mysql -u root -p
 Enter password: 
 ```
 
-it means that I'm going to use `u` ser root and the `p`assword which i will provide. It is also possible to type the password on the command and define which database  i am going to use , which is not a great idea!
+Significa que voy a usar `u` como root y la `p`assword que voy a proporcionar. También es posible escribir la contraseña en el comando y definir qué base de datos voy a usar, ¡lo cual no es una gran idea!
 
 ```
 # mysql -u root -p password cars
@@ -54,11 +52,9 @@ it means that I'm going to use `u` ser root and the `p`assword which i will prov
 
 #### using a database
 
-After connecting to the mysql-server, we should define which database we are going to use. There might too many databases, first we see them via SHOW DATABASES command and then we use use the define which database we are going to use.
+Después de conectarnos al servidor MySQL, debemos definir qué base de datos vamos a utilizar. Puede haber demasiadas bases de datos, primero las vemos mediante el comando SHOW DATABASES y luego usamos el comando para definir qué base de datos vamos a utilizar.
 
-{% hint style="info" %}
-Usually MySQL commands are typed with CAPITAL LETTERS and names and values , ... in lower case. There should be a ; at the end of each MySQL command.
-{% endhint %}
+Por lo general, los comandos MySQL se escriben con LETRAS MAYÚSCULAS y los nombres y valores, ... en minúsculas. Debe haber un ; al final de cada comando MySQL.
 
 ```
 root@ubuntu16-1:~# mysql -u root -p
@@ -95,8 +91,7 @@ You can turn off this feature to get a quicker startup with -A
 Database changed
 ```
 
-lets see tables:
-
+Veamos las tablas:
 ```
 mysql> SHOW TABLES;
 +----------------+
@@ -108,11 +103,11 @@ mysql> SHOW TABLES;
 2 rows in set (0.00 sec)
 ```
 
-### Exploring tables and columns <a href="exploring-tables-and-columns" id="exploring-tables-and-columns"></a>
+### Exploración de tablas y columnas <a href="exploring-tables-and-columns" id="exploring-tables-and-columns"></a>
 
 ### SELECT
 
- The **select** statement is used to query the database and retrieve selected data. We can select everything in the table using` *` , or we can select from particular columns:
+La instrucción **select** se utiliza para consultar la base de datos y recuperar los datos seleccionados. Podemos seleccionar todo en la tabla utilizando ` *` , o podemos seleccionar de columnas específicas:
 
 >  SELECT _column1_,_ column2, ..._\
 > FROM _table_name_;
@@ -141,7 +136,7 @@ mysql> SELECT name FROM hatchback;
 
 ### WHERE
 
- We can choose which data to display by using the `WHERE :`
+ Podemos elegir qué datos mostrar utilizando `WHERE :`
 
 >  SELECT _column1_,_ column2, ..._\
 > FROM _table_name_\
@@ -158,7 +153,7 @@ mysql> SELECT *  FROM hatchback WHERE size = 'big';
 2 rows in set (0.00 sec)
 ```
 
-it is also possible to make desired condition via AND and OR when using WHERE:
+También es posible realizar la condición deseada mediante AND y OR cuando se usa WHERE:
 
 ```
 mysql> SELECT *  FROM hatchback WHERE size = 'big' AND country = 'germany';
@@ -180,9 +175,9 @@ mysql> SELECT *  FROM hatchback WHERE size = 'big' OR country = 'korea';
 3 rows in set (0.01 sec)
 ```
 
-### ORDER BY 
+### ORDER BY
 
-ORDERBY is used if we want to sort the data based on one field:
+ORDERBY se utiliza si queremos ordenar los datos en función de un campo:
 
 >  SELECT _column1_,_ column2, ..._\
 > FROM _table_name_\
@@ -200,7 +195,7 @@ mysql> SELECT *  FROM hatchback ORDER BY name;
 3 rows in set (0.01 sec)
 ```
 
-and it can sort results based on any fields:
+y puede ordenar los resultados según cualquier campo:
 
 ```
 mysql> SELECT *  FROM hatchback ORDER BY country;
@@ -216,7 +211,7 @@ mysql> SELECT *  FROM hatchback ORDER BY country;
 
 ### GROUP BY
 
- Sometimes you want aggregate information from a table. For example, you want to know how many big hatchbacks you have. We can use the `GROUP BY` clause to group your data for this purpose:
+A veces, desea agregar información de una tabla. Por ejemplo, desea saber cuántos hatchbacks grandes tiene. Podemos usar la cláusula `GROUP BY` para agrupar sus datos con este fin:
 
 >  SELECT _column_name(s)_\
 > FROM _table_name_\
@@ -233,7 +228,7 @@ mysql> SELECT *  FROM hatchback GROUP BY size;                                  
 2 rows in set (0.00 sec)
 ```
 
-it acts like unique command and group the result , to understand how many rows have been grouped by we can use count:
+Actúa como un comando único y agrupa el resultado. Para entender cuántas filas se han agrupado, podemos usar count:
 
 ```
 mysql> SELECT count(size)  FROM hatchback GROUP BY size;
@@ -259,7 +254,7 @@ mysql> SELECT name,count(size)  FROM hatchback GROUP BY size;
 
 ###  INSERT
 
- `INSERT` command  add one or more rows of data to a table.
+ El comando `INSERT` agrega una o más filas de datos a una tabla.
 
 >  INSERT INTO _table_name_ (_column1_,_ column2_,_ column3_, ...)\
 > VALUES (_value1_,_ value2_,_ value3_, ...);
@@ -282,13 +277,12 @@ mysql> SELECT * FROM hatchback;
 
 > the order is not important and bellow query would have the same result:
 
-> ```
-> INSERT INTO hatchback (size,name,country) VALUES ('small','yaris','japan');
-> ```
-
+```
+INSERT INTO hatchback (size,name,country) VALUES ('small','yaris','japan');
+```
 ###   UPDATE
 
-`UPDATE` command to fix this mistake . It update row but which row? we should specified that with WHERE command.
+Comando `UPDATE` para corregir este error. Actualiza la fila, pero ¿cuál? Deberíamos especificarlo con el comando WHERE.
 
 >  UPDATE _table_name_\
 > SET _column1 _=_ value1_,_ column2 _=_ value2_, ...\
@@ -313,13 +307,11 @@ mysql> SELECT * FROM hatchback;
 
 ### DELETE
 
-The DELETE statement is used to delete existing records in a table.
+La instrucción DELETE se utiliza para eliminar registros existentes en una tabla.
 
 >  DELETE FROM _table_name _WHERE _condition_;
 
-{% hint style="danger" %}
-Be careful when deleting records in a table! Notice the at  WHERE  in the DELETE statement. The WHERE clause specifies which record(s) should be deleted. If you omit the WHERE clause, all records in the table will be deleted!
-{% endhint %}
+¡Tenga cuidado al eliminar registros de una tabla! Observe el WHERE en la declaración DELETE. La cláusula WHERE especifica qué registro(s) se deben eliminar. Si omite la cláusula WHERE, se eliminarán todos los registros de la tabla.
 
 ```
 mysql> DELETE FROM hatchback WHERE name= 'yaris';
@@ -338,7 +330,7 @@ mysql> SELECT * FROM hatchback;
 
 ### JOIN
 
-A JOIN clause is used to combine rows from two or more tables, based on a related column between them. If no related column is given, Every single row from second table (sedan) is copied in front of the first table (hatchback).
+Una cláusula JOIN se utiliza para combinar filas de dos o más tablas, en función de una columna relacionada entre ellas. Si no se proporciona ninguna columna relacionada, cada fila de la segunda tabla (sedán) se copia delante de la primera tabla (hatchback).
 
 ```
 mysql> SELECT * FROM hatchback;
@@ -378,7 +370,7 @@ mysql> SELECT * FROM hatchback JOIN sedan;
 9 rows in set (0.01 sec)
 ```
 
-and if we give  JOIN a common field to JOIN the tables based on that, the magic happens:
+y si le damos a JOIN un campo común para UNIR las tablas en base a eso, ocurre la magia:
 
 ```
 mysql> SELECT * FROM hatchback JOIN sedan ON  hatchback.country = sedan.country; 
@@ -405,20 +397,18 @@ mysql> SELECT * FROM hatchback JOIN sedan ON  hatchback.size = sedan.size;
 
 ```
 
-{% hint style="info" %}
-### Different Types of SQL JOINs
+### Diferentes tipos de uniones SQL
 
-Here are the different types of the JOINs in SQL:
+A continuación se muestran los diferentes tipos de uniones en SQL:
 
-* **(INNER) JOIN**: Returns records that have matching values in both tables
-* **LEFT (OUTER) JOIN**: Returns all records from the left table, and the matched records from the right table
-* **RIGHT (OUTER) JOIN**: Returns all records from the right table, and the matched records from the left table
-* **FULL (OUTER) JOIN**: Returns all records when there is a match in either left or right table
-{% endhint %}
+* **(INNER) JOIN**: Devuelve registros que tienen valores coincidentes en ambas tablas
+* **LEFT (OUTER) JOIN**: Devuelve todos los registros de la tabla izquierda y los registros coincidentes de la tabla derecha
+* **RIGHT (OUTER) JOIN**: Devuelve todos los registros de la tabla derecha y los registros coincidentes de la tabla izquierda
+* **FULL (OUTER) JOIN**: Devuelve todos los registros cuando hay una coincidencia en la tabla izquierda o derecha
 
-![](.gitbook/assets/sql-jointypes.jpg)
+![](assets/sql-jointypes.jpg)
 
-finally use quit command to get out of MySQL command line.
+Finalmente, use el comando quit para salir de la línea de comandos MySQL.
 
 ```
 mysql> quit
@@ -426,15 +416,7 @@ Bye
 root@ubuntu16-1:~# 
 ```
 
-that's all!
-
-.
-
-.
-
-.
-
-.
+¡eso es todo!
 
 [https://developer.ibm.com/tutorials/l-lpic1-105-3/](https://developer.ibm.com/tutorials/l-lpic1-105-3/)
 
@@ -444,8 +426,6 @@ that's all!
 
 [https://jadi.gitbooks.io/lpic1/content/1053\_sql_data_management.html](https://jadi.gitbooks.io/lpic1/content/1053\_sql_data_management.html)
 
-``[`https://www.w3schools.com/sql/sql_select.asp`](https://www.w3schools.com/sql/sql_select.asp)``
+[`https://www.w3schools.com/sql/sql_select.asp`](https://www.w3schools.com/sql/sql_select.asp)
 
 [https://tableplus.com/blog/2018/08/mysql-how-to-turn-off-only-full-group-by.html](https://tableplus.com/blog/2018/08/mysql-how-to-turn-off-only-full-group-by.html)
-
-.
