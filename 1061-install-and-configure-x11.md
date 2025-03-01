@@ -39,9 +39,7 @@ El archivo xorg.conf es un archivo que se utiliza para configurar el servidor X.
 El archivo de configuración xorg.conf está organizado en secciones que pueden especificarse en cualquier orden. El formato general de las secciones es:
 
 > Sección "SectionName"
->
 > SectionEntry ...
->
 > EndSection
 
 Veamos rápidamente las más importantes:
@@ -228,7 +226,7 @@ xwininfo: Window id: 0x320000a "root@ubuntu16-1: ~"
 
 Xdpyinfo es una utilidad para mostrar información sobre un servidor X.
 
-```
+```bash
 root@ubuntu16-1:~# xdpyinfo 
 name of display:    :0
 version number:    11.0
@@ -274,7 +272,7 @@ SI:localuser:user1
 * xhost + : desactiva el control de acceso (todos los hosts remotos tendrán acceso al servidor X)
 * xhost - : vuelve a activar el control de acceso.
 
-```
+```bash
 root@ubuntu16-1:~# xhost +
 access control disabled, clients can connect from any host
 root@ubuntu16-1:~# xhost -
@@ -284,7 +282,7 @@ access control enabled, only authorized clients can connect
 * xhost + hostname: agrega el nombre de host a la lista de control de acceso del servidor X.
 * xhost - hostname: elimina el nombre de host de la lista de control de acceso del servidor X.
 
-```
+```bash
 root@ubuntu16-1:~# xhost +172.16.43.136
 172.16.43.136 being added to access control list
 
@@ -302,7 +300,7 @@ El programa xhost se utiliza para agregar y eliminar nombres de usuarios de la l
 * xhost +si:localuser:some_user Otorga acceso a "some_user" al "usuario local" X (localuser se refiere al usuario que está conectado actualmente).
 * xhost -si:localuser:some_user Revoca el acceso de "some_user".
 
-```
+```bash
 root@ubuntu16-1:~# xhost +si:localuser:payam
 localuser:payam being added to access control list
 

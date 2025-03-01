@@ -1,5 +1,3 @@
-# 107.1. Manage user and group accounts and related system files
-
 ## **107.1 Manage user and group accounts and related system files**
 
 **Weight:** 5
@@ -250,7 +248,7 @@ postfix:x:123:130::/var/spool/postfix:/bin/false
 
 it has one line for each user in the system. the format of it is :
 
-![](.gitbook/assets/usergroup-passwd.jpg)
+![](assets/usergroup-passwd.jpg)
 
 1. **Username**:  should be between 1 and 32 characters 
 2. **Password **_(will be discussed)_
