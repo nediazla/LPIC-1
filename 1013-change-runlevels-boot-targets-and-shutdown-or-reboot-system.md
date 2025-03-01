@@ -1,5 +1,3 @@
-# 101.3. Change runlevels / boot targets and shutdown or reboot system
-
 ## **101.3 Change runlevels / boot targets and shutdown or reboot system**
 
 **Weight:**3
@@ -109,8 +107,8 @@ There are several ways to change runlevels. To make a permanent change, we can e
 
 After the Linux kernel has booted, the init program reads the /etc/inittab file to determine the **behavior for each runlevel**. Unless the user specifies another value as a kernel boot parameter, the system will attempt to enter (start) the default runlevel.(CentOs5)
 
-```
-[root@centos5-1 ~]# cat /etc/inittab 
+```bash
+[root@centos5-1 ~]> cat /etc/inittab 
 #
 # inittab       This file describes how the INIT process should set up
 #               the system in a certain run-level.
@@ -185,8 +183,8 @@ Now lets see how SysV implements the concept of run levels.
 
 /etc/init.d contains scripts used by the System V init tools (SysVinit).
 
-```
-[root@centos5-1 ~]# ls  /etc/init.d/
+```bash
+[root@centos5-1 ~]> ls  /etc/init.d/
 acpid               hidd           netconsole       rpcidmapd
 anacron             httpd          netfs            rpcsvcgssd
 atd                 ip6tables      netplugd         saslauthd
@@ -220,7 +218,7 @@ SysV uses grouping. **Scripts of each runlevel are grouped and placed in /etc/rc
 As many services might be existed in different runlevels, the real script files are hold in /etc/init.d and /etc/rc{runlevel}.d/just point to required ones.
 
 ```
-[root@centos5-1 etc]# ls | grep rc.
+[root@centos5-1 etc]> ls | grep rc.
 rc0.d
 rc1.d
 rc2.d
@@ -235,8 +233,8 @@ rc.sysinit
 
 Lets take a look at rc.5 for example:
 
-```
-[root@centos5-1 etc]# ls -l rc5.d/
+```bash
+[root@centos5-1 etc]> ls -l rc5.d/
 total 288
 lrwxrwxrwx 1 root root 17 Aug 26 23:21 K01dnsmasq -> ../init.d/dnsmasq
 lrwxrwxrwx 1 root root 24 Aug 26 23:21 K02avahi-dnsconfd -> ../init.d/avahi-dnsconfd
@@ -274,8 +272,8 @@ lrwxrwxrwx 1 root root 19 Aug 26 23:21 S15mdmonitor -> ../init.d/mdmonitor
 
 Each script in each runlevel is run with its startup or shutdown functions depending on if that runlevel is going up or going down.** S** means **starting** script and **K** shows that it is a **killing** script .The sequence of actions is defined by the numbers. try cat command to see what is inside :
 
-```
-[root@centos5-1 rc5.d]# cat S55sshd
+```bash
+[root@centos5-1 rc5.d]> cat S55sshd
 #!/bin/bash
 #
 # Init file for OpenSSH server daemon

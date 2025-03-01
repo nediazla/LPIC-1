@@ -1,18 +1,16 @@
-# 106.1. Install and configure X11
+## **106.1 Instalar y configurar X11**
 
-## **106.1 Install and configure X11**
+**Peso:** 2
 
-**Weight:** 2
+**Descripción: **Los candidatos deben ser capaces de instalar y configurar X11.
 
-**Description: **Candidates should be able to install and configure X11.
+**Áreas de conocimiento clave:**
 
-**Key Knowledge Areas:**
+* Verificar que la tarjeta de vídeo y el monitor sean compatibles con un servidor X
+* Conocimiento del servidor de fuentes X
+* Comprensión y conocimiento básicos del archivo de configuración de X Window
 
-* Verify that the video card and monitor are supported by an X server
-* Awareness of the X font server
-* Basic understanding and knowledge of the X Window configuration file
-
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * /etc/X11/xorg.conf
 * xhost
@@ -21,39 +19,36 @@
 * xdpyinfo
 * X
 
-In the days of very expensive computers that were shared among many users, X terminals provided a low cost way for many users to share the resources of a single computer. Nowadays computers have become as much powerful  that no one doesn't think about sharing resources, but there are some history lessons which should know about!
+En la época de las computadoras muy caras que se compartían entre muchos usuarios, las terminales X proporcionaban una forma económica para que muchos usuarios compartieran los recursos de una sola computadora. Hoy en día, las computadoras se han vuelto tan poderosas que nadie piensa en compartir recursos, pero hay algunas lecciones de historia que conviene conocer.
 
 ### X
 
-The X Window System, often known as X, is a windowing system for graphics workstations developed at MIT. It is based on a client/server model : The client/server model in X system works in reverse to typical client/server model, where the client runs on the local machine and asks for services from the server. In X system, the server runs on the local machine and provides its display and services to the client programs. The client programs may be local or remotely exist over different networks, but X serverc appear transparently.
+El sistema X Window, a menudo conocido como X, es un sistema de ventanas para estaciones de trabajo gráficas desarrollado en el MIT. Se basa en un modelo cliente/servidor: El modelo cliente/servidor en el sistema X funciona a la inversa del modelo cliente/servidor típico, donde el cliente se ejecuta en la máquina local y solicita servicios del servidor. En el sistema X, el servidor se ejecuta en la máquina local y proporciona su visualización y servicios a los programas cliente. Los programas cliente pueden ser locales o existir de forma remota en diferentes redes, pero los servidores X aparecen de forma transparente.
 
-![X11 display server protocol](.gitbook/assets/x-overviewall.jpg)
+![X11 display server protocol](assets/x-overviewall.jpg)
 
-Beside  displaying  the windows for the clients(applications ) The **X server also **handles input devices such as keyboards, mice, and touchscreens
+Además de mostrar las ventanas para los clientes (aplicaciones), el **servidor X** también **maneja dispositivos de entrada como teclados, ratones y pantallas táctiles
 
-{% hint style="info" %}
-**XOrg** Server was the free and open-source implementation of the display server for the X Window System managed by the X.Org Foundation. The X11 name points to X Windows version 11.
-{% endhint %}
+**XOrg** Server fue la implementación libre y de código abierto del servidor de visualización para el sistema X Window administrado por la Fundación X.Org. El nombre X11 apunta a la versión 11 de X Windows.
 
-In many modern linux distributions , the Display manager server still exists, but X Window has been replaced by new solutions like wayland. 
-
+En muchas distribuciones modernas de Linux, el servidor de administración de visualización aún existe, pero X Window ha sido reemplazado por nuevas soluciones como wayland.
 ### /etc/X11/xorg.conf
 
-The file xorg.conf is a file used for configuring the X.Org Server. xorg.conf usually is located in /etc/X11/xorg.conf but that does not exist any more on modern linux distributions , so we use a sample xorg.conf to explain that. 
+El archivo xorg.conf es un archivo que se utiliza para configurar el servidor X.Org. xorg.conf suele estar ubicado en /etc/X11/xorg.conf, pero ya no existe en las distribuciones de Linux modernas, por lo que utilizamos un xorg.conf de muestra para explicarlo.
 
-The xorg.conf configuration file is  organized into sections which may be specified in any order. The general section format is
+El archivo de configuración xorg.conf está organizado en secciones que pueden especificarse en cualquier orden. El formato general de las secciones es:
 
-> Section "SectionName" 
+> Sección "SectionName"
 >
->        SectionEntry ... 
+> SectionEntry ...
 >
 > EndSection
 
-Lets take a quick look at most important ones:
+Veamos rápidamente las más importantes:
 
-* Files - pathnames for files such as fontpath
+* Archivos: nombres de ruta para archivos como fontpath
 
-```
+```bash
 Section "Files"
 	FontPath	"/usr/share/X11/fonts/misc"
 	FontPath	"/usr/share/X11/fonts/100dpi/:unscaled"
@@ -65,7 +60,7 @@ Section "Files"
 EndSection
 ```
 
-* Module - which modules to load
+* Módulo - qué módulos cargar
 
 ```
 Section "Module"
@@ -81,11 +76,11 @@ Section "Module"
 EndSection
 ```
 
-For example `glx` takes care of 3d graphical effects.
+Por ejemplo, `glx` se encarga de los efectos gráficos en 3D.
 
-* InputDevice - keyboard and pointer (mouse)
+* InputDevice: teclado y puntero (ratón)
 
-```
+```bash
 Section "InputDevice"
 	Identifier	"Generic Keyboard"
 	Driver		"kbd"
@@ -115,9 +110,9 @@ Section "InputDevice"
 EndSection
 ```
 
-These InputDevice sections are configured for any input devices, such as touchpads, mice, keyboards, that you may have plugged in to your system.
+Estas secciones de InputDevice están configuradas para cualquier dispositivo de entrada, como paneles táctiles, ratones y teclados, que pueda tener conectados a su sistema.
 
-* Monitor - display device description
+* Monitor: descripción del dispositivo de visualización
 
 ```
 Section "Monitor"
@@ -126,9 +121,9 @@ Section "Monitor"
 EndSection
 ```
 
-* Device - video card description/information
+* Dispositivo - descripción/información de la tarjeta de video
 
-```
+```bash
 Section "Device"
 	Identifier	"ATI Technologies, Inc. Radeon Mobility 7500 (M7 LW)"
 	Driver		"radeon"
@@ -145,9 +140,9 @@ EndSection
 
 ```
 
-* Screen - binds a video adapter to a monitor
+* Pantalla: vincula un adaptador de video a un monitor
 
-```
+```bash
 Section "Screen"
     Identifier    "Screen0"
     Device        "Screen0 ATI Technologies, Inc. Radeon Mobility 7500 (M7 LW)"
@@ -180,7 +175,7 @@ Section "Screen"
 EndSection
 ```
 
-* ServerLayout - binds one or more screens with one or more input devices
+* ServerLayout: vincula una o más pantallas con uno o más dispositivos de entrada
 
 ```
 Section "ServerLayout"
@@ -194,11 +189,11 @@ EndSection
 
 ### xwininfo
 
-There may be situations where-in we need to fetch detailed information about an application window on our Linux system. For example, we might need to get the size and position of the window. 
+Puede haber situaciones en las que necesitemos obtener información detallada sobre la ventana de una aplicación en nuestro sistema Linux. Por ejemplo, es posible que necesitemos obtener el tamaño y la posición de la ventana.
 
-xwininfo is the tool that'll help us in this case. It's basically a window information utility for X (or X-Windows system). It gives Various information about that window depending on which options are selected. Information like size, position, color, depth, … .
+xwininfo es la herramienta que nos ayudará en este caso. Es básicamente una utilidad de información de ventanas para X (o sistema X-Windows). Proporciona información variada sobre esa ventana según las opciones seleccionadas. Información como tamaño, posición, color, profundidad, etc.
 
-```
+```bash
 root@ubuntu16-1:~# xwininfo
 
 xwininfo: Please select the window about which you
@@ -231,7 +226,7 @@ xwininfo: Window id: 0x320000a "root@ubuntu16-1: ~"
 
 ### xdpyinfo
 
-Xdpyinfo is a utility for displaying information about an X server.
+Xdpyinfo es una utilidad para mostrar información sobre un servidor X.
 
 ```
 root@ubuntu16-1:~# xdpyinfo 
@@ -264,11 +259,11 @@ number of extensions:    29
 
 ### xhost
 
-As we said **X** is designed to be network transparent, so that an X server can display windows from local or networked application sources.
+Como dijimos, **X** está diseñado para ser transparente en la red, de modo que un servidor X pueda mostrar ventanas desde fuentes de aplicaciones locales o en red.
 
-The primary command for executing these network activities is xhost — the server access control program for X. Typically, remote access will be disabled, as it poses a security risk. But, if you need to run a GUI application on a remote computer, and have the GUI show up on your own screen, XHOST can be used to allow the remote computer. let get started:
+El comando principal para ejecutar estas actividades de red es xhost, el programa de control de acceso al servidor para X. Normalmente, el acceso remoto estará deshabilitado, ya que representa un riesgo de seguridad. Pero, si necesita ejecutar una aplicación GUI en una computadora remota y hacer que la GUI aparezca en su propia pantalla, puede usar XHOST para permitir el acceso a la computadora remota. Comencemos:
 
-* xhost with no option tells us the access status:
+* xhost sin opción nos indica el estado del acceso:
 
 ```
 root@ubuntu16-1:~# xhost
@@ -276,8 +271,8 @@ access control enabled, only authorized clients can connect
 SI:localuser:user1
 ```
 
-* xhost + : Turns off access control (all remote hosts will have access to X server)
-*  xhost - : Turns access control back on.
+* xhost + : desactiva el control de acceso (todos los hosts remotos tendrán acceso al servidor X)
+* xhost - : vuelve a activar el control de acceso.
 
 ```
 root@ubuntu16-1:~# xhost +
@@ -286,8 +281,8 @@ root@ubuntu16-1:~# xhost -
 access control enabled, only authorized clients can connect
 ```
 
-* xhost + hostname: Adds hostname to X server access control list. 
-* xhost - hostname: Removes hostname from X server access control list.
+* xhost + hostname: agrega el nombre de host a la lista de control de acceso del servidor X.
+* xhost - hostname: elimina el nombre de host de la lista de control de acceso del servidor X.
 
 ```
 root@ubuntu16-1:~# xhost +172.16.43.136
@@ -302,10 +297,10 @@ root@ubuntu16-1:~# xhost -172.16.43.136
 172.16.43.136 being removed from access control list
 ```
 
-The xhost program is used to add and delete  user names to the list allowed to make connections to the X server:
+El programa xhost se utiliza para agregar y eliminar nombres de usuarios de la lista a los que se les permite realizar conexiones al servidor X:
 
-* xhost +si:localuser:some_user Grants "some_user" access to the "localuser" X, (localuser refers to the user who is currently logged in.)
-*  xhost -si:localuser:some_user Revokes access of "some_user".
+* xhost +si:localuser:some_user Otorga acceso a "some_user" al "usuario local" X (localuser se refiere al usuario que está conectado actualmente).
+* xhost -si:localuser:some_user Revoca el acceso de "some_user".
 
 ```
 root@ubuntu16-1:~# xhost +si:localuser:payam
@@ -320,58 +315,56 @@ root@ubuntu16-1:~# xhost -si:localuser:payam
 localuser:payam being removed from access control list
 ```
 
-### DISPLAY
+### PANTALLA
 
-The magic word in the X window system is DISPLAY. A display consists (simplified) of:
+La palabra mágica en el sistema de ventanas X es PANTALLA. Una pantalla consta (simplificadamente) de:
 
-* a keyboard, 
-* a mouse
-* and a screen. 
+* un teclado,
+* un ratón
+* y una pantalla.
 
-A DISPLAY is managed by X server program. The server serves displaying capabilities to other programs that connect to it. The remote server knows where it have to redirect the X network traffic via the definition of the DISPLAY environment variable which generally points to an X Display server located on your local computer.
+UNA PANTALLA es administrada por un programa servidor X. El servidor ofrece capacidades de visualización a otros programas que se conectan a él. El servidor remoto sabe a dónde debe redirigir el tráfico de red X a través de la definición de la variable de entorno DISPLAY que generalmente apunta a un servidor de pantalla X ubicado en su computadora local.
 
 ```
 root@ubuntu16-1:~# echo $DISPLAY
 :0
 ```
 
-The value of the display environment variable is: **`hostname:D.S`**
+El valor de la variable de entorno de visualización es: **`hostname:D.S`**
 
-where: 
+donde:
 
-* **hostname** is the name of the computer where the X server runs. An omitted hostname means the localhost. 
-* **D** is a sequence number (usually 0). It can be varied if there are multiple displays connected to one computer. 
-* **S** is the screen number. A display can actually have multiple screens. Usually there's only one screen though where 0 is the default.
+* **hostname** es el nombre de la computadora donde se ejecuta el servidor X. Un nombre de host omitido significa el host local.
+* **D** es un número de secuencia (normalmente 0). Puede variar si hay varias pantallas conectadas a una computadora.
+* **S** es el número de pantalla. Una pantalla puede tener varias pantallas. Normalmente, solo hay una pantalla, donde 0 es el valor predeterminado.
 
-> :0.0 means that we are talking about the first screen attached to your first display in your local host
+> :0.0 significa que estamos hablando de la primera pantalla conectada a su primera pantalla en su host local
 
-We can  change the DISPLAY environment and connect my graphical output to another machine.
+Podemos cambiar el entorno DISPLAY y conectar mi salida gráfica a otra máquina.
 
 ```
 root@ubuntu16-1:~# export DISPLAY=172.16.43.136:0
 root@ubuntu16-1:~# xeyes 
 ```
 
- In this case if  a graphical program is run , its output (windows) will be shown on another machine
+En este caso, si se ejecuta un programa gráfico, su salida (ventanas) se mostrará en otra máquina
 
-> When using the OpenSSH ssh command on Linux, the -X option can be used to specify X11 forwarding.
+> Al utilizar el comando ssh de OpenSSH en Linux, se puede utilizar la opción -X para especificar el reenvío X11.
 
-.
 
-.
+- [https://developer.ibm.com/tutorials/l-lpic1-106-1/](https://developer.ibm.com/tutorials/l-lpic1-106-1/)
+- [https://kb.iu.edu/d/adnu](https://kb.iu.edu/d/adnu)
+- [https://commons.wikimedia.org/wiki/File:X11\_display_server_protocol.svg](https://commons.wikimedia.org/wiki/File:X11\_display_server_protocol.svg)
+- [https://en.wikipedia.org/wiki/X.Org_Server](https://en.wikipedia.org/wiki/X.Org_Server)
+- [https://mg.pov.lt/xorg.conf](https://mg.pov.lt/xorg.conf)
+- [https://www.faqforge.com/linux/fetch-detailed-information-application-window-linux/](https://www.faqforge.com/linux/fetch-detailed-information-application-window-linux/) 
+- [https://www.x.org/releases/X11R7.7/doc/man/man1/xwininfo.1.xhtml](https://www.x.org/releases/X11R7.7/doc/man/man1/xwininfo.1.xhtml) 
+- [https://linux.die.net/man/1/xdpyinfo](https://linux.die.net/man/1/xdpyinfo) 
+- [https://www.x.org/releases/X11R7.7/doc/man/man1/xdpyinfo.1.xhtml](https://www.x.org/releases/X11R7.7/doc/man/man1/xdpyinfo.1.xhtml) 
+- [https://www.lifewire.com/linux-command-xhost-4093456](https://www.lifewire.com/linux-command-xhost-4093456)
+- [https://beamtic.com/xhost-linux](https://beamtic.com/xhost-linux) 
+- [https://linux.die.net/man/1/xhost](https://linux.die.net/man/1/xhost) 
+- [https://askubuntu.com/questions/432255/what-is-the-display-environment-variable](https://askubuntu.com/questions/432255/what-is-the-display-environment-variable)
 
-.
-
-[https://developer.ibm.com/tutorials/l-lpic1-106-1/](https://developer.ibm.com/tutorials/l-lpic1-106-1/)
-
-[https://kb.iu.edu/d/adnu](https://kb.iu.edu/d/adnu)
-
-[https://commons.wikimedia.org/wiki/File:X11\_display_server_protocol.svg](https://commons.wikimedia.org/wiki/File:X11\_display_server_protocol.svg)
-
-[https://en.wikipedia.org/wiki/X.Org_Server](https://en.wikipedia.org/wiki/X.Org_Server)
-
-[https://mg.pov.lt/xorg.conf](https://mg.pov.lt/xorg.conf)
-
-[https://www.faqforge.com/linux/fetch-detailed-information-application-window-linux/](https://www.faqforge.com/linux/fetch-detailed-information-application-window-linux/) [https://www.x.org/releases/X11R7.7/doc/man/man1/xwininfo.1.xhtml](https://www.x.org/releases/X11R7.7/doc/man/man1/xwininfo.1.xhtml) [https://linux.die.net/man/1/xdpyinfo](https://linux.die.net/man/1/xdpyinfo) [https://www.x.org/releases/X11R7.7/doc/man/man1/xdpyinfo.1.xhtml](https://www.x.org/releases/X11R7.7/doc/man/man1/xdpyinfo.1.xhtml) [https://www.lifewire.com/linux-command-xhost-4093456](https://www.lifewire.com/linux-command-xhost-4093456) [https://beamtic.com/xhost-linux](https://beamtic.com/xhost-linux) [https://linux.die.net/man/1/xhost](https://linux.die.net/man/1/xhost) [https://askubuntu.com/questions/432255/what-is-the-display-environment-variable](https://askubuntu.com/questions/432255/what-is-the-display-environment-variable)
 
 .

@@ -1,91 +1,72 @@
-# 106.3. Accessibility
+**Peso:** 1
 
-**Weight:** 1
+**Descripción:** Demostrar conocimiento y conciencia de las tecnologías de accesibilidad.
 
-**Description:** Demonstrate knowledge and awareness of accessibility technologies.
+**Áreas de conocimiento clave:**
 
-**Key Knowledge Areas:**
+* Conocimiento básico de la configuración de accesibilidad del teclado (AccessX)
+* Conocimiento básico de la configuración visual y los temas
+* Conocimiento básico de la tecnología de asistencia (TA)
 
-* Basic knowledge of keyboard accessibility settings (AccessX)
-* Basic knowledge of visual settings and themes
-* Basic knowledge of assistive technology (ATs)
+**Términos y utilidades:**
 
-**Terms and Utilities:**
-
-* Sticky/Repeat Keys
-* Slow/Bounce/Toggle Keys
-* Mouse Keys
-* High Contrast/Large Print Desktop Themes
-* Screen Reader
-* Braille Display
-* Screen Magnifier
-* On-Screen Keyboard
-* Gestures (used at login, for example GDM)
+* Teclas fijas/de repetición
+* Teclas lentas/de rebote/de alternancia
+* Teclas del mouse
+* Temas de escritorio de alto contraste/letra grande
+* Lector de pantalla
+* Pantalla Braille
+* Lupa de pantalla
+* Teclado en pantalla
+* Gestos (usados ​​al iniciar sesión, por ejemplo GDM)
 * Orca
 * GOK
 * emacspeak
 
-There are some people with disabilities .  A disability is any condition that makes it more difficult for a person to do certain activities or interact with the world around them. People with disabilities might like to work with Linux too . The good news is that Linux distributions provide great advantages over proprietary alternatives for people with disabilities! 
+Hay algunas personas con discapacidades. Una discapacidad es cualquier condición que dificulta que una persona realice ciertas actividades o interactúe con el mundo que la rodea. A las personas con discapacidades también les puede gustar trabajar con Linux. ¡La buena noticia es que las distribuciones de Linux ofrecen grandes ventajas sobre las alternativas propietarias para las personas con discapacidades!
 
-#### What is Accessibility?
+#### ¿Qué es la accesibilidad?
 
-Accessibility , means making software usable by disabled people. That includes blind people of course, but also people who have low vision, are deaf, colorblind, have only one hand, can move only a few fingers, or even only the eyes. 
+Accesibilidad significa hacer que el software sea utilizable por personas discapacitadas. Eso incluye a las personas ciegas, por supuesto, pero también a las personas con baja visión, sordas, daltónicas, que tienen una sola mano, que pueden mover solo unos pocos dedos o incluso solo los ojos.
 
-These options are available in display managers (login screen) and in major desktops (like gnome, kde, xfce, ...). Its logo is a human stretching its hands a legs.
+Estas opciones están disponibles en los administradores de pantalla (pantalla de inicio de sesión) y en los principales escritorios (como gnome, kde, xfce, ...). Su logotipo es un humano estirando sus manos y piernas.
 
-![](.gitbook/assets/accsessibilty-login.jpg)
+![](assets/accsessibilty-login.jpg)
 
-> In Gnome the config is located at Settings \~ Universal Access.
+> En Gnome, la configuración se encuentra en Configuración \~ Acceso universal.
 
-Linux provides accessibility in 3 sections:
+Linux ofrece accesibilidad en 3 secciones:
 
-1. **AccessX  :**_ _**AccessX** or the **Keyboard Accessibility** preference tool allows you to set  some options for people who have difficulty with keyboard . 
-2. ** Visual Settings : **Visual Settings help people with vision problems:
-3. **Assistive Technologies : **things like text-to-speech (tts)
+1. **AccessX :**_ _**AccessX** o la herramienta de preferencias **Accesibilidad del teclado** le permite configurar algunas opciones para personas que tienen dificultades con el teclado.
+2. **Configuración visual : **La configuración visual ayuda a las personas con problemas de visión:
+3. **Tecnologías de asistencia : **cosas como la conversión de texto a voz (TTS)
 
 ### AccessX
 
-* **Sticky keys**: Helps users who have trouble pressing multiple keys at once, and users who have use of only one hand
-* **Slow keys** allows the user to specify the duration for which one must press-and-hold a **key** before the system accepts the keypress.
-* **BounceKeys:** Requires a delay between keystrokes before accepting the next keypress .
-* **MouseKeys:** Enables a group of  keys to emulate a mouse. Pressing keys in this group will move a pointer around the screen and perform mouse button actions.
-* **RepeatKeys:** Enables the user who has trouble releasing keys quickly once they press to slow down how fast keys start repeating once they're pressed.
-* **Hover Click: ** Enable **click **or drag simply by **hovering** **mouse** pointer over a control or object on the screen.
+* **Teclas especiales**: ayuda a los usuarios que tienen problemas para presionar varias teclas a la vez y a los usuarios que pueden usar una sola mano
+* **Teclas lentas** permite al usuario especificar la duración durante la cual se debe presionar y mantener presionada una **tecla** antes de que el sistema acepte la pulsación de tecla.
+* **Teclas de rebote:** requiere un retraso entre las pulsaciones de teclas antes de aceptar la siguiente pulsación de tecla.
+* **Teclas del mouse:** permite que un grupo de teclas emule un mouse. Al presionar las teclas de este grupo, se moverá un puntero por la pantalla y se realizarán acciones con los botones del mouse.
+* **RepeatKeys:** permite al usuario que tiene problemas para soltar las teclas rápidamente una vez que las presiona, reducir la velocidad con la que las teclas comienzan a repetirse una vez que se presionan.
+* **Hover Click:** permite hacer clic o arrastrar simplemente al **pasar el puntero del mouse** sobre un control u objeto en la pantalla.
 
-### Visual Settings
+### Configuración visual
 
-* **High-contrast** : Helps users who have trouble seeing text unless contrast is corrected, such as white text on a black background, or vice versa.
-* **zoom (Magnifier)** : Helps users with visual impairments who need larger text and images.
-* **Large Text**: Make reading text easier by using larger fonts in menus.
-* **On screen keyboard**: Helps users who cannot type at all, but who can use a mouse.
+* **Alto contraste**: ayuda a los usuarios que tienen problemas para ver el texto a menos que se corrija el contraste, como texto blanco sobre un fondo negro, o viceversa.
+* **Zoom (lupa)**: ayuda a los usuarios con discapacidades visuales que necesitan texto e imágenes más grandes.
+* **Texto grande**: facilita la lectura del texto utilizando fuentes más grandes en los menús.
+* **Teclado en pantalla**: ayuda a los usuarios que no pueden escribir en absoluto, pero que pueden usar un mouse.
 
-{% hint style="info" %}
-**GOK **is the _Gnome On-Screen Keyboard_. As the title implies, it is a keyboard that appears on the display as an alternative for those who are not able to use a regular keyboard.
-{% endhint %}
+**GOK **es el _Teclado en pantalla de Gnome_. Como lo indica el título, es un teclado que aparece en la pantalla como una alternativa para aquellos que no pueden usar un teclado normal.
 
-* **Visual alerts**: Replace system sounds with visual cues(like flashing th e screen)
-* **Screen reader**: A text-to-speech system to read what's on the screen
+* **Alertas visuales**: reemplaza los sonidos del sistema con señales visuales (como el parpadeo de la pantalla)
+* **Lector de pantalla**: un sistema de texto a voz para leer lo que está en la pantalla
 
-### Text to speech 
+### Texto a voz
 
-There are some Text to speech software in Linux which read dialog boxes for us .  Software like **orca  **and  **emac speak** .
+Hay algunos programas de texto a voz en Linux que leen los cuadros de diálogo por nosotros. Programas como **orca **y **emac speak**.
 
-
-
-
-
-.
-
-.
-
-.
-
-[https://lwn.net/Articles/302159/](https://lwn.net/Articles/302159/)
-
-[https://opensource.com/life/15/5/accessibility-linux](https://opensource.com/life/15/5/accessibility-linux)[https://accessibility.linuxfoundation.org/a11yweb/presentations/2005f2f/johnson-20050124-accessx.html](https://accessibility.linuxfoundation.org/a11yweb/presentations/2005f2f/johnson-20050124-accessx.html)
-
-[https://wiki.ubuntu.com/Accessibility/Reviews/GOK](https://wiki.ubuntu.com/Accessibility/Reviews/GOK)
-
-[https://jadi.gitbooks.io/lpic1/content/1063\_accessibility.html](https://jadi.gitbooks.io/lpic1/content/1063\_accessibility.html)
-
-.
+- [https://lwn.net/Articles/302159/](https://lwn.net/Articles/302159/)
+- [https://opensource.com/life/15/5/accessibility-linux](https://opensource.com/life/15/5/accessibility-linux)[https://accessibility.linuxfoundation.org/a11yweb/presentations/2005f2f/johnson-20050124-accessx.html](https://accessibility.linuxfoundation.org/a11yweb/presentations/2005f2f/johnson-20050124-accessx.html)
+- [https://wiki.ubuntu.com/Accessibility/Reviews/GOK](https://wiki.ubuntu.com/Accessibility/Reviews/GOK)
+- [https://jadi.gitbooks.io/lpic1/content/1063\_accessibility.html](https://jadi.gitbooks.io/lpic1/content/1063\_accessibility.html)

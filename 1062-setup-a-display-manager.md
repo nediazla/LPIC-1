@@ -1,38 +1,34 @@
-# 106.2. Setup a display manager
+**Peso: **1
 
-**Weight: **1
+**Descripción: **Los candidatos deben poder describir las características básicas y la configuración del administrador de pantalla LightDM. Este objetivo cubre el conocimiento de los administradores de pantalla XDM (X Display Manager), GDM (Gnome Display Manager) y KDM (KDE Display Manager).
 
-**Description: **Candidates should be able to describe the basic features and configuration of the LightDM display manager. This objective covers awareness of the display managers XDM (X Display Manger), GDM (Gnome Display Manager) and KDM (KDE Display Manager).
+**Áreas de conocimiento clave**:
 
-**Key Knowledge Areas**:
+* Configuración básica de LightDM
+* Activar o desactivar el administrador de pantalla
+* Cambiar el saludo del administrador de pantalla
+* Conocimiento de XDM, KDM y GDM
 
-* Basic configuration of LightDM
-* Turn the display manager on or off
-* Change the display manager greeting
-* Awareness of XDM, KDM and GDM
-
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * lightdm
 * /etc/lightdm/
 
+Un entorno de escritorio Linux es una colección de aplicaciones diseñadas para funcionar bien entre sí y brindar una experiencia de usuario consistente. Un entorno de escritorio generalmente se combina con un administrador de inicio de sesión. El administrador de inicio de sesión también se conoce como un saludo o administrador de pantalla
 
+#### ¿Qué es el Administrador de pantalla?
 
-A Linux desktop environment is a collection of applications designed to work well with each other and provide a consistent user experience. A desktop environment is usually paired with a login manager. The login manager also known as a greeter or display manager
-
-#### What is Display Manager ?
-
-The display manager is a bit of code that provides the GUI login screen for your Linux desktop. After you log in to a GUI desktop, the display manager turns control over to the window manager.
+El administrador de pantalla es un fragmento de código que proporciona la pantalla de inicio de sesión de la interfaz gráfica de usuario para su escritorio Linux. Después de iniciar sesión en un escritorio con interfaz gráfica de usuario, el administrador de pantalla cede el control al administrador de ventanas.
 
 > Kernel -> X -> DisplayManager -> Desktop
 
- When you log out of the desktop, the display manager is given control again to display the login screen and wait for another login.
+Cuando cierra sesión en el escritorio, el administrador de pantalla vuelve a recibir el control para mostrar la pantalla de inicio de sesión y esperar a que se inicie otra sesión.
 
-![](.gitbook/assets/displaymanager-centos7gdm.jpg)
+![](assets/displaymanager-centos7gdm.jpg)
 
-There are several display managers—some are provided with their respective desktops while some others not. 
+Existen varios administradores de pantalla; algunos se proporcionan con sus respectivos escritorios, mientras que otros no.
 
- Any of the display managers can be used for your login screen regardless of which desktop you are using. Such is the flexibility of Linux and well-written, modular code.
+Cualquiera de los administradores de pantalla se puede utilizar para la pantalla de inicio de sesión, independientemente del escritorio que esté utilizando. Tal es la flexibilidad de Linux y el código modular bien escrito.
 
 | Desktop | Display Manager | notes                                                |
 | ------- | --------------- | ---------------------------------------------------- |
@@ -43,7 +39,7 @@ There are several display managers—some are provided with their respective des
 |         | XDM             | Default X Window System Display Manager              |
 |         | LightDM         | Lightweight Display Manage                           |
 
-to get the default display manager you can try :` `
+Para obtener el administrador de pantalla predeterminado, puede intentar: ` `
 
 ```
 cat /etc/X11/default-display-manager 
@@ -51,10 +47,9 @@ cat /etc/X11/default-display-manager
 systemctl status display-manager
 ```
 
-{% hint style="success" %}
-#### installing and switching to lightdm
+#### Instalación y cambio a lightdm
 
-In this lesson we use CentOS7 which uses gdm display manager by default. Lets switch to lightdm using bellow commands and check it:
+En esta lección, utilizamos CentOS7, que utiliza el administrador de pantalla gdm de manera predeterminada. Cambiemos a lightdm con los siguientes comandos y comprobémoslo:
 
 ```
 yum install -y epel-release 
@@ -66,20 +61,19 @@ systemctl enable lightdm.service
 reboot
 ```
 
-if you reboot the service your system will be crashed.
-{% endhint %}
+Si reinicia el servicio, su sistema se bloqueará.
 
-![lightdm greeter session](.gitbook/assets/displaymanager-centos7lightdm.jpg)
+![lightdm greeter session](assets/displaymanager-centos7lightdm.jpg)
 
 ### LightDM
 
-LightDM is a free and open-source X display manager that aims to be lightweight, fast, extensible and multi-desktop.
+LightDM es un administrador de pantalla X gratuito y de código abierto que pretende ser ligero, rápido, extensible y multi-escritorio.
 
->  **LightDM** is the display manager running in Ubuntu up to version 16.04 LTS. While it has been replaced by GDM in later Ubuntu releases
+> **LightDM** es el administrador de pantalla que se ejecuta en Ubuntu hasta la versión 16.04 LTS. Si bien ha sido reemplazado por GDM en versiones posteriores de Ubuntu
 
 ### /etc/lightdm
 
-LightDM configuration is located in /etc/lightdm directory:
+La configuración de LightDM se encuentra en el directorio /etc/lightdm:
 
 ```
 [root@centos7-1 ~]# ls -l /etc/lightdm/
@@ -91,7 +85,7 @@ drwxr-xr-x 2 root root    6 Nov 27  2017 lightdm.conf.d
 -rw-r--r-- 1 root root  452 Nov 27  2017 users.conf
 ```
 
-lets see some confiurations inside /etc/lightdm/lightdm.conf :
+Veamos algunas configuraciones dentro de /etc/lightdm/lightdm.conf:
 
 ```
 ...
@@ -106,16 +100,16 @@ lets see some confiurations inside /etc/lightdm/lightdm.conf :
 ...
 ```
 
-In some distributions (ubuntu )configuration files are located inside lightdm.conf.d directory:
+En algunas distribuciones (ubuntu) los archivos de configuración se encuentran dentro del directorio lightdm.conf.d:
 
 ```
 [root@centos7-1 ~]# ls -l /etc/lightdm/lightdm.conf.d/
 total 0
 ```
 
-#### changing greeter session:
+#### Cambiar la sesión de saludo:
 
-For instance lets install another greeter session for lightdm and test it
+Por ejemplo, instalemos otra sesión de saludo para lightdm y probémosla
 
 ```
 [root@centos7-1 lightdm]# yum search lightdm | grep greeter
@@ -135,36 +129,25 @@ drwxr-xr-x 2 root root    6 Nov 27  2017 lightdm.conf.d
 
 ```
 
-next we need to edit lightdm.conf and change line bellow:
+A continuación debemos editar lightdm.conf y cambiar la línea a continuación:
 
 ```
 greeter-session=slick-greeter
 ```
 
-restart lightdm using `systemctl restart lightdm` and see the result:
+Reinicie lightdm usando `systemctl restart lightdm` y vea el resultado:
 
-![slick greeter for lightdm](.gitbook/assets/displaymanager-slickgreeter.jpg)
+![slick greeter for lightdm](assets/displaymanager-slickgreeter.jpg)
 
-#### Controlling Display managers
+#### Controlar los administradores de pantalla
 
-Installing and switching between different Display Managers is pretty easy , as we have seen in CentOS, we can install new DM via `yum /apt` commands. Next some modifications in configuration files might be needed example `/etc/lightdm/lightdm.conf` .And finally  we should enable previous DM and enable the new one with `systemctl enable/disable lightdm` commands and `reboot`.
+Instalar y cambiar entre diferentes administradores de pantalla es bastante fácil. Como hemos visto en CentOS, podemos instalar un nuevo administrador de pantalla mediante los comandos `yum /apt`. A continuación, es posible que se necesiten algunas modificaciones en los archivos de configuración, por ejemplo, `/etc/lightdm/lightdm.conf`. Y, por último, debemos habilitar el administrador de pantalla anterior y habilitar el nuevo con los comandos `systemctl enable/disable lightdm` y `reboot`.
 
-For disabling Display Manager ang going to text mode it depends on your distribution! We can either use `telinit` command or  set default target via `systemctl set-default` command.
+Para deshabilitar el administrador de pantalla y pasar al modo de texto, depende de su distribución. Podemos usar el comando `telinit` o establecer el destino predeterminado mediante el comando `systemctl set-default`.
 
-
-
-.
-
-.
-
-.
-
-[https://developer.ibm.com/tutorials/l-lpic1-106-2/](https://developer.ibm.com/tutorials/l-lpic1-106-2/)
-
-[https://opensource.com/article/16/12/yearbook-best-couple-2016-display-manager-and-window-manager](https://opensource.com/article/16/12/yearbook-best-couple-2016-display-manager-and-window-manager)
-
-[https://en.wikipedia.org/wiki/LightDM](https://en.wikipedia.org/wiki/LightDM)
-
-[https://wiki.ubuntu.com/LightDM](https://wiki.ubuntu.com/LightDM)
+- [https://developer.ibm.com/tutorials/l-lpic1-106-2/](https://developer.ibm.com/tutorials/l-lpic1-106-2/)
+- [https://opensource.com/article/16/12/yearbook-best-couple-2016-display-manager-and-window-manager](https://opensource.com/article/16/12/yearbook-best-couple-2016-display-manager-and-window-manager)
+- [https://en.wikipedia.org/wiki/LightDM](https://en.wikipedia.org/wiki/LightDM)
+- [https://wiki.ubuntu.com/LightDM](https://wiki.ubuntu.com/LightDM)
 
 .
