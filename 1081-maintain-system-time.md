@@ -1,21 +1,19 @@
-# 108.1. Maintain system time
+## **108.1 Mantener la hora del sistema**
 
-## **108.1 Maintain system time**
+**Ponderación: **3
 
-**Weight: **3
+**Descripción: **Los candidatos deben ser capaces de mantener correctamente la hora del sistema y sincronizar el reloj mediante NTP.
 
-**Description: **Candidates should be able to properly maintain the system time and synchronize the clock via NTP.
+**Áreas de conocimiento clave:**
 
-**Key Knowledge Areas:**
+* Configurar la fecha y hora del sistema
+* Ajustar el reloj del hardware a la hora UTC correcta
+* Configurar la zona horaria correcta
+* Configuración básica de NTP
+* Conocimiento del uso del servicio pool.ntp.org
+* Conocimiento del comando ntpq
 
-* Set the system date and time
-* Set the hardware clock to the correct time in UTC
-* Configure the correct timezone
-* Basic NTP configuration
-* Knowledge of using the pool.ntp.org service
-* Awareness of the ntpq command
-
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * /usr/share/zoneinfo/
 * /etc/timezone
@@ -27,39 +25,39 @@
 * ntpdate
 * pool.ntp.org
 
-When we install a Linux® system graphically, we set the clock and choose a time zone suitable for our needs ,we can also choose to use the Network Time Protocol (NTP) to set your clock automatically. In this lesson we show  how to go below the graphical interfaces and configure the various time-related aspects of Linux system.
+Al instalar un sistema Linux® gráficamente, configuramos el reloj y elegimos una zona horaria adecuada a nuestras necesidades. También podemos usar el Protocolo de Tiempo de Red (NTP) para configurar el reloj automáticamente. En esta lección mostramos cómo pasar por debajo de las interfaces gráficas y configurar los diversos aspectos relacionados con el tiempo del sistema Linux.
 
-#### How Linux keep tack of time
+#### Cómo Linux controla el tiempo
 
- there are 2 clocks in each computer. The first is the Hardware Clock. This is the clock on a motherboard chip that keeps time even when the machine is powered off. 
+Hay dos relojes en cada computadora. El primero es el reloj de hardware. Este reloj se encuentra en el chip de la placa base y mantiene la hora incluso cuando la máquina está apagada.
 
-The other clock is the virtual System Clock. Linux asks the Hardware Clock chip what time it is on power up and then keeps track of the time itself with software. 
+El otro reloj es el reloj virtual del sistema. Linux pregunta al reloj de hardware qué hora es al encenderse y luego registra la hora mediante software.
 
-Hardware clock can be the localtime (your computers timezone) or UTC time (standard time). 
+El reloj de hardware puede ser la hora local (la zona horaria de su computadora) o la hora UTC (hora estándar).
 
-> We can determine which one is set by checking /etc/adjtime . This file is empty unless the  Hardware has been set manually.
+> Podemos determinar cuál está configurado consultando /etc/adjtime. Este archivo está vacío a menos que el reloj de hardware se haya configurado manualmente.
 
-Usually the hardware clock is set on UTC , so when ever system boots up, Software clock reads Hardware clock and then calculates the difference based on our timezone.
+Normalmente, el reloj de hardware se configura en UTC, por lo que al arrancar el sistema, el reloj de software lee el reloj de hardware y calcula la diferencia según nuestra zona horaria.
 
-#### Setting The System Clock
+#### Configurar el reloj del sistema
 
 ### date
 
- **date **command is used to display the system date and time.  By default the date command displays the date in  local time, even if your hardware clock keeps UTC. Use the `-u` option to display UTC. 
+El comando **date** se usa para mostrar la fecha y la hora del sistema. Por defecto, el comando date muestra la fecha en hora local, incluso si el reloj de su hardware mantiene la hora UTC. Use la opción `-u` para mostrar la hora UTC.El comando **date** se usa para mostrar la fecha y la hora del sistema. Por defecto, el comando date muestra la fecha en hora local, incluso si el reloj de su hardware mantiene la hora UTC. Use la opción `-u` para mostrar la hora UTC.
 
 ```
 root@ubuntu16-1:~# date
 Mon Feb 17 19:17:52 +0330 2020
 ```
 
-Use the `-u` option to display UTC:
+Utilice la opción `-u` para mostrar UTC:
 
 ```
 root@ubuntu16-1:~# date -u
 Mon Feb 17 15:50:20 UTC 2020
 ```
 
-date command is also used to set date and time of the system ( Automatic Adjustment (ntp) should not be enabled, otherwise it won't work):
+El comando de fecha también se utiliza para establecer la fecha y la hora del sistema (el Ajuste automático (ntp) no debe estar habilitado, de lo contrario no funcionará):
 
 ```
 root@ubuntu16-1:~# date
@@ -70,15 +68,15 @@ root@ubuntu16-1:~# date
 Thu Apr 13 21:14:02 +0430 2017
 ```
 
- Although we can set time using date command, the big problem with this idea is that time change will only last until the next reboot. Unless we somehow set  the system time to the hardware clock.
+Aunque podemos configurar la hora con el comando "date", el gran problema es que el cambio de hora solo durará hasta el siguiente reinicio, a menos que configuremos la hora del sistema según el reloj del hardware.
 
-### Setting The Hardware Clock <a href="_setting_the_hardware_clock" id="_setting_the_hardware_clock"></a>
+### Configuración del reloj del hardware <a href="_setting_the_hardware_clock" id="_setting_the_hardware_clock"></a>
 
 ### hwclock
 
-To change the Hardware Clock, you can use the motherboard’s BIOS utility at startup, but if you miss that opportunity, there is still hope. The "hwclock" command.
+Para cambiar el reloj del hardware, puedes usar la utilidad de la BIOS de la placa base al iniciar, pero si no la usas, aún hay esperanza: el comando "hwclock".
 
- `hwclock` is a utility for accessing the hardware clock, also referred to as the Real Time Clock (RTC). As we mentioned it  is independent of the operating system you use and works even when the machine is shut down.
+`hwclock` es una utilidad para acceder al reloj del hardware, también conocido como Reloj de Tiempo Real (RTC). Como mencionamos, es independiente del sistema operativo y funciona incluso con el equipo apagado.
 
 ```
 root@ubuntu16-1:~# hwclock
@@ -87,7 +85,7 @@ root@ubuntu16-1:~# date
 Mon Feb 17 20:53:33 +0330 2020
 ```
 
->  hwclock date shows the date in the localtime (time after adding the timezone to the UTC time) , even when the hardware clock is set on UTC!
+>hwclock date muestra la fecha en hora local (hora después de agregar la zona horaria a la hora UTC), ¡incluso cuando el reloj del hardware está configurado en UTC!
 
 hwclock syntax : `hwclock [function] [option...]` where :
 
@@ -104,7 +102,7 @@ hwclock syntax : `hwclock [function] [option...]` where :
   -u, --utc            the hardware clock is kept in UTC
 ```
 
-lets do some examples:
+Hagamos algunos ejemplos:
 
 ```
 ### lets set hardware clock in utc
@@ -139,27 +137,27 @@ Mon Feb 17 21:40:55 +0330 2020
 
 ```
 
-the hwclock --localtime  -w would do the same thing , but setting  hardware clock to your local time is not a good idea, so use hwclock -u -w instead. 
+El comando hwclock --localtime -w haría lo mismo, pero configurar el reloj del hardware a la hora local no es recomendable, así que use hwclock -u -w en su lugar.
 
 ### NTP
 
-**Network Time Protocol (NTP)** is an application layer protocol used for clock synchronization between hosts on a TCP/IP network. The goal of NTP is to ensure that all computers on a network agree on the time, since even a small difference can create problems.
+El **Protocolo de Tiempo de Red (NTP)** es un protocolo de capa de aplicación que se utiliza para la sincronización de relojes entre hosts en una red TCP/IP. El objetivo de NTP es garantizar que todos los equipos de una red coincidan en la hora, ya que incluso una pequeña diferencia puede causar problemas.
 
- NTP uses a hierarchical system of time sources. At the top of the structure are highly accurate time sources – typically atomic or GPS clocks. These clocks are known as **stratum 0** servers. **Stratum 1** servers are directly linked to stratum 0 servers and computers run NTP servers that deliver the time to **stratum 2** servers, and so on (image source: Wikipedia):
+NTP utiliza un sistema jerárquico de fuentes de tiempo. En la parte superior de la estructura se encuentran fuentes de tiempo de alta precisión, generalmente relojes atómicos o GPS. Estos relojes se conocen como servidores de **estrato 0**. Los servidores de **estrato 1** están conectados directamente a los servidores de **estrato 0** y los equipos ejecutan servidores NTP que envían la hora a los servidores de **estrato 2**, y así sucesivamente (fuente de la imagen: Wikipedia).
 
-![](.gitbook/assets/maintaintime-ntp.jpg)
+![](assets/maintaintime-ntp.jpg)
 
-> NTP uses a client-server architecture; one host is configured as the NTP server and all other hosts on the network are configured as NTP clients.
+NTP utiliza una arquitectura cliente-servidor; un host se configura como servidor NTP y todos los demás hosts de la red se configuran como clientes NTP.
 
 ### pool.ntp.org
 
-The pool.ntp.org project is a big virtual cluster of timeservers providing reliable easy to use NTP service for millions of clients.
+El proyecto pool.ntp.org es un gran clúster virtual de servidores de tiempo que proporciona un servicio NTP fiable y fácil de usar para millones de clientes.
 
-The pool is being used by hundreds of millions of systems around the world. It's the default "time server" for most of the major Linux distributions and many networked appliances
+Cientos de millones de sistemas en todo el mundo utilizan este clúster. Es el servidor de tiempo predeterminado para la mayoría de las principales distribuciones de Linux y muchos dispositivos en red.
 
 ### ntpdate
 
- **ntpdate** sets the local date and time by polling the Network Time Protocol (NTP) **server**(s) given as the server arguments to determine the correct time. It must be run as root on the local host. (you might need to install it). `-v` : verbose 
+**ntpdate** establece la fecha y la hora locales consultando los **servidores** del Protocolo de Tiempo de Red (NTP) proporcionados como argumentos del servidor para determinar la hora correcta. Debe ejecutarse como root en el host local (es posible que deba instalarlo). `-v`: verbose
 
 ```
 root@ubuntu16-1:~# ntpdate -v pool.ntp.org
@@ -167,13 +165,13 @@ root@ubuntu16-1:~# ntpdate -v pool.ntp.org
 17 Feb 22:59:46 ntpdate[4365]: adjust time server 194.225.150.25 offset -0.005153 sec
 ```
 
-After this, we need to set the hwclock to the just corrected system time by sudo `hwclock -w` or` hwclock -u -w` to make sure you are setting that on utc .
+Después de esto, necesitamos configurar el reloj del sistema a la hora del sistema recién corregida mediante sudo `hwclock -w` o `hwclock -u -w` para asegurarnos de que se configura en UTC.
 
-> \-q switch will query for time and just show the result with out setting that.
+> El parámetro \-q consultará la hora y mostrará el resultado sin configurarla.
 
 ### ntpd
 
-Instead of manually setting the time each time, we can use a linux service called ntp.  The `ntpd` utility is an operating system daemon which sets and maintains the system time of day in synchronism with Internet standard time servers.
+En lugar de configurar la hora manualmente cada vez, podemos usar un servicio de Linux llamado ntp. La utilidad `ntpd` es un demonio del sistema operativo que configura y mantiene la hora del sistema en sincronía con los servidores de hora estándar de Internet.
 
 ```
 root@ubuntu16-1:~# apt install ntp
@@ -181,7 +179,7 @@ root@ubuntu16-1:~# systemctl start ntp
 root@ubuntu16-1:~# systemctl enable ntp
 ```
 
-Fun fact: we can not use natpdate while ntp service is running:
+Dato curioso: no podemos usar natpdate mientras se ejecuta el servicio ntp:
 
 ```
 root@ubuntu16-1:~# ntpdate pool.ntp.org
@@ -190,7 +188,7 @@ root@ubuntu16-1:~# ntpdate pool.ntp.org
 
 ### /etc/ntp.cpnf
 
- The ntpd configuration file is located at **/etc/ntp.conf**. It is read at initial startup by the ntpd daemon in order to specify the appropriate  synchronization sources:
+El archivo de configuración de ntpd se encuentra en **/etc/ntp.conf**. El demonio ntpd lo lee durante el arranque inicial para especificar las fuentes de sincronización adecuadas:
 
 ```
 root@ubuntu16-1:~# cat /etc/ntp.conf 
@@ -262,13 +260,13 @@ restrict source notrap nomodify noquery
 #fudge 127.127.22.1 flag3 1            # enable PPS API
 ```
 
-You can change the ntp servers to the ntp server(s) you want. Do not forget to restart the service after any modifications.
+Puede cambiar los servidores NTP a los que desee. No olvide reiniciar el servicio después de cualquier modificación.
 
 ### ntpq
 
- The **ntpq** utility program is used to monitor NTP daemon **ntpd** operations and determine performance.
+La utilidad **ntpq** se utiliza para supervisar las operaciones del demonio NTP **ntpd** y determinar su rendimiento.
 
- **`-p :`**Print a list of the peers known to the server as well as a summary of their state.
+**`-p :`**Imprime una lista de los pares conocidos por el servidor, así como un resumen de su estado.
 
 ```
 root@ubuntu16-1:~# ntpq -p
@@ -286,7 +284,7 @@ root@ubuntu16-1:~# ntpq -p
 *golem.canonical 17.253.34.251    2 u   59   64  377   85.408   11.230   8.712
 ```
 
- **-n** : Output all host addresses in dotted-quad numeric format rather than converting to the canonical host names.
+**-n** : Muestra todas las direcciones de host en formato numérico de cuatro puntos en lugar de convertirlas a nombres de host canónicos.
 
 ```
 root@ubuntu16-1:~# ntpq -pn
@@ -304,7 +302,7 @@ root@ubuntu16-1:~# ntpq -pn
 *91.189.89.199   17.253.34.251    2 u   18   64  377   85.408   11.230   6.346
 ```
 
-the meaning :
+El significado:
 
 ```
 * Synchronized to this peer
@@ -314,34 +312,17 @@ the meaning :
 ~ Peer is statically configured
 ```
 
-tha's all.
 
-.
-
-.
-
-.
-
-[https://developer.ibm.com/tutorials/l-lpic1-108-1/](https://developer.ibm.com/tutorials/l-lpic1-108-1/)
-
-[http://xed.ch/help/time.html](http://xed.ch/help/time.html)
-
-[https://www.geeksforgeeks.org/date-command-linux-examples/](https://www.geeksforgeeks.org/date-command-linux-examples/)
-
-[https://jadi.gitbooks.io/lpic1/content/1081\_maintain_system_time.html](https://jadi.gitbooks.io/lpic1/content/1081\_maintain_system_time.html)
-
-[https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sect-configuring_the_date_and_time-hwclock](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sect-configuring_the_date_and_time-hwclock)
-
-[https://www.geeksforgeeks.org/hwclock-command-in-linux-with-examples/](https://www.geeksforgeeks.org/hwclock-command-in-linux-with-examples/)
-
-[https://geek-university.com/ccna/network-time-protocol/](https://geek-university.com/ccna/network-time-protocol/)
-
-[https://www.ntppool.org/en/](https://www.ntppool.org/en/)
-
-[https://linux.die.net/man/8/ntpdate](https://linux.die.net/man/8/ntpdate)
-
-[https://docs.ntpsec.org/latest/ntpd.html](https://docs.ntpsec.org/latest/ntpd.html)
-
-[https://detailed.wordpress.com/2017/10/22/understanding-ntpq-output/](https://detailed.wordpress.com/2017/10/22/understanding-ntpq-output/)
+- [https://developer.ibm.com/tutorials/l-lpic1-108-1/](https://developer.ibm.com/tutorials/l-lpic1-108-1/)
+- [http://xed.ch/help/time.html](http://xed.ch/help/time.html)
+- [https://www.geeksforgeeks.org/date-command-linux-examples/](https://www.geeksforgeeks.org/date-command-linux-examples/)
+- [https://jadi.gitbooks.io/lpic1/content/1081\_maintain_system_time.html](https://jadi.gitbooks.io/lpic1/content/1081\_maintain_system_time.html)
+- [https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sect-configuring_the_date_and_time-hwclock](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sect-configuring_the_date_and_time-hwclock)
+- [https://www.geeksforgeeks.org/hwclock-command-in-linux-with-examples/](https://www.geeksforgeeks.org/hwclock-command-in-linux-with-examples/)
+- [https://geek-university.com/ccna/network-time-protocol/](https://geek-university.com/ccna/network-time-protocol/)
+- [https://www.ntppool.org/en/](https://www.ntppool.org/en/)
+- [https://linux.die.net/man/8/ntpdate](https://linux.die.net/man/8/ntpdate)
+- [https://docs.ntpsec.org/latest/ntpd.html](https://docs.ntpsec.org/latest/ntpd.html)
+- [https://detailed.wordpress.com/2017/10/22/understanding-ntpq-output/](https://detailed.wordpress.com/2017/10/22/understanding-ntpq-output/)
 
 .

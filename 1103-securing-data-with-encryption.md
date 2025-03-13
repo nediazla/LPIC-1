@@ -49,7 +49,7 @@ Symmetric encryption is the oldest and best-known technique. A secret key, which
 
 The problem with secret keys is exchanging them over the Internet or a large network while preventing them from falling into the wrong hands. Anyone who knows the secret key can decrypt the message. One answer is asymmetric encryption, in which there are two related keys--a key pair. A public key is made freely available to anyone who might want to send you a message. A second, private key is kept secret, so that only you know it.
 
-![](.gitbook/assets/securedata-asymetric.jpg)
+![](assets/securedata-asymetric.jpg)
 
 Any message (text, binary files, or documents) that are encrypted by using the public key can only be decrypted by applying the same algorithm, but by using the matching private key. Any message that is encrypted by using the private key can only be decrypted by using the matching public key.\
 \
@@ -57,19 +57,14 @@ This means that you do not have to worry about passing public keys over the Inte
 
 > A problem with asymmetric encryption, however, is that it is slower than symmetric encryption. It requires far more processing power to both encrypt and decrypt the content of the message.
 
-{% hint style="info" %}
 **encryption vs signing**
 
 When encrypting, you use **their public key** to write a message and they use **their private key** to read it.
 
 When signing, you use **your private key** to write message's signature, and they use **your public key** to check if it's really yours.
-{% endhint %}
-
-{% hint style="success" %}
 #### Whats is a key server?
 
 Key server (cryptographic), a server on which public keys are stored for others to use
-{% endhint %}
 
 With that introduction lets talk about SSH.
 
@@ -92,7 +87,7 @@ SSH operates on TCP port 22 by default (though this can be changed if needed). T
 
 SSH provides multiple mechanisms for authenticating the server and the client. Two of the commonly used authentication mechanism are password based, and key based authentication. Although password based authentication is also secure, its advisable to use key based authentication instead.
 
-![](.gitbook/assets/ssh-howitworks.jpg)
+![](assets/ssh-howitworks.jpg)
 
 the connection is established by the SSH client connecting to the SSH server. The SSH client drives the connection setup process and uses public key cryptography to verify the identity of the SSH server. After the setup phase the SSH protocol uses strong symmetric encryption and hashing algorithms to ensure the privacy and integrity of the data that is exchanged between the client and server.
 
@@ -104,10 +99,7 @@ OpenSSH is a free, open source implementation of the SSH (Secure Shell) protocol
 
 All communications and user credentials using OpenSSH are encrypted, they are also protected from man in the middle attacks. If a third party tries to intercept our connection, OpenSSH detects it and informs us about that.
 
-{% hint style="success" %}
 We use Ubuntu16-1 as ssh server and Ubuntu16-2 as client.
-{% endhint %}
-
 #### /etc/ssh
 
 OpenSSH has two different sets of configuration files: one for client programs (ssh, scp, and sftp) and one for the server daemon (sshd).
@@ -159,9 +151,7 @@ Last login: Fri Mar 27 15:51:55 2020 from 192.168.52.133
 user1@ubuntu16-1:~$ 
 ```
 
-{% hint style="info" %}
 **What is fingerprint ?** a public key fingerprint is a short sequence of bytes used to identify a longer public key. Fingerprints are created by applying a cryptographic hash function to a public key. Since fingerprints are shorter than the keys they refer to, they can be used to simplify certain key management tasks.
-{% endhint %}
 
 now lets compare the keys in server and client:
 
@@ -186,7 +176,7 @@ user1@ubuntu16-2:~$ cat .ssh/known_hosts
 
 Its possible to omit entring user name and password and get connected to the ssh server using client public and private key.
 
-![](.gitbook/assets/ssh-keybasedauth.jpg)
+![](assets/ssh-keybasedauth.jpg)
 
 Now lets generate public and private keys for client and copy client public key to the server.
 
@@ -468,7 +458,7 @@ SSH tunneling is a method of transporting arbitrary networking data over an encr
 
 SSH is a standard for secure remote logins and file transfers over untrusted networks. It also provides a way to secure the data traffic of any given application using port forwarding, basically tunneling any TCP/IP port over SSH. This means that the application data traffic is directed to flow inside an encrypted SSH connection so that it cannot be eavesdropped or intercepted while it is in transit. SSH tunneling enables adding network security to legacy applications that do not natively support encryption.
 
-![](.gitbook/assets/ssh-tunneling.jpg)
+![](assets/ssh-tunneling.jpg)
 
 #### what is ssh port forwarding?
 
@@ -478,15 +468,15 @@ There are three types of SSH port forwarding:
 
 * **Local port forwarding** - connections from an SSH client are forwarded, via the SSH server, to a destination server.
 
-![](.gitbook/assets/ssh-portfwl1.jpg)
+![](assets/ssh-portfwl1.jpg)
 
-![](.gitbook/assets/ssh-portfwl2.jpg)
+![](assets/ssh-portfwl2.jpg)
 
 * **Remote port forwarding** - connections from an SSH server are forwarded, via the SSH client, to a destination server
 
-![](.gitbook/assets/ssh-portfwlr1.jpg)
+![](assets/ssh-portfwlr1.jpg)
 
-![](.gitbook/assets/ssh-portfwlr2.jpg)
+![](assets/ssh-portfwlr2.jpg)
 
 * **Dynamic port forwarding** - connections from various programs are forwarded, via the SSH client to an SSH server, and finally to several destination servers.
 
@@ -512,7 +502,7 @@ GnuPG (more commonly known as GPG) is an implementation of a standard known as P
 
 for demonstration, we use  two users on ubuntu16, user1 and user2.
 
-![](.gitbook/assets/securedata-gpgencrypt.jpg)
+![](assets/securedata-gpgencrypt.jpg)
 
 okey, lets login via user1 and start creating keypairs using `gpg --gen-key` command:
 
@@ -812,9 +802,6 @@ and that's all folks!
 
 .
 
-.
-
-.
 
 [https://www.ssl2buy.com/wiki/symmetric-vs-asymmetric-encryption-what-are-differences](https://www.ssl2buy.com/wiki/symmetric-vs-asymmetric-encryption-what-are-differences)
 

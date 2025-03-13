@@ -1,16 +1,14 @@
-# 107.2. Automate system administration tasks by scheduling jobs
+**Peso:** 4
 
-**Weight:** 4
+Descripción: Los candidatos deben poder usar cron o anacron para ejecutar trabajos a intervalos regulares y usar at para ejecutar trabajos en un momento específico.
 
-Description: Candidates should be able to use cron or anacron to run jobs at regular intervals and to use at to run jobs at a specific time.
+**Áreas de conocimiento clave:**
 
-**Key Knowledge Areas:**
+* Administrar trabajos cron y at
+* Configurar el acceso de los usuarios a cron y servicios at
+* Configurar anacron
 
-* Manage cron and at jobs
-* Configure user access to cron and at services
-* Configure anacron
-
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * /etc/cron.{d,daily,hourly,monthly,weekly}/
 * /etc/at.deny
@@ -26,21 +24,21 @@ Description: Candidates should be able to use cron or anacron to run jobs at reg
 * anacron
 * /etc/anacrontab
 
-Many system administration tasks must be done regularly, such as rotating log files, backing up files or databases, preparing reports, or installing system updates. In this lesson we will learn how to automate these kinds of jobs by setting up  scheduling for them
+Muchas tareas de administración del sistema deben realizarse con regularidad, como rotar archivos de registro, realizar copias de seguridad de archivos o bases de datos, preparar informes o instalar actualizaciones del sistema. En esta lección, aprenderemos a automatizar este tipo de trabajos configurando una programación para ellos.
 
-By scheduling :
+Al programar:
 
-* We can start a job for a time at which system usage is low
-* Errors will be reduced due to less manual interaction is needed.
-* We are  sure that  jobs  always run the same way
-* System administrators can sleep more!
+* Podemos iniciar un trabajo en un momento en el que el uso del sistema sea bajo.
+* Se reducirán los errores debido a que se necesita menos interacción manual.
+* Estamos seguros de que los trabajos siempre se ejecutan de la misma manera.
+* ¡Los administradores de sistemas pueden dormir más!
 
-### Run jobs at regular intervals <a href="run-jobs-at-regular-intervals" id="run-jobs-at-regular-intervals"></a>
+### Ejecutar trabajos a intervalos regulares <a href="run-jobs-at-regular-intervals" id="run-jobs-at-regular-intervals"></a>
 
-Linux systems have two facilities for scheduling jobs to run at regular intervals:
+Los sistemas Linux tienen dos funciones para programar trabajos para que se ejecuten a intervalos regulares:
 
-* The original `cron` facility is best suited to servers and systems that are continuously powered on.
-* The `anacron` (or anachronistic `cron`) facility is suited to systems such as desktops or laptops that can be asleep or running on battery power.
+* La función `cron` original es la más adecuada para servidores y sistemas que están encendidos continuamente.
+* La función `anacron` (o el anacrónico `cron`) es adecuada para sistemas como computadoras de escritorio o portátiles que pueden estar en modo de suspensión o funcionando con energía de la batería.
 
 | cron                                                 | anacron                                |
 | ---------------------------------------------------- | -------------------------------------- |
@@ -48,22 +46,21 @@ Linux systems have two facilities for scheduling jobs to run at regular interval
 | Granularity from one minute to one year              | Daily, weekly, and monthly granularity |
 | Job runs only if system is running at scheduled time | Job runs when system is next available |
 | Can be used by normal users                          | Needs root authority                   |
+### Programar trabajos periódicos con cron <a href="schedule-periodic-jobs-with-cron" id="schedule-periodic-jobs-with-cron"></a>
 
-### Schedule periodic jobs with cron <a href="schedule-periodic-jobs-with-cron" id="schedule-periodic-jobs-with-cron"></a>
+La función `cron` consta del demonio `cron` y un conjunto de tablas que describen qué trabajo se debe realizar y con qué frecuencia. El demonio `cron` generalmente lo inicia el proceso `init`, `upstart` o `systemd` al iniciar el sistema.
 
- The `cron` facility consists of the `cron` daemon and a set of tables that describe what work is to be done and with what frequency. The `cron` daemon is usually started by the `init`, `upstart`, or `systemd` process at system startup. 
+### Sintaxis y operadores del archivo crontab
 
-### crontab file syntax and Operators
+Crontab (tabla cron) es un archivo de texto que especifica la programación de los trabajos cron. El demonio `cron` se activa cada minuto y verifica cada crontab en busca de trabajos que se deben ejecutar.
 
-Crontab (cron table) is a text file that specifies the schedule of cron jobs. The `cron` daemon wakes up every minute and checks each crontab for jobs that need to run. 
+Hay dos tipos de archivos crontab. Los archivos crontab de usuario individual y los archivos crontab de todo el sistema.
 
- There are two types of crontab files.  The  individual user crontab files and  system-wide crontab files.
+#### Sintaxis y operadores de crontab
 
-#### crontab syntax and operators
+Cada línea del archivo crontab del usuario contiene seis campos separados por un espacio seguido del comando que se ejecutará.
 
-Each line in the user crontab file contains six fields separated by a space followed by the command to be run.
-
-```
+```bash
 * * * * * command(s)
 - - - - -
 | | | | |
@@ -74,54 +71,48 @@ Each line in the user crontab file contains six fields separated by a space foll
 ------------- Minute (0 - 59)
 ```
 
-* `*` -The asterisk operator means any value or always.
-* `,` -The comma operator allows you to specify a list of values for repetition. 
-* `-` -The hyphen operator allows you to specify a range of values. 
-* `/` -The slash operator allows you to specify values that will be repeated over a certain interval between them.
+* `*` - El operador asterisco significa cualquier valor o siempre.
+* `,` - El operador coma le permite especificar una lista de valores para la repetición.
+* `-` - El operador guion le permite especificar un rango de valores.
+* `/` - El operador barra le permite especificar valores que se repetirán en un cierto intervalo entre ellos.
 
-> Also if you have `@reboot` or `@daily` instead of time fields, the command will be run once after the reboot or daily.
+> Además, si tiene `@reboot` o `@daily` en lugar de campos de tiempo, el comando se ejecutará una vez después del reinicio o diariamente.
 
-Lets see some examples:
+Veamos algunos ejemplos:
 
 ```
 @reboot      ### on reboot
 
 50 13 * * *  ### 1:50 PM daily
-
 40 6 4 * *   ### 4th of every month at 6:40AM
-
 05 * * 1 0   ### 5 mintues past everyhour,each Sunday in January
-
 0 15 29 11 5 ### 3:00PM Every November 29th  that lands on a Friday
-
 1,5,10 * * * * # 1,5,10 mintues past every hour
-
 30 20 * * 1-5 ## weekdays at 8:20 PM
-
 */5 * * * *  ### ever 5 mintues
 ```
 
-## user specific crons
+## Crons específicos del usuario
 
 ### /var/spool/cron/
 
- Users crontab files are stored by the user’s name, and their location varies by operating systems. In Red Hat based system such as CentOS, crontab files are stored in the `/var/spool/cron` directory while on Debian and Ubuntu files are stored in the `/var/spool/cron/crontabs` directory.
+Los archivos crontab de los usuarios se almacenan por nombre de usuario y su ubicación varía según el sistema operativo. En sistemas basados ​​en Red Hat como CentOS, los archivos crontab se almacenan en el directorio `/var/spool/cron` mientras que en Debian y Ubuntu los archivos se almacenan en el directorio `/var/spool/cron/crontabs`.
 
-Although you can edit the user crontab files manually, it is recommended to use the `crontab` command.
+Aunque puede editar los archivos crontab del usuario manualmente, se recomienda utilizar el comando `crontab`.
 
-### crontab command
+### Comando crontab
 
-The crontab command allows you to install or open a crontab file for editing.
+El comando crontab le permite instalar o abrir un archivo crontab para editarlo.
 
-You can use the crontab command to view, add, remove, or modify cron jobs using the following options:
+Puede utilizar el comando crontab para ver, agregar, eliminar o modificar trabajos cron utilizando las siguientes opciones:
 
-* `crontab -e` : Edit crontab file, or create one if it doesn’t already exist.
-* `crontab -l` : Display crontab file contents.
-* `crontab -r` : Remove your current crontab file.
-* `crontab -i` :Remove your current crontab file with a prompt before removal.
-* `crontab -u <username>` : Edit other user crontab file. Requires system administrator privileges.
+* `crontab -e` : Editar archivo crontab o crear uno si aún no existe.
+* `crontab -l` : Mostrar el contenido del archivo crontab.
+* `crontab -r` : elimina el archivo crontab actual.
+* `crontab -i` : elimina el archivo crontab actual y muestra un mensaje antes de eliminarlo.
+* `crontab -u <nombre de usuario>` : edita el archivo crontab de otro usuario. Requiere privilegios de administrador del sistema.
 
-```
+```bash
 user1@ubuntu16-1:~$ crontab -e
 no crontab for user1 - using an empty one
 
@@ -134,7 +125,7 @@ Select an editor.  To change later, run 'select-editor'.
 Choose 1-4 [2]: 3
 ```
 
-The crontab  -e command opens the crontab file using the editor specified by the `VISUAL` or `EDITOR` environment variables.
+El comando crontab -e abre el archivo crontab usando el editor especificado por las variables de entorno `VISUAL` o `EDITOR`.
 
 ```
 # Edit this file to introduce tasks to be run by cron.
@@ -163,43 +154,43 @@ The crontab  -e command opens the crontab file using the editor specified by the
 "/tmp/crontab.f5VKYq/crontab" 22L, 888C                       1,1           All
 ```
 
-as an example add bellow line to above and it would send and email every 5 mintues:
+Como ejemplo, agregue la siguiente línea a la anterior y se enviará un correo electrónico cada 5 minutos:
 
 ```
 5 * * * * echo "Hello" | mail -s "Cron Test" user1@localhost.com
 ```
 
-crontab -e also check the syntax before exiting the file , which is really helpful.
+crontab -e también verifica la sintaxis antes de salir del archivo, lo cual es realmente útil.
 
-crontab -l would show the above contents. Lets check if user crontab file has been created:
+crontab -l mostraría el contenido anterior. Verifiquemos si se creó el archivo crontab del usuario:
 
-```
+```bash
 root@ubuntu16-1:/var/spool/cron/crontabs# ls -l
 total 4
 -rw------- 1 user1 crontab 1154 Feb 15 05:07 user1
 ```
 
-## system wide cron
+## cron de todo el sistema
 
- In addition to the user crontab files in /var/spool/cron, the `cron` daemon also checks /etc/crontab and any crontabs in the /etc/cron.d directory. 
+Además de los archivos crontab del usuario en /var/spool/cron, el demonio `cron` también revisa /etc/crontab y cualquier crontab en el directorio /etc/cron.d.
 
 ### /etc/crontab , /etc/cron.d
 
- `/etc/crontab` and the files inside the `/etc/cron.d` directory are system-wide **crontab** files that can be edited only by the system administrators.
+`/etc/crontab` y los archivos dentro del directorio `/etc/cron.d` son archivos **crontab** de todo el sistema que solo pueden ser editados por los administradores del sistema.
 
->  /etc/crontab is  updated by direct editing. You cannot use the `crontab` command to update file files or files in the /etc/cron.d directory.
+> /etc/crontab se actualiza mediante edición directa. No puede usar el comando `crontab` para actualizar archivos o archivos en el directorio /etc/cron.d.
 
-#### System-wide Crontab Files <a href="system-wide-crontab-files" id="system-wide-crontab-files"></a>
+#### Archivos crontab de todo el sistema <a href="system-wide-crontab-files" id="system-wide-crontab-files"></a>
 
-The syntax of system-wide crontab files is slightly different than user crontabs. It contains an additional mandatory user field that specifies which user will run the cron job.
+La sintaxis de los archivos crontab de todo el sistema es ligeramente diferente a la de los crontabs de usuario. Contiene un campo de usuario obligatorio adicional que especifica qué usuario ejecutará el trabajo cron.
 
 ```
 * * * * * <username> command(s)
 ```
 
-This file should be edited with an editor directly and we can mention which user runs command(s).
+Este archivo debe editarse directamente con un editor y podemos mencionar qué usuario ejecuta el/los comando(s).
 
-```
+```bash
 # /etc/crontab: system-wide crontab
 # Unlike any other crontab you don't have to run the `crontab'
 # command to install the new version when you edit this file
@@ -223,9 +214,9 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 ### /etc/cron.{daily,hourly,monthly,weekly}/
 
-In most Linux distributions you can also put **scripts** inside the `/etc/cron.{hourly,daily,weekly,monthly}` directories and the scripts will be executed every `hour/day/week/month`.
+En la mayoría de las distribuciones de Linux también puedes poner **scripts** dentro de los directorios `/etc/cron.{hourly,daily,weekly,monthly}` y los scripts se ejecutarán cada `hora/día/semana/mes`.
 
-```
+```bash
 root@ubuntu16-1:~# tree /etc/cron*
 /etc/cron.d
 ├── anacron
@@ -262,9 +253,9 @@ root@ubuntu16-1:~# tree /etc/cron*
 0 directories, 25 files
 ```
 
-as an example lets take look at one of them:
+A modo de ejemplo, veamos uno de ellos:
 
-```
+```bash
 root@ubuntu16-1:~# cat /etc/cron.daily/passwd 
 #!/bin/sh
 
@@ -279,15 +270,15 @@ done
 
 ### anacron
 
-The cron facility works well for systems that run continuously.If the system is down when the cron should run a task, that cron job wont run till the next occurrence! But anacron creates the timestamp each time a daily, weekly or monthly job runs. 
+La función cron funciona bien para sistemas que se ejecutan continuamente. Si el sistema está inactivo cuando el cron debería ejecutar una tarea, ese trabajo cron no se ejecutará hasta la próxima ocurrencia. Pero anacron crea la marca de tiempo cada vez que se ejecuta un trabajo diario, semanal o mensual.
 
-> Note: anacron checks the timestamps at BOOT TIME and does not handle jobs that must run hourly or every minute.
+> Nota: anacron verifica las marcas de tiempo en el MOMENTO DEL ARRANQUE y no maneja trabajos que deben ejecutarse cada hora o cada minuto.
 
 > ### /etc/anacron
 
- The table of jobs for `anacron` is stored in /etc/anacrontab, which has a slightly different format from /etc/crontab.
+La tabla de trabajos para `anacron` se almacena en /etc/anacrontab, que tiene un formato ligeramente diferente de /etc/crontab.
 
-```
+```bash
 root@ubuntu16-1:/# cat /etc/anacrontab 
 # /etc/anacrontab: configuration file for anacron
 
@@ -304,26 +295,22 @@ LOGNAME=root
 @monthly	15	cron.monthly	run-parts --report /etc/cron.monthly
 ```
 
->  just like/etc/crontab , /etc/anacrontab is updated by direct editing. 
+> al igual que /etc/crontab, /etc/anacrontab se actualiza mediante edición directa.
+#### Formato de Anacrontab
 
-{% hint style="info" %}
-#### Anacrontab Format
-
-```
+```bash
 period   delay   job-identifier   command
 ```
 
-* ** period in days** : specifies the frequency of execution of a job in  _N_ days.
-*  **delay in minutes**: number of minutes anacron should wait before executing the job after reboot.
-*  **job-identifier :**It is the name for the job’s timestamp file. It should be unique for each job. This will be available as a file under the /var/spool/anacron directory.
-*  **command**: specifies the command to execute. 
-{% endhint %}
-
+* ** período en días**: especifica la frecuencia de ejecución de un trabajo en _N_ días.
+* ** retraso en minutos**: cantidad de minutos que anacron debe esperar antes de ejecutar el trabajo después del reinicio.
+* ** identificador de trabajo: ** es el nombre del archivo de marca de tiempo del trabajo. Debe ser único para cada trabajo. Este estará disponible como un archivo en el directorio /var/spool/anacron.
+* ** comando**: especifica el comando a ejecutar.
 ### /var/spool/anacron
 
- `anacron` keeps a time stamp file in /var/spool/anacron for each job to record when the job runs. When `anacron` runs, it checks to see if the required number of days has passed since a job last ran and runs the job if necessary.
+`anacron` mantiene un archivo de marca de tiempo en /var/spool/anacron para cada trabajo para registrar cuándo se ejecuta el trabajo. Cuando `anacron` se ejecuta, verifica si ha transcurrido la cantidad de días requerida desde la última ejecución de un trabajo y ejecuta el trabajo si es necesario.
 
-```
+```bash
 root@ubuntu16-1:/# ls -l /var/spool/anacron/
 total 12
 -rw------- 1 root root 9 Feb 15 07:35 cron.daily
@@ -331,26 +318,26 @@ total 12
 -rw------- 1 root root 9 Feb 10 00:46 cron.weekly
 ```
 
-This file will contain a single line that indicates the last time when this job was executed.
+Este archivo contendrá una sola línea que indica la última vez que se ejecutó este trabajo.
 
-```
+```bash
 root@ubuntu16-1:/# cat /var/spool/anacron/cron.daily 
 20200215
 ```
 
 ### at
 
- Sometimes you need to run a job at a future time just once, rather than regularly. For this purpose you use the `at` command. (ubuntu: `apt install at`)
+A veces, es necesario ejecutar un trabajo en un momento futuro solo una vez, en lugar de hacerlo con regularidad. Para ello, se utiliza el comando `at`. (ubuntu: `apt install at`)
 
- A typical **at** command sequence looks like this
+Una secuencia de comandos **at** típica se ve así
 
-```
+```bash
 at 5:45
 ```
 
-By running at command  It then places you at a special prompt, where you can type in the command (or series of commands) to be run at the scheduled time. When you're done, press **Control-D** on a new line, and your command will be placed in the queue.
+Al ejecutar el comando at, se lo coloca en un mensaje especial, donde puede escribir el comando (o la serie de comandos) que se ejecutará en el momento programado. Cuando haya terminado, presione **Control-D** en una nueva línea y su comando se colocará en la cola.
 
-```
+```bash
 user1@ubuntu16-1:~$ at 5:45
 warning: commands will be executed using /bin/sh
 at> touch BlaHBlaH 
@@ -361,11 +348,11 @@ user1@ubuntu16-1:~$ ls -ltrh | grep -i blah
 -rw-rw-r-- 1 user1 user1    0 Feb 15 05:45 BlaHBlaH
 ```
 
-> warning: commands will be executed using /bin/sh
+> Advertencia: los comandos se ejecutarán mediante /bin/sh
 
-Some other examples of at command:
+Otros ejemplos del comando at:
 
-```
+```bash
   Example                  Schedule Task at
 -----------                -------------------
 at 10:00 AM                at coming 10:00 AM
@@ -382,11 +369,11 @@ at now + 1 month           to execute just after 1 month
 at now + 1 year            to execute just after 1 year
 ```
 
-at command has other members in its family:
+El comando at tiene otros miembros en su familia:
 
 ### atq
 
-lists the pending jobs of users
+enumera los trabajos pendientes de los usuarios
 
 ```
 user1@ubuntu16-1:~$ at 06:20
@@ -407,7 +394,7 @@ user1@ubuntu16-1:~$ atq
 
 ### atrm 
 
- delete jobs by their job number
+Eliminar trabajos por su número de trabajo
 
 ```
 user1@ubuntu16-1:~$ atrm 5
@@ -415,27 +402,24 @@ user1@ubuntu16-1:~$ atq
 4	Sat Feb 15 06:20:00 2020 a user1
 ```
 
-  atq command only shows the list of jobs but if you want to check what script/commands are scheduled with that task use `at -c JobNum` command and see the last line.
+El comando atq solo muestra la lista de trabajos, pero si desea verificar qué script/comandos están programados con esa tarea, use el comando `at -c JobNum` y vea la última línea.
 
-{% hint style="info" %}
-both cron and are system services.
-{% endhint %}
+Tanto cron como son servicios del sistema.
+## Configurar el acceso de los usuarios a la programación de trabajos
 
-## Configure user access to job scheduling
+Podemos controlar el acceso al comando crontab usando dos archivos en el directorio /etc/cron.d: cron.deny y cron.allow. Estos archivos permiten que solo usuarios específicos realicen tareas del comando crontab, como crear, editar, mostrar o eliminar sus propios archivos crontab.
 
-We can control access to the crontab command by using two files in the /etc/cron.d directory: cron.deny and cron.allow. These files permit only specified users to perform crontab command tasks such as creating, editing, displaying, or removing their own crontab files.
-
-> The cron.deny and cron.allow files consist of a list of user names, one user name per line.
+> Los archivos cron.deny y cron.allow consisten en una lista de nombres de usuario, un nombre de usuario por línea.
 
 ### /etc/cron.allow , /etc/cron.deny
 
-These access control files work together as follows:
+Estos archivos de control de acceso funcionan juntos de la siguiente manera:
 
-* If cron.allow exists, only the users who are listed in this file can create, edit, display, or remove crontab files.
-* If cron.allow does not exist, all users can submit crontab files, except for users who are listed in cron.deny.
-* If neither cron.allow nor cron.deny exists, superuser privileges are required to run the crontab command.
+* Si existe cron.allow, solo los usuarios que se enumeran en este archivo pueden crear, editar, mostrar o eliminar archivos crontab.
+* Si no existe cron.allow, todos los usuarios pueden enviar archivos crontab, excepto los usuarios que se enumeran en cron.deny.
+* Si no existe cron.allow ni cron.deny, se requieren privilegios de superusuario para ejecutar el comando crontab.
 
-Superuser privileges are required to edit or create the cron.deny and cron.allow files.
+Se requieren privilegios de superusuario para editar o crear los archivos cron.deny y cron.allow.
 
 ```
 root@ubuntu16-1:~# cat /etc/cron.deny
@@ -444,43 +428,21 @@ user2
 
 ###  /etc/at.allow , /etc/at.deny
 
-The corresponding /etc/at.allow and /etc/at.deny files have similar effects for the `at` facility.
+Los archivos /etc/at.allow y /etc/at.deny correspondientes tienen efectos similares para la función `at`
+### Variables de crontab <a href="crontab-variables" id="crontab-variables"></a>
 
-.
+El demonio cron establece automáticamente varias variables de entorno.
 
-.
+* La ruta predeterminada está establecida en `PATH=/usr/bin:/bin`. Si el comando que está llamando está presente en la ruta especificada de cron, puede utilizar la ruta absoluta al comando o cambiar la variable `$PATH` de cron. No puede agregar implícitamente `:$PATH` como lo haría con un script normal.
+* El shell predeterminado está establecido en `/bin/sh`. Puede establecer un shell diferente cambiando la variable `SHELL`.
+* Cron invoca el comando desde el directorio de inicio del usuario. La variable `HOME` puede ser anulada por las configuraciones en el crontab.
+* La notificación por correo electrónico se envía al propietario del crontab. Para sobrescribir el comportamiento predeterminado, puede utilizar la variable de entorno `MAILTO` con una lista (separada por comas) de todas las direcciones de correo electrónico que desea que reciban las notificaciones por correo electrónico. Si `MAILTO` está definido pero está vacío (`MAILTO=""`), no se envía ningún correo.
 
-.
-
-{% hint style="info" %}
-### Crontab Variables <a href="crontab-variables" id="crontab-variables"></a>
-
-The cron daemon automatically sets several environment variables.
-
-* The default path is set to `PATH=/usr/bin:/bin`. If the command you are calling is present in the cron specified path, you can either use the absolute path to the command or change the cron `$PATH` variable. You can’t implicitly append `:$PATH` as you would do with a regular script.
-* The default shell is set to `/bin/sh`. You can set a different shell by changing the `SHELL` variable.
-* Cron invokes the command from the user’s home directory. The `HOME` variable can be overridden by settings in the crontab.
-* The email notification is sent to the owner of the crontab. To overwrite the default behavior, you can use the `MAILTO` environment variable with a list (comma separated) of all the email addresses you want to receive the email notifications. If `MAILTO` is defined but empty (`MAILTO=""`), no mail is sent.
-{% endhint %}
-
-.
-
-.
-
-[https://developer.ibm.com/tutorials/l-lpic1-107-2/](https://developer.ibm.com/tutorials/l-lpic1-107-2/)
-
-[https://linuxize.com/post/scheduling-cron-jobs-with-crontab/](https://linuxize.com/post/scheduling-cron-jobs-with-crontab/)
-
-[https://jadi.gitbooks.io/lpic1/content/1072\_automate_system_administration_tasks_by_scheduling_jobs.html](https://jadi.gitbooks.io/lpic1/content/1072\_automate_system_administration_tasks_by_scheduling_jobs.html)
-
-[https://www.thegeekdiary.com/centos-rhel-anacron-basics-what-is-anacron-and-how-to-configure-it/](https://www.thegeekdiary.com/centos-rhel-anacron-basics-what-is-anacron-and-how-to-configure-it/)
-
-[https://www.thegeekstuff.com/2011/05/anacron-examples/](https://www.thegeekstuff.com/2011/05/anacron-examples/)
-
-[https://www.computerhope.com/unix/uat.htm](https://www.computerhope.com/unix/uat.htm)
-
-[https://tecadmin.net/one-time-task-scheduling-using-at-commad-in-linux/](https://tecadmin.net/one-time-task-scheduling-using-at-commad-in-linux/)
-
-[https://docs.oracle.com/cd/E19253-01/817-0403/sysrescron-23/index.html](https://docs.oracle.com/cd/E19253-01/817-0403/sysrescron-23/index.html)
-
-.
+- [https://developer.ibm.com/tutorials/l-lpic1-107-2/](https://developer.ibm.com/tutorials/l-lpic1-107-2/)
+- [https://linuxize.com/post/scheduling-cron-jobs-with-crontab/](https://linuxize.com/post/scheduling-cron-jobs-with-crontab/)
+- [https://jadi.gitbooks.io/lpic1/content/1072\_automate_system_administration_tasks_by_scheduling_jobs.html](https://jadi.gitbooks.io/lpic1/content/1072\_automate_system_administration_tasks_by_scheduling_jobs.html)
+- [https://www.thegeekdiary.com/centos-rhel-anacron-basics-what-is-anacron-and-how-to-configure-it/](https://www.thegeekdiary.com/centos-rhel-anacron-basics-what-is-anacron-and-how-to-configure-it/)
+- [https://www.thegeekstuff.com/2011/05/anacron-examples/](https://www.thegeekstuff.com/2011/05/anacron-examples/)
+- [https://www.computerhope.com/unix/uat.htm](https://www.computerhope.com/unix/uat.htm)
+- [https://tecadmin.net/one-time-task-scheduling-using-at-commad-in-linux/](https://tecadmin.net/one-time-task-scheduling-using-at-commad-in-linux/)
+- [https://docs.oracle.com/cd/E19253-01/817-0403/sysrescron-23/index.html](https://docs.oracle.com/cd/E19253-01/817-0403/sysrescron-23/index.html)

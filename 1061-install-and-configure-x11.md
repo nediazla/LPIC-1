@@ -7,18 +7,18 @@
 
 **Áreas de conocimiento clave:**
 
-* Verificar que la tarjeta de vídeo y el monitor sean compatibles con un servidor X
-* Conocimiento del servidor de fuentes X
-* Comprensión y conocimiento básicos del archivo de configuración de X Window
+- Verificar que la tarjeta de vídeo y el monitor sean compatibles con un servidor X
+- Conocimiento del servidor de fuentes X
+- Comprensión y conocimiento básicos del archivo de configuración de X Window
 
 **Términos y utilidades:**
 
-* /etc/X11/xorg.conf
-* xhost
-* DISPLAY
-* xwininfo
-* xdpyinfo
-* X
+- /etc/X11/xorg.conf
+- xhost
+- DISPLAY
+- xwininfo
+- xdpyinfo
+- X
 
 En la época de las computadoras muy caras que se compartían entre muchos usuarios, las terminales X proporcionaban una forma económica para que muchos usuarios compartieran los recursos de una sola computadora. Hoy en día, las computadoras se han vuelto tan poderosas que nadie piensa en compartir recursos, pero hay algunas lecciones de historia que conviene conocer.
 
@@ -61,7 +61,7 @@ EndSection
 
 * Módulo - qué módulos cargar
 
-```
+```bash
 Section "Module"
 	Load	"bitmap"
 	Load	"ddc"
@@ -113,7 +113,7 @@ Estas secciones de InputDevice están configuradas para cualquier dispositivo de
 
 * Monitor: descripción del dispositivo de visualización
 
-```
+```bash
 Section "Monitor"
 	Identifier	"Generic Monitor"
 	Option		"DPMS"
@@ -176,7 +176,7 @@ EndSection
 
 * ServerLayout: vincula una o más pantallas con uno o más dispositivos de entrada
 
-```
+```bash
 Section "ServerLayout"
 	Identifier	"DefaultLayout"
 	Screen		"Default Screen"
@@ -264,7 +264,7 @@ El comando principal para ejecutar estas actividades de red es xhost, el program
 
 * xhost sin opción nos indica el estado del acceso:
 
-```
+```bash
 root@ubuntu16-1:~# xhost
 access control enabled, only authorized clients can connect
 SI:localuser:user1

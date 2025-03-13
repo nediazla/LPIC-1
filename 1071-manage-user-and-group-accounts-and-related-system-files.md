@@ -1,38 +1,37 @@
-## **107.1 Manage user and group accounts and related system files**
 
-**Weight:** 5
+**Peso:** 5
 
-**Description: **Candidates should be able to add, remove, suspend and change user accounts.
+**Descripción:** Los candidatos deben ser capaces de agregar, eliminar, suspender y cambiar cuentas de usuario.
 
-**Key Knowledge Areas:**
+**Áreas clave de conocimiento:**
 
-* Add, modify and remove users and groups
-* Manage user/group info in password/group databases
-* Create and manage special purpose and limited accounts
+- Agregar, modificar y eliminar usuarios y grupos
+- Gestionar la información de usuarios/grupos en las bases de datos de contraseñas/grupos
+- Crear y gestionar cuentas de propósito especial y limitadas
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
-* /etc/passwd
-* /etc/shadow
-* /etc/group
-* /etc/skel/
-* chage
-* getent
-* groupadd
-* groupdel
-* groupmod
-* passwd
-* useradd
-* userdel
-* usermod
+- /etc/passwd
+- /etc/shadow
+- /etc/group
+- /etc/skel/
+- chage
+- getent
+- groupadd
+- groupdel
+- groupmod
+- passwd
+- useradd
+- userdel
+- usermod
 
-## Changing password
+## Cambio de contraseña
 
 ### passwd
 
-The passwd command changes passwords for user accounts. A normal user can only change the password for their own account, but the superuser can change the password for any account.
+El comando `passwd` cambia las contraseñas de las cuentas de usuario. Un usuario normal solo puede cambiar la contraseña de su propia cuenta, pero el superusuario puede cambiar la contraseña de cualquier cuenta.
 
-```
+```bash
 user1@ubuntu16-1:~$ passwd 
 Changing password for user1.
 (current) UNIX password: 
@@ -41,11 +40,11 @@ Retype new UNIX password:
 passwd: password updated successfully
 ```
 
-1. Before a normal user can change their own password, they must first enter their current password for verification. (The superuser can bypass this step when changing another user's password.)
-2. After the current password has been verified, **passwd** checks to see if the user is allowed to change their password at this time or not. Then user is then prompted twice.
-3. Next, the password is tested for complexity.passwords should consist of at least 6 characters.
+1. Antes de que un usuario normal pueda cambiar su propia contraseña, debe ingresar primero su contraseña actual para su verificación. (El superusuario puede omitir este paso al cambiar la contraseña de otro usuario).
+2. Después de que la contraseña actual haya sido verificada, **passwd** verifica si al usuario se le permite cambiar su contraseña en ese momento o no. Luego, el usuario será solicitado a ingresar la nueva contraseña dos veces.
+3. A continuación, la contraseña se prueba para verificar su complejidad. Las contraseñas deben consistir de al menos 6 caracteres.
 
-The root user can change any users password to anything (weak passwords) without providing their current password:
+El usuario root puede cambiar la contraseña de cualquier usuario a cualquier valor (contraseñas débiles) sin proporcionar su contraseña actual.
 
 ```
 root@ubuntu16-1:~# passwd user1
@@ -54,73 +53,71 @@ Retype new UNIX password:
 passwd: password updated successfully
 ```
 
->  Groups can also have passwords, which you set with the `gpasswd` command, but it is not used at all!
+> Los grupos también pueden tener contraseñas, las cuales se configuran con el comando `gpasswd`, ¡pero no se utilizan en absoluto!
 
-## Users and Groups
+## Usuarios y Grupos
 
-We have  learned  that Linux is a multiuser system.Recall that we can log in as one user and become another user by using the su or sudo commands. 
+Hemos aprendido que Linux es un sistema multiusuario. Recuerda que podemos iniciar sesión como un usuario y convertirnos en otro usuario utilizando los comandos `su` o `sudo`.
 
-Linux also has the concept of groups . 
+Linux también tiene el concepto de grupos.
 
-* each user belongs to one primary group and possibly to additional groups. 
-* Each file belongs to one user and one group
+- Cada usuario pertenece a un grupo primario y posiblemente a grupos adicionales.
+- Cada archivo pertenece a un usuario y un grupo.
 
-We learn how to create, delete, and manage users and groups.
+Aprendemos cómo crear, eliminar y gestionar usuarios y grupos.
 
-## Managing users 
+## Gestión de usuarios
 
 ### useradd
 
- We add a user to a Linux system with the `useradd` command.
+Añadimos un usuario a un sistema Linux con el comando `useradd`.
 
-```
+```bash
  useradd <options> <username_or_login>
 ```
 
-| switch | description                                  |
-| ------ | -------------------------------------------- |
-| -d     | home directory of the new account            |
-| -m     | create the user's home directory             |
-| -s     | login shell of the new account               |
-| -G     | add to Additional Groups                     |
-| -c     | comment, most of the time user's actual name |
+| switch | descripción                                         |
+| ------ | --------------------------------------------------- |
+| -d     | directorio home de la nueva cuenta                  |
+| -m     | crear el directorio home del usuario                |
+| -s     | shell de inicio de sesión de la nueva cuenta        |
+| -G     | añadir a grupos adicionales                         |
+| -c     | comentario, generalmente el nombre real del usuario |
 
-In most distributions  useradd creates home directory for the new user but we can make sure using -m switch. example(ubunru 16):
+En la mayoría de las distribuciones, `useradd` crea el directorio home para el nuevo usuario, pero podemos asegurarnos de ello utilizando el switch `-m`. Ejemplo (Ubuntu 16):
 
-```
+```bash
 root@ubuntu16-1:~# useradd -m -d /home/user3 -c "Dear user3" -s /bin/bash user3
 ```
 
 ### /etc/skel
 
-{% hint style="info" %}
-#### The home directory skeleton
+#### El skel del directorio home
 
-When you create a new user and a new home directory is created, the directory is populated with several files and subdirectories that, by default, are copied from /etc/skel.
+Cuando creas un nuevo usuario y se crea un nuevo directorio home, el directorio se llena con varios archivos y subdirectorios que, por defecto, se copian desde /etc/skel.
 
 ```
 root@ubuntu16-1:~# ls -a /etc/skel/
 .  ..  .bash_logout  .bashrc  examples.desktop  .profile
 ```
-{% endhint %}
 
-### usermod <a href="the-home-directory-skeleton" id="the-home-directory-skeleton"></a>
+### usermod
 
- We can use the `usermod` command to modify a user account. we can use most of the options that you use with `useradd`, except that you cannot create or populate a new home directory for the user.
+Podemos usar el comando `usermod` para modificar una cuenta de usuario. Podemos usar la mayoría de las opciones que se utilizan con `useradd`, excepto que no se puede crear ni poblar un nuevo directorio home para el usuario.
 
-```
+```bash
 usermod <options> <username_or_login>
 ```
 
-| switch | description                                                                                 |
-| ------ | ------------------------------------------------------------------------------------------- |
-| -L     | lock the user account                                                                       |
-| -U     | unlock the user account                                                                     |
-| -g     | force use GROUP as new primary group                                                        |
-| -G     | new list of Additional GROUPS ( user will be  removed from all previous Additional groups ) |
-| -aG    | append the user to the Additional  GROUPS(without removing him/her from other groups)       |
+| switch | descripción                                                                                              |
+| ------ | -------------------------------------------------------------------------------------------------------- |
+| -L     | bloquear la cuenta de usuario                                                                            |
+| -U     | desbloquear la cuenta de usuario                                                                         |
+| -g     | forzar el uso de GROUP como el nuevo grupo primario                                                      |
+| -G     | nueva lista de grupos adicionales (el usuario será eliminado de todos los grupos adicionales anteriores) |
+| -aG    | agregar al usuario a los grupos adicionales (sin eliminarlo de otros grupos)                             |
 
-```
+```bash
 root@ubuntu16-1:~# id user3
 uid=1003(user3) gid=1003(user3) groups=1003(user3)
 
@@ -141,44 +138,47 @@ root@ubuntu16-1:~# usermod -g user3 -G user3 user3
 root@ubuntu16-1:~# id user3
 uid=1003(user3) gid=1003(user3) groups=1003(user3)
 ```
-
 ### userdel
 
- We can delete a user with the `userdel` command.
+Podemos eliminar un usuario con el comando `userdel`.
 
+```bash
+userdel <opciones> <nombre_de_usuario_o_login>
 ```
-userdel <options> <username_or_login>
-```
 
-userdel by default does not remove user's home directory.
+Por defecto, `userdel` no elimina el directorio home del usuario.
 
-| switch | description                          |
-| ------ | ------------------------------------ |
-| -f     | force removal of files               |
-| -r     | remove home directory and mail spool |
+|opción|descripción|
+|---|---|
+|-f|eliminar forzosamente los archivos|
+|-r|eliminar el directorio home y el spool de correo|
 
-```
+Ejemplo:
+
+```bash
 root@ubuntu16-1:~# userdel -f -r user3
 userdel: user3 mail spool (/var/mail/user3) not found
 ```
 
 ### Managing Groups
 
- Similarly, we can add or delete groups with the `groupadd` and `groupdel` commands.
+De manera similar, podemos agregar o eliminar grupos con los comandos `groupadd` y `groupdel`.
+### groupadd
 
-### groupadd 
+El comando `groupadd` se usa para crear un nuevo grupo en el sistema.
 
+```bash
+groupadd [opciones] grupo
 ```
-groupadd [options] group
-```
 
-| switch | description                                                                             |
-| ------ | --------------------------------------------------------------------------------------- |
-| -g     | use GID for the new group                                                               |
-| -f     | exit successfully if the group already exists, and cancel -g if the GID is already used |
-| -p     | use this encrypted password for the new group                                           |
+|opción|descripción|
+|---|---|
+|-g|especificar el GID para el nuevo grupo|
+|-f|salir exitosamente si el grupo ya existe, y cancelar la opción `-g` si el GID ya está en uso|
+|-p|usar esta contraseña cifrada para el nuevo grupo|
 
-```
+
+```bash
 root@ubuntu16-1:~# groupadd -g 666  group1
 root@ubuntu16-1:~# groupadd -g 666  group1
 groupadd: group 'group1' already exists
@@ -192,47 +192,47 @@ root@ubuntu16-1:~# echo $?
 
 ### groupmod
 
- When you need to modify group information, use the `groupmod` command.
+Cuando necesitas modificar la información de un grupo, puedes usar el comando `groupmod`.
 
-```
-groupmod [options] GROUP
+```bash
+groupmod [opciones] GRUPO
 ```
 
-| switch | description           |
-| ------ | --------------------- |
-| -n     | change the group name |
-| -g     | change the group ID   |
+|opción|descripción|
+|---|---|
+|-n|cambiar el nombre del grupo|
+|-g|cambiar el ID del grupo|
 
-```
+Ejemplos:
+
+```bash
 root@ubuntu16-1:~# groupmod -n newgroup1 group1
 root@ubuntu16-1:~# groupmod -g 888 newgroup1 
 ```
 
 ### groupdel
 
-  In fact, the `groupdel` command to delete a group requires only the group name; it has no options. You cannot delete any group that is the primary group of a user.
+El comando `groupdel` se usa para eliminar un grupo y solo requiere el nombre del grupo; no tiene opciones adicionales. No se puede eliminar un grupo que sea el grupo primario de un usuario.
 
-```
+```bash
 root@ubuntu16-1:~# groupdel newgroup1
 ```
 
-> Note: If root deletes a group with members, people wont be deleted! They will just wont be the members of that group anymore.
+> Nota: Si el root elimina un grupo con miembros, las personas no serán eliminadas. Simplemente dejarán de ser miembros de ese grupo.
 
+Cuando ejecutamos el comando `useradd` en la terminal de Linux, realiza las siguientes acciones principales:
 
+1. Edita los archivos `/etc/passwd`, `/etc/shadow`, `/etc/group` y `/etc/gshadow` para la nueva cuenta de usuario.
+2. Crea y llena el directorio home para el nuevo usuario.
+3. Establece los permisos y la propiedad del directorio home.
 
-When we run ‘**useradd**‘ command in Linux terminal, it performs following major things:
-
-1. It edits /etc/passwd, /etc/shadow, /etc/group and /etc/gshadow files for the newly created User account.
-2. Creates and populate a home directory for the new user.
-3. Sets permissions and ownerships to home directory.
-
-What are those files?
+### ¿Qué son esos archivos?
 
 ### /etc/passwd
 
- /etc/passwd is the _password_ file containing basic information about users.
+El archivo `/etc/passwd` es el archivo de _contraseñas_ que contiene información básica sobre los usuarios.
 
-```
+```bash
 root@ubuntu16-1:~# tail /etc/passwd
 pulse:x:117:124:PulseAudio daemon,,,:/var/run/pulse:/bin/false
 rtkit:x:118:126:RealtimeKit,,,:/proc:/bin/false
@@ -246,41 +246,54 @@ user2:x:1002:1002::/home/user2:
 postfix:x:123:130::/var/spool/postfix:/bin/false
 ```
 
-it has one line for each user in the system. the format of it is :
+El archivo `/etc/passwd` tiene una línea para cada usuario en el sistema. El formato de cada línea es el siguiente:
+
+```bash
+username:password:UID:GID:comment:home_directory:shell
+```
+
+- **username**: El nombre del usuario.
+- **password**: La contraseña cifrada (o **x**, indicando que la contraseña está en el archivo `/etc/shadow`).
+- **UID (User ID)**: El ID único del usuario en el sistema.
+- **GID (Group ID)**: El ID del grupo primario del usuario.
+- **comment**: Información adicional sobre el usuario, como el nombre completo o una descripción.
+- **home_directory**: El directorio home del usuario.
+- **shell**: El shell por defecto del usuario (por ejemplo, `/bin/bash`, `/bin/false`, etc.).
+
+Este archivo es esencial para el funcionamiento de la gestión de usuarios en Linux, ya que proporciona la información básica sobre cada cuenta de usuario del sistema.
 
 ![](assets/usergroup-passwd.jpg)
 
-1. **Username**:  should be between 1 and 32 characters 
-2. **Password **_(will be discussed)_
-3. **User ID (UID)**: Each user must be assigned a user ID (UID). UID 0 (zero) is reserved for root and UIDs 1-99 are reserved for other predefined accounts. Further UID 100-999 are reserved by system for administrative and system accounts/groups. 
-4. **Group ID (GID)**: The primary group ID (stored in /etc/group file) 
-5. **The comment field**. It allow you to add extra information about the users such as user’s full name, phone number etc. This field use by finger command. 
-6. **Home directory**
-7. **Command/shell**: The absolute path of a command or shell (/bin/bash). Typically, this is a shell. It does not have to be a shell.
+1. **Username**: Debe tener entre 1 y 32 caracteres.
+2. **Password** _(será discutido más adelante)_.
+3. **User ID (UID)**: A cada usuario se le debe asignar un ID de usuario (UID). El UID 0 (cero) está reservado para el root, y los UIDs 1-99 están reservados para otras cuentas predefinidas. Los UIDs 100-999 están reservados por el sistema para cuentas/grupos administrativos y de sistema.
+4. **Group ID (GID)**: El ID de grupo primario (almacenado en el archivo /etc/group).
+5. **El campo de comentarios**: Permite agregar información adicional sobre los usuarios, como el nombre completo del usuario, el número de teléfono, etc. Este campo es utilizado por el comando `finger`.
+6. **Directorio home**.
+7. **Comando/shell**: La ruta absoluta de un comando o shell (por ejemplo, `/bin/bash`). Típicamente, esto es un shell, pero no tiene que serlo.
 
-> There are some users with /sbin/nologin shell, They are actually system accounts that run a service and no one can interactively login using them. Some times it has been set to /bin/false. 
+> Hay algunos usuarios con el shell `/sbin/nologin`. Estos son cuentas del sistema que ejecutan un servicio y nadie puede iniciar sesión interactivamente con ellas. A veces, se establece `/bin/false`.
 
-Every user should have read access to /etc/passwd  :
+Cada usuario debe tener acceso de lectura al archivo `/etc/passwd`:
 
-```
+```bash
 root@ubuntu16-1:~# ls -l /etc/passwd
 -rw-r--r-- 1 root root 2469 Feb 12 02:53 /etc/passwd
 ```
 
-In old days there was a place that  all users information even the user's password, and it is not so hard thick about security issue that it caused. To solve the problem /etc/shadow was invented.  An x character indicates that encrypted password is stored in /etc/shadow file
-
+En los primeros días, había un lugar donde se almacenaba toda la información del usuario, incluso la contraseña del usuario, lo que no era tan difícil de considerar como un problema de seguridad. Para solucionar este problema, se inventó `/etc/shadow`. Un carácter **x** indica que la contraseña cifrada se almacena en el archivo `/etc/shadow`.
 ### /etc/shadow
 
-The /etc/shadow file contains encrypted passwords, along with password- and account-expiration information.
+El archivo `/etc/shadow` contiene contraseñas cifradas, junto con la información de expiración de la contraseña y la cuenta.
 
-```
+```bash
 root@ubuntu16-1:~# ls -l /etc/shadow
 -rw-r----- 1 root shadow 1609 Feb 12 02:53 /etc/shadow
 ```
 
-Lets see what's inside that:
+Veamos qué contiene:
 
-```
+```bash
 root@ubuntu16-1:~# tail /etc/shadow
 pulse:*:17379:0:99999:7:::
 rtkit:*:17379:0:99999:7:::
@@ -294,32 +307,30 @@ user2:$6$kN2DNYrP$XmM/3ONRnrTCuTTBxCwVBlVW9E4tVRc02JbRHPhwj128Q6aUIcUq4gxw2r74go
 postfix:*:18300:0:99999:7:::
 ```
 
-> Note: !! means user can not log in with any passwords. Most of service accounts are like this.
+> Nota: **!!** significa que el usuario no puede iniciar sesión con ninguna contraseña. La mayoría de las cuentas de servicio son así.
 
-Passwords can be encrypted with one of several encryption algorithms. Older systems used DES or MD5, but modern systems typically use Blowfish, SHA-256, or SHA-512, or possibly MD5. Regardless of encryption algorithm, passwords are _salted_ so that two otherwise identical passwords do not generate the same encrypted value.
+Las contraseñas pueden ser cifradas con uno de varios algoritmos de cifrado. Los sistemas más antiguos usaban DES o MD5, pero los sistemas modernos típicamente usan Blowfish, SHA-256 o SHA-512, o posiblemente MD5. Independientemente del algoritmo de cifrado, las contraseñas son **"salted"**, lo que significa que incluso si dos contraseñas son idénticas, no generarán el mismo valor cifrado.
 
-![](.gitbook/assets/usergroup-shadow.jpg)
+![](assets/usergroup-shadow.jpg)
 
-1. **Username** : It is your login name. 
-2. **Password** : It is your encrypted password. The password should be minimum 8-12 characters long including special characters, digits, lower case alphabetic and more. Usually password format is set to `$id$salt$hashed`, _The $id is the algorithm used On GNU/Linux as follows: $1$ is MD5 $2a$ is Blowfish $2y$ is Blowfish $5$ is SHA-256 $6$ is SHA-512 _
-3. **Last password change (lastchanged)** : Days since Jan 1, 1970 that password was last changed 
-4. **Minimum **: The minimum number of days required between password changes i.e. the number of days left before the user is allowed to change his/her password
-5. **Maximum **: The maximum number of days the password is valid (after that user is forced to change his/her password)
-6.  **Warn** : The number of days before password is to expire that user is warned that his/her password must be changed 
-7. **Inactive **: The number of days after password expires that account is disabled 
-8. **Expire** : days since Jan 1, 1970 that account is disabled i.e. an absolute date specifying when the login may no longer be used.
+1. **Username**: Es tu nombre de inicio de sesión.
+2. **Password**: Es tu contraseña cifrada. La contraseña debe tener entre 8 y 12 caracteres, incluyendo caracteres especiales, dígitos, letras minúsculas y más. Usualmente, el formato de la contraseña es `$id$salt$hashed`. _El `$id` es el algoritmo utilizado en GNU/Linux, de la siguiente manera: $1$ es MD5, $2a$ es Blowfish, $2y$ es Blowfish, $5$ es SHA-256, $6$ es SHA-512._
+3. **Last password change (lastchanged)**: Días desde el 1 de enero de 1970 en los que se cambió por última vez la contraseña.
+4. **Minimum**: El número mínimo de días requeridos entre los cambios de contraseña, es decir, el número de días restantes antes de que el usuario pueda cambiar su contraseña.
+5. **Maximum**: El número máximo de días en los que la contraseña es válida (después de eso, el usuario debe cambiar su contraseña).
+6. **Warn**: El número de días antes de que expire la contraseña en los que el usuario es advertido de que debe cambiarla.
+7. **Inactive**: El número de días después de que la contraseña haya expirado en los que la cuenta se desactiva.
+8. **Expire**: Días desde el 1 de enero de 1970 en los que la cuenta queda deshabilitada, es decir, una fecha absoluta que especifica cuándo no se podrá usar el inicio de sesión.
 
-The last 6 fields provides password aging and account lockout features. You need to use the chage command to setup password aging.
+Los últimos 6 campos proporcionan características de envejecimiento de la contraseña y bloqueo de la cuenta. Debes usar el comando `chage` para configurar el envejecimiento de la contraseña.
 
-{% hint style="info" %}
-**epoch time**
+**Tiempo de época (epoch time)**
 
-Unix time is a system for describing a point in time. It is the number of seconds that have elapsed since the Unix epoch, that is the time 00:00:00 UTC on 1 January 1970, minus leap seconds.
-{% endhint %}
+El tiempo de Unix es un sistema para describir un punto en el tiempo. Es el número de segundos que han transcurrido desde la época de Unix, es decir, desde las 00:00:00 UTC del 1 de enero de 1970, menos los segundos bisiestos.
 
 ### chage
 
- **chage** command is used to view and change the user password expiry information. This command is used when the login is to be provided for a user for limited amount of time or when it is necessary to change the login password time to time.
+El comando **chage** se usa para ver y cambiar la información de expiración de la contraseña de un usuario. Este comando se utiliza cuando se desea proporcionar acceso a un usuario por un tiempo limitado o cuando es necesario cambiar la contraseña de inicio de sesión de forma periódica.
 
 ```
 chage [options] LOGIN
@@ -342,26 +353,26 @@ Options:
 
 ```
 
-chage without any options lets do  editing  all items interactively ,lets try -l option on user1:
+**chage** sin ninguna opción edita todos los elementos de forma interactiva. Probemos la opción `-l` en el usuario `user1`:
 
 ```
 root@ubuntu16-1:~# chage -l user1
-Last password change					: Aug 06, 2018
-Password expires					: never
-Password inactive					: never
-Account expires						: never
-Minimum number of days between password change		: 0
-Maximum number of days between password change		: 99999
-Number of days of warning before password expires	: 7
+Último cambio de contraseña           : 06 de agosto de 2018
+La contraseña expira                 : nunca
+Contraseña inactiva                  : nunca
+La cuenta expira                    : nunca
+Número mínimo de días entre cambios de contraseña    : 0
+Número máximo de días entre cambios de contraseña    : 99999
+Número de días de advertencia antes de que expire la contraseña : 7
 ```
 
->  `chage -d 0 user-name` will force user to change his password in next login.
+> `chage -d 0 nombre-de-usuario` obligará al usuario a cambiar su contraseña en el próximo inicio de sesión.
 
-> **passwd** can also change or reset the account's validity period — how much time can pass before the password expires and must be changed.
+> **passwd** también puede cambiar o restablecer el período de validez de la cuenta, es decir, cuánto tiempo puede pasar antes de que la contraseña caduque y deba ser cambiada.
 
 ### /etc/group
 
- /etc/group is the _group_ file containing basic information about groups and which users belong to them. It contains one line for each group in the system.
+`/etc/group` es el archivo de _grupo_ que contiene información básica sobre los grupos y qué usuarios pertenecen a ellos. Contiene una línea para cada grupo en el sistema.
 
 ```
 root@ubuntu16-1:~# tail /etc/group
@@ -377,21 +388,21 @@ postdrop:x:131:
 mysecuregroup:x:1003:
 ```
 
-![](.gitbook/assets/usergroup-group.jpg)
+![](assets/usergroup-group.jpg)
 
-1. **group_name**: It is the name of group. If you run ls -l command, you will see this name printed in the group field. 
-2. **Password**: Generally password is not used, hence it is empty/blank. It can store encrypted password. This is useful to implement privileged groups. 
-3. **Group ID (GID)**: Each user must be assigned a group ID. You can see this number in your /etc/passwd file. 
-4. **Group List**: It is a list of user names of users who are members of the group. The user names, must be separated by commas.
+1. **group_name**: Es el nombre del grupo. Si ejecutas el comando `ls -l`, verás este nombre impreso en el campo del grupo.
+2. **Contraseña**: Generalmente, la contraseña no se usa, por lo que suele estar vacía o en blanco. Puede almacenar una contraseña cifrada. Esto es útil para implementar grupos privilegiados.
+3. **ID del grupo (GID)**: A cada usuario se le debe asignar un ID de grupo. Puedes ver este número en tu archivo `/etc/passwd`.
+4. **Lista de grupos**: Es una lista de nombres de usuarios que son miembros del grupo. Los nombres de usuario deben estar separados por comas.
 
 ```
 root@ubuntu16-1:~# ls -l /etc/group
 -rw-r--r-- 1 root root 1077 Feb 12 03:58 /etc/group
 ```
 
-Like /etc/passwd file, /etc/group is shadowed for security reasons and must be world readable, but encrypted passwords should not be world readable.
+Al igual que el archivo `/etc/passwd`, el archivo `/etc/group` está sombreado por razones de seguridad y debe ser legible por todos, pero las contraseñas cifradas no deben ser legibles por todos.
 
-groups password are stored in /etc/gshadow file which is readable only by root.
+Las contraseñas de los grupos se almacenan en el archivo `/etc/gshadow`, que solo es legible por root.
 
 ```
 root@ubuntu16-1:~# ls -l /etc/gshadow
@@ -410,21 +421,21 @@ postdrop:!::
 mysecuregroup:Aa12345::
 ```
 
-> its format is : 
->
-> `Group name:Encrypted password:Group administrators: Group members`
-
-> ! :groups can have passwords but it have never been used in any distribution!
+> Su formato es:
+> 
+> `Nombre del grupo:Contraseña cifrada:Administradores del grupo: Miembros del grupo`
+> 
+> ¡Nota! : los grupos pueden tener contraseñas, pero nunca se han utilizado en ninguna distribución.
 
 ### getent
 
- **getent** is a Linux command that helps the user to get the entries in a number of important text files called databases.
+**getent** es un comando de Linux que ayuda al usuario a obtener las entradas en varios archivos de texto importantes llamados bases de datos.
 
 ```
-getent database [key ...]
+getent base_de_datos [clave ...]
 ```
 
-we use the getent command for processing groups and user information, instead of manually reading /etc/passwd, /etc/groups.
+Usamos el comando `getent` para procesar la información de grupos y usuarios, en lugar de leer manualmente /etc/passwd, /etc/group.
 
 ```
 root@ubuntu16-1:~# getent passwd payam
@@ -434,52 +445,30 @@ root@ubuntu16-1:~# getent group payam
 payam:x:1000:
 ```
 
-do not forget to use id command.
+No olvides usar el comando `id`.
 
-.
+**Bonus: **Comandos y opciones para cambiar cuentas de usuario
 
-.
+|usermod|passwd|chage|Propósito|
+|---|---|---|---|
+|-L|-l (letra minúscula L)|N/A|Bloquear o suspender la cuenta.|
+|-U|-u|N/A|Desbloquear la cuenta.|
+|N/A|-d|N/A|Deshabilitar la cuenta configurándola sin contraseña.|
+|-e|-f|-E|Establecer la fecha de expiración para una cuenta.|
+|N/A|-n|-m|El tiempo mínimo de vida de la contraseña en días.|
+|N/A|-X|-M|El tiempo máximo de vida de la contraseña en días.|
+|N/A|-W|-W|El número de días de advertencia antes de que una contraseña deba ser cambiada.|
+|-f|-i|-I (letra mayúscula i)|El número de días después de que una contraseña expire hasta que la cuenta se deshabilite.|
+|N/A|-S|-l (letra minúscula L)|Mostrar un mensaje corto sobre el estado actual de la cuenta.
 
-.
 
-**Bonus: **Commands and options for changing user accounts
-
-| usermod | passwd          | chage           | Purpose                                                                    |
-| ------- | --------------- | --------------- | -------------------------------------------------------------------------- |
-| -L      | -l(lowercase L) | N/A             | Lock or suspend the account.                                               |
-| -U      | -u              | N/A             | Unlock the account.                                                        |
-| N/A     | -d              | N/A             | Disable account by setting it passwordless                                 |
-| -e      | -f              | -E              | Set the expiration date for an account.                                    |
-| N/A     | -n              | -m              | The minimum password lifetime in days.                                     |
-| N/A     | -X              | -M              | The maximum password lifetime in days.                                     |
-| N/A     | -W              | -W              | The number of days of warning before a password must be changed.           |
-| -f      | -i              | -I(uppercase i) | The number of days after a password expires until the account is disabled. |
-| N/A     | -S              | -l(lowercase L) | Output a short message about the current account status.                   |
-
-.
-
-.
-
-.
-
-[https://developer.ibm.com/technologies/linux/tutorials/l-lpic1-map/](https://developer.ibm.com/technologies/linux/tutorials/l-lpic1-map/)
-
-[https://www.computerhope.com/unix/upasswor.htm](https://www.computerhope.com/unix/upasswor.htm)
-
-[https://jadi.gitbooks.io/lpic1/content/1071\_manage_user_and_group_accounts_and_related_system_files.html](https://jadi.gitbooks.io/lpic1/content/1071\_manage_user_and_group_accounts_and_related_system_files.html)
-
-[https://askubuntu.com/questions/639990/what-is-the-group-id-of-this-group-name](https://askubuntu.com/questions/639990/what-is-the-group-id-of-this-group-name)
-
-[https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/](https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/)
-
-[https://www.cyberciti.biz/faq/understanding-etcshadow-file/](https://www.cyberciti.biz/faq/understanding-etcshadow-file/)
-
-[https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time)
-
-[https://www.cyberciti.biz/faq/understanding-etcgroup-file/](https://www.cyberciti.biz/faq/understanding-etcgroup-file/)
-
-[https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/4/html/Introduction_To_System_Administration/s3-acctsgrps-gshadow.html](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/4/html/Introduction_To_System_Administration/s3-acctsgrps-gshadow.html)
-
-[https://www.geeksforgeeks.org/chage-command-in-linux-with-examples/](https://www.geeksforgeeks.org/chage-command-in-linux-with-examples/)
-
-.
+- [https://developer.ibm.com/technologies/linux/tutorials/l-lpic1-map/](https://developer.ibm.com/technologies/linux/tutorials/l-lpic1-map/)
+- [https://www.computerhope.com/unix/upasswor.htm](https://www.computerhope.com/unix/upasswor.htm)
+- [https://jadi.gitbooks.io/lpic1/content/1071\_manage_user_and_group_accounts_and_related_system_files.html](https://jadi.gitbooks.io/lpic1/content/1071\_manage_user_and_group_accounts_and_related_system_files.html)
+- [https://askubuntu.com/questions/639990/what-is-the-group-id-of-this-group-name](https://askubuntu.com/questions/639990/what-is-the-group-id-of-this-group-name)
+- [https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/](https://www.cyberciti.biz/faq/understanding-etcpasswd-file-format/)
+- [https://www.cyberciti.biz/faq/understanding-etcshadow-file/](https://www.cyberciti.biz/faq/understanding-etcshadow-file/)
+- [https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time)
+- [https://www.cyberciti.biz/faq/understanding-etcgroup-file/](https://www.cyberciti.biz/faq/understanding-etcgroup-file/)
+-  [https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/4/html/Introduction_To_System_Administration/s3-acctsgrps-gshadow.html](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/4/html/Introduction_To_System_Administration/s3-acctsgrps-gshadow.html)
+- [https://www.geeksforgeeks.org/chage-command-in-linux-with-examples/](https://www.geeksforgeeks.org/chage-command-in-linux-with-examples/)
