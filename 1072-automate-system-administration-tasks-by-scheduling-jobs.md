@@ -1,4 +1,4 @@
-**Peso:** 4
+@**Peso:** 4
 
 Descripción: Los candidatos deben poder usar cron o anacron para ejecutar trabajos a intervalos regulares y usar at para ejecutar trabajos en un momento específico.
 

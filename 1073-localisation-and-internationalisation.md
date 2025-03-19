@@ -1,4 +1,4 @@
-**Peso:** 3
+		**Peso:** 3
 
 **Descripción:** Los candidatos deben ser capaces de localizar un sistema en un idioma distinto del inglés. Además, deben comprender por qué LANG=C es útil al crear scripts.
 
