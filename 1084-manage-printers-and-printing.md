@@ -1,49 +1,48 @@
-# 108.4. Manage printers and printing
+# 108.4. Administrar impresoras e impresión
 
-**Weight:** 2
+**Ponderación:** 2
 
-**Description:** Candidates should be able to manage print queues and user print jobs using CUPS and the LPD compatibility interface.
+**Descripción:** Los candidatos deben ser capaces de administrar colas de impresión y trabajos de impresión de usuarios mediante CUPS y la interfaz de compatibilidad LPD.
 
-**Key Knowledge Areas:**
+**Áreas de conocimiento clave:**
 
-* Basic CUPS configuration (for local and remote printers)
-* Manage user print queues
-* Troubleshoot general printing problems
-* Add and remove jobs from configured printer queues
+* Configuración básica de CUPS (para impresoras locales y remotas)
+* Administrar colas de impresión de usuarios
+* Solucionar problemas generales de impresión
+* Agregar y eliminar trabajos de las colas de impresión configuradas
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
-* CUPS configuration files, tools and utilities
+* Archivos de configuración, herramientas y utilidades de CUPS
 * /etc/cups/
-* lpd legacy interface (lpr, lprm, lpq)
+* Interfaz lpd heredada (lpr, lprm, lpq)
 
-Although much of our communication today is electronic and paperless, we still have considerable need to print material from our computers.
+Aunque gran parte de nuestra comunicación actual es electrónica y sin papel, aún tenemos una necesidad considerable de imprimir material desde nuestros ordenadores.
 
 ### cups
 
-CUPS is the standards-based, open source printing system developed by Apple Inc. for macOS® and other UNIX®-like operating systems.It stands  for Common UNIX Printing System. The CUPS system can act as a printer server for a local machine or a network of machines.
+CUPS es el sistema de impresión de código abierto basado en estándares desarrollado por Apple Inc. para macOS® y otros sistemas operativos similares a UNIX®. Significa Sistema de Impresión Común de UNIX. El sistema CUPS puede actuar como servidor de impresión para una máquina local o una red de máquinas.
 
-CUPS consists of:
+CUPS consta de:
 
-* Print spooler/scheduler: Lines up printing jobs to be sent to the printer.
-* Filter system: Converts data so that the attached printer can understand and format the data being printed.
-* Backend system: Transports data from filters to printer.
+* Cola de impresión/programador: Organiza los trabajos de impresión que se enviarán a la impresora.
+* Sistema de filtros: Convierte los datos para que la impresora conectada pueda comprender y formatear los datos que se imprimen.
+* Sistema backend: Transporta los datos de los filtros a la impresora.
 
-![](.gitbook/assets/manageprinters-cupsdiagram.jpg)
+![](assets/manageprinters-cupsdiagram.jpg)
+
+En el corazón del sistema de impresión CUPS se encuentra el servidor de impresión `cupsd`, que se ejecuta como un proceso demonio.
+
+#### Interfaz web de CUPS
+
+Cups ofrece diferentes interfaces, como la interfaz gráfica de usuario (GUI), la interfaz web e incluso las interfaces de línea de comandos tradicionales. Aquí mostramos la herramienta de administración web de CUPS (`http://localhost:631 o http://127.0.0.1:631`) para buscar o agregar impresoras.
 
 
+![](assets/manageprinters-cupsweb.jpg)
 
->  At the heart of the CUPS printing system is the `cupsd` print server which runs as a daemon process.
+Si se le solicita un nombre de usuario y una contraseña al acceder a la interfaz web de CUPS (localhost:631), utilice su nombre de usuario y contraseña.
 
-#### cups web interface
-
- There are different interfaces for cups like gui , web interfaces and even traditional command line interfaces. Here we show  the CUPS web administration tool (`http://localhost:631 or http://127.0.0.1:631`) to search for or add printers.
-
-![](.gitbook/assets/manageprinters-cupsweb.jpg)
-
-> If you are asked for a username and password when accessing the CUPS web interface (localhost:631), use your login name and password. 
->
-> Obviously adding printer requires root access.(in ubuntu members of cups admin group are accepted too)
+> Obviamente, para agregar una impresora se requiere acceso root. (En Ubuntu, también se aceptan miembros del grupo de administración de CUPS).
 
 ```
 ### cups tree of menus:
@@ -56,13 +55,12 @@ CUPS consists of:
 -Printers ---> shopw the orinters
 ```
 
-{% hint style="info" %}
-We need to know what driver to use for your printer. Not all printers are fully supported on Linux and some may not work at all, or only with limitations. Check  the printer manufacturer’s website or take a look at OpenPrinting.org.
-{% endhint %}
 
+Necesitamos saber qué controlador usar para su impresora. No todas las impresoras son totalmente compatibles con Linux y algunas podrían no funcionar o funcionar solo con limitaciones. Consulte el sitio web del fabricante de la impresora o visite OpenPrinting.org.
 ### /etc/cups
 
-The /etc/cups directory contains other configuration files related to CUPS (Fedora 30).
+
+El directorio /etc/cups contiene otros archivos de configuración relacionados con CUPS (Fedora 30).
 
 ```
 [root@earth ~]# ls -l /etc/cups
@@ -88,7 +86,7 @@ drwx------. 2 root lp    4096 Nov  9  2018 ssl
 -rw-r--r--. 1 root root    75 Dec  8  2018 thnuclnt.types
 ```
 
-The CUPS configuration file is normally located in /etc/cups/cupsd.conf
+El archivo de configuración de CUPS normalmente se encuentra en /etc/cups/cupsd.conf
 
 ```
 MaxLogSize 0
@@ -144,11 +142,11 @@ WebInterface Yes
 ...
 ```
 
-> note1:The default CUPS configuration limits administration to the local machine.
->
-> note2: Most of the settings are accessible from the web interface and it is not recommended to edit this file.
+Nota 1: La configuración predeterminada de CUPS limita la administración a la máquina local.
 
-If any printer has been configured, the setting are stored in etc/cups/printers.conf 
+Nota 2: La mayoría de las configuraciones son accesibles desde la interfaz web y no se recomienda editar este archivo.
+
+Si se ha configurado alguna impresora, la configuración se almacena en etc/cups/printers.conf.
 
 ```
 # Printer configuration file for CUPS v2.2.6
@@ -178,25 +176,25 @@ ErrorPolicy stop-printer
 
 ```
 
-> `DO NOT EDIT THIS FILE WHEN CUPSD IS RUNNING!`
+> `¡NO EDITE ESTE ARCHIVO CUANDO CUPSD ESTÉ EN EJECUCIÓN!`
 
-### lpd legacy interface 
+### Interfaz heredada de lpd
 
-In UNIX and Linux systems, printing initially used the Berkeley Software Distribution (BSD) printing subsystem, consisting of a line printer daemon (lpd) running as a server, and client commands such as lpr to submit jobs for printing.
+En sistemas UNIX y Linux, la impresión utilizaba inicialmente el subsistema de impresión de Berkeley Software Distribution (BSD), que consistía en un demonio de impresora de línea (lpd) que se ejecutaba como servidor y comandos de cliente como lpr para enviar trabajos a imprimir.
 
-Nowadays many of these legacy tools still exist to keep backward compatibility.
+Hoy en día, muchas de estas herramientas heredadas siguen existiendo para mantener la compatibilidad con versiones anteriores.
 
-| command    | usage                |
+| comando | uso |
 | ---------- | -------------------- |
-| lpr        | send file to printer |
-| lpq        | show print jobs      |
-| lprm       | remove print jobs    |
-| lpc status | show printer status  |
+| lpr | enviar archivo a la impresora |
+| lpq | mostrar trabajos de impresión |
+| lprm | eliminar trabajos de impresión |
+| estado de lpc | mostrar estado de la impresora |
 
-** lpq : q **stands for** queue **and it is use full when we want to see printer jobs
+** lpq : q **significa** cola **y se usa cuando queremos ver los trabajos de impresión.
 
-* `-P` : show the jobs of specific printer
-* `-a` : show jobs of all printers.
+* `-P` : mostrar los trabajos de una impresora específica.
+* `-a` : mostrar los trabajos de todas las impresoras.
 
 ```
 [root@earth ~]# lpq -PHP-LaserJet-p2055d
@@ -206,9 +204,9 @@ Rank    Owner   Job     File(s)                         Total Size
 2nd     payam    16      MOP template.docx               16384 bytes
 ```
 
-> There should be no space between -P and Printer's name! `-Pprintername`
+No debe haber espacio entre -P y el nombre de la impresora. `-Pprintername`
 
-**lpr : ** The simplest way to print any file is to use the `lpr` command and provide the file name. Again use `-P` to specify printer:
+**lpr: ** La forma más sencilla de imprimir cualquier archivo es usar el comando `lpr` y proporcionar el nombre del archivo. De nuevo, use `-P` para especificar la impresora:
 
 ```
 [root@earth ~]#  lpr -PHP-LaserJet-p2055d minicom.log 
@@ -221,7 +219,7 @@ Rank    Owner   Job     File(s)                         Total Size
 
 ```
 
-**lprm : **lprm  removes job(s) from the printer's queue. We need to define Job ID for this command, if no Job ID is specified the older job is removed.
+**lprm: **lprm elimina trabajos de la cola de impresión. Es necesario definir el ID del trabajo para este comando. Si no se especifica, se elimina el trabajo anterior.
 
 ```
 [root@earth ~]# lpq
@@ -244,37 +242,11 @@ Rank    Owner   Job     File(s)                         Total Size
 [root@earth ~]# 
 ```
 
-> again -P can be used to specify the printer. Also we can use `lprm -Pprintername - `to remove all printer's jobs. And`  lprm -  `will remove all jobs from the default printer.
->
-> Each user can remove his/her own jobs, but root can do any thing!
+> De nuevo, se puede usar -P para especificar la impresora. También podemos usar `lprm -Pprintername -` para eliminar todos los trabajos de la impresora. Y `lprm -` eliminará todos los trabajos de la impresora predeterminada.
 
-**lpc**  : we can use lpc status command in order to check the printer health and troubleshoot (become root for better results!).
+> Cada usuario puede eliminar sus propios trabajos, ¡pero el usuario root puede hacer cualquier cosa!
 
-```
-[root@earth ~]# lpc status
-HP-LaserJet-p2055d:
-	printer is on device 'smb' speed -1
-	queuing is enabled
-	printing is disabled
-	1 entries
-	daemon present
-```
-
-where 
-
-* **queuing is enabled**: it means that printer will accept new jobs, if it was disabled it won't accept any new job even if the printer was ok.
-* **printing is disabled**: means that printer can not actually print on the paper. That happens if the printer is out of ink or paper or experiencing a paper jam.
-
-In my case, my printer is out of paper. But there are some other cups command which might be helpful specially when a problem occurs: 
-
-| command         | describe                                         |
-| --------------- | ------------------------------------------------ |
-| **cupsaccept**  | tells the printer queue to accept new jobs       |
-| **cupsreject**  | tells the printer to reject any new job          |
-| **cupsenable**  | enables the actual/physical printing of the jobs |
-| **cupsdisable** | disables the physical printing of the jobs       |
-
- with all commands we can specify printer's name without -P switch !
+**lpc**: Podemos usar el comando lpc status para comprobar el estado de la impresora y solucionar problemas (¡conviértase en usuario root para obtener mejores resultados!).
 
 ```
 [root@earth ~]# lpc status
@@ -286,7 +258,33 @@ HP-LaserJet-p2055d:
 	daemon present
 ```
 
-Adding some papers :
+Donde
+
+* **La cola está habilitada**: significa que la impresora aceptará nuevos trabajos. Si está deshabilitada, no aceptará ningún trabajo nuevo, incluso si la impresora funciona correctamente.
+* **La impresión está deshabilitada**: significa que la impresora no puede imprimir en el papel. Esto ocurre si la impresora se queda sin tinta o papel, o si se produce un atasco de papel.
+
+En mi caso, mi impresora se quedó sin papel. Sin embargo, hay otros comandos de cups que podrían ser útiles, especialmente cuando ocurre un problema:
+
+| comando         | describir                                                 |
+| --------------- | --------------------------------------------------------- |
+| **cupsaccept**  | indica a la cola de impresión que acepte nuevos trabajos  |
+| **cupsreject**  | indica a la impresora que rechace cualquier trabajo nuevo |
+| **cupsenable**  | habilita la impresión física de los trabajos              |
+| **cupsdisable** | deshabilita la impresión física de los trabajos           |
+
+Con todos los comandos podemos especificar el nombre de la impresora sin la opción -P.
+
+```
+[root@earth ~]# lpc status
+HP-LaserJet-p2055d:
+	printer is on device 'smb' speed -1
+	queuing is enabled
+	printing is disabled
+	1 entries
+	daemon present
+```
+
+Añadiendo algunos papeles:
 
 ```
 [root@earth ~]# cupsenable HP-LaserJet-p2055d
@@ -300,7 +298,7 @@ HP-LaserJet-p2055d:
 	daemon present
 ```
 
-And if we want to disable a printer intentionally, we can mention the reason with -r switch:
+Y si queremos deshabilitar una impresora intencionalmente, podemos mencionar el motivo con el interruptor -r:
 
 ```
 [root@earth ~]# cupsreject HP-LaserJet-p2055d -r "Adding more paper"
@@ -313,13 +311,6 @@ HP-LaserJet-p2055d:
 	daemon present
 ```
 
-that's all!
-
-.
-
-.
-
-.
 
 [https://developer.ibm.com/tutorials/l-lpic1-108-4/](https://developer.ibm.com/tutorials/l-lpic1-108-4/)
 
@@ -330,8 +321,6 @@ that's all!
 [https://jadi.gitbooks.io/lpic1/content/1084\_manage_printers_and_printing.html](https://jadi.gitbooks.io/lpic1/content/1084\_manage_printers_and_printing.html)
 
 [https://www.cups.org/](https://www.cups.org/faq.html)
-
-.
 
 
 

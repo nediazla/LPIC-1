@@ -1,16 +1,16 @@
-# 109.4. Configure client side DNS
+# 109.4. Configurar DNS del lado del cliente
 
-**Weight**: 2
+**Ponderación**: 2
 
-**Description:** Candidates should be able to configure DNS on a client host.
+**Descripción:** Los candidatos deben ser capaces de configurar DNS en un host cliente.
 
-**Key Knowledge Areas:**
+**Áreas de conocimiento clave:**
 
-* Query remote DNS servers
-* Configure local name resolution and use remote DNS servers
-* Modify the order in which name resolution is done
+* Consultar servidores DNS remotos
+* Configurar la resolución de nombres local y usar servidores DNS remotos
+* Modificar el orden de la resolución de nombres
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * /etc/hosts
 * /etc/resolv.conf
@@ -19,21 +19,21 @@
 * dig
 * getent
 
-We have seen all of these topics in previous lessons, so in this lesson first  we take a quick look at them and then we will talk about steps of Name Resolution on client side.
+Hemos visto todos estos temas en lecciones anteriores, por lo que en esta lección primero los revisaremos brevemente y luego hablaremos sobre los pasos de la resolución de nombres del lado del cliente.
 
-#### DNS
+### DNS
 
-The DNS (Domain Name System) resolves the names of internet sites with their underlying IP addresses .
+El DNS (Sistema de Nombres de Dominio) resuelve los nombres de los sitios de internet con sus direcciones IP subyacentes.
 
-![](.gitbook/assets/clientdns-howdns.jpg)
+![](assets/clientdns-howdns.jpg)
 
-#### Query remote DNS servers
+#### Consultar servidores DNS remotos
 
 ### dig
 
-Dig (Domain Information Groper) is a powerful command-line tool for querying DNS name servers. It is the most commonly used tool among system administrators for troubleshooting DNS problems because of its flexibility and ease of use.
+Dig (Domain Information Groper) es una potente herramienta de línea de comandos para consultar servidores de nombres DNS. Es la herramienta más utilizada por los administradores de sistemas para solucionar problemas de DNS gracias a su flexibilidad y facilidad de uso.
 
-In its simplest form, when used to query a single host (domain) without any additional options, the `dig` command is pretty verbose.
+En su forma más simple, al consultar un solo host (dominio) sin opciones adicionales, el comando `dig` es bastante complejo.
 
 ```
 root@ubuntu16-1:~# dig lpi.org
@@ -58,11 +58,11 @@ lpi.org.		599	IN	A	65.39.134.165
 ;; MSG SIZE  rcvd: 52
 ```
 
-> don't forget, by default, dig sends the DNS query to name servers listed in the resolver(/etc/resolv.conf), how ever, we can query different DNS server usnig @.
+No olvide que, por defecto, dig envía la consulta DNS a los servidores de nombres listados en el resolver (/etc/resolv.conf). Sin embargo, podemos consultar diferentes servidores DNS usando @.
 
 ### host
 
-the host command is a DNS lookup utility, finding the IP address of a domain name. It also performs reverse lookups, finding the domain name associated with an IP address.
+El comando host es una utilidad de búsqueda DNS que encuentra la dirección IP de un nombre de dominio. También realiza búsquedas inversas, encontrando el nombre de dominio asociado a una dirección IP.
 
 ```
 root@ubuntu16-1:~# host yahoo.com
@@ -83,22 +83,22 @@ yahoo.com mail is handled by 1 mta7.am0.yahoodns.net.
 yahoo.com mail is handled by 1 mta5.am0.yahoodns.net.
 ```
 
- And vica-versa To find out the hostname of the host with the IP address**:**
+ Y viceversa Para averiguar el nombre de host del host con la dirección IP**:**
 
 ```
 root@ubuntu16-1:~# host 72.30.35.10
 10.35.30.72.in-addr.arpa domain name pointer media-router-fp2.prod1.media.vip.bf1.yahoo.com.
 ```
 
-> If no arguments or options are given, _host_ prints a short summary of its command line arguments and options:
+Si no se proporcionan argumentos ni opciones, _host_ imprime un breve resumen de sus argumentos y opciones en la línea de comandos:
 
-#### Client Name Resolution 
+#### Resolución de nombres del cliente
 
-When client  wants to access any other computers in the  network, first it needs to know about target  ip address. There are different places inside os which keeps information, lets review them togther :
+Cuando un cliente desea acceder a otros equipos de la red, primero necesita conocer la dirección IP de destino. Existen diferentes lugares dentro del sistema operativo que almacenan información; analicémoslos juntos:
 
 ### /etc/host
 
-If we  don’t want to use a DNS server for name resolution, we  can use the **/etc/hosts** file for the purpose of name resolution. This is a simple text file that contains IP addresses to hostnames mappings. Each line consists of an IP address, followed by one or more hostnames(ubuntu16):
+Si no queremos usar un servidor DNS para la resolución de nombres, podemos usar el archivo **/etc/hosts**. Este es un archivo de texto simple que contiene las asignaciones de direcciones IP a nombres de host. Cada línea contiene una dirección IP, seguida de uno o más nombres de host (ubuntu16):
 
 ```
 root@ubuntu16-1:~# cat /etc/hosts
@@ -113,7 +113,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ```
 
-you can see the typical default content of the **hosts** file that contains entries for the loopback addresses. To set up our own mappings, add the entries in the form of **`IP_ADDRESS HOSTNAME `**:
+Puede ver el contenido predeterminado típico del archivo **hosts**, que contiene las entradas para las direcciones de bucle invertido. Para configurar nuestras propias asignaciones, agregue las entradas con el formato **`IP_ADDRESS HOSTNAME`**:
 
 ```
 root@ubuntu16-1:~# ping thisismyexample.com
@@ -136,7 +136,7 @@ ff02::2 ip6-allrouters
 172.217.164.238 thisismyexample
 ```
 
-The line **`172.217.164.238 thisismyexample.com` ** will map the IP address of **172.217.164.238** to the **thisismyexample.com** hostname . We can now use the **thisismyexample** hostname to communicate with the remote machine:
+La línea **`172.217.164.238 thisismyexample.com`** asignará la dirección IP de **172.217.164.238** al nombre de host **thisismyexample.com**. Ahora podemos usar el nombre de host **thisismyexample** para comunicarnos con la máquina remota:
 
 ```
 root@ubuntu16-1:~# ping thisismyexample -c3
@@ -153,7 +153,7 @@ rtt min/avg/max/mdev = 262.673/289.474/324.462/25.881 ms
 
 ### /etc/resolv.conf
 
-/etc/resolv.conf contain information about current system DNS  server. Altough we can manually modify it  but don't forget our settings would not be permanent in last until next reboot. 
+El archivo /etc/resolv.conf contiene información sobre el servidor DNS actual del sistema. Si bien podemos modificarlo manualmente, no olvide que la configuración no será permanente hasta el próximo reinicio.
 
 ```
 root@ubuntu16-1:~# cat /etc/resolv.conf 
@@ -166,55 +166,41 @@ search mydomain.local
 
 ### /etc/nsswitch
 
-The /etc/nsswitch.conf file defines the order in which to contact different name services. For Internet use, it is important that _dns_ shows up in the "hosts" line:
+El archivo /etc/nsswitch.conf define el orden de contacto con los diferentes servicios de nombres. Para el uso de Internet, es importante que _dns_ aparezca en la línea "hosts":
 
 ```
 root@ubuntu16-1:~# cat /etc/nsswitch.conf | grep hosts
 hosts:          files mdns4_minimal [NOTFOUND=return] dns
 ```
 
-The hosts  line specifies the order in which various name resolution services will be tried. The default is to:
+La línea hosts especifica el orden en que se probarán los distintos servicios de resolución de nombres. El valor predeterminado es:
 
-* `files` reads `/etc/hosts`
-* `mdns4_minimal` resolves IPv4 addresses with multicast DNS ONLY if the requested hostname ends with `.local`.
-* `[NOTFOUND=return]` stops the resolving process if that `.local` hostname was not found
-* `dns` probably does DNS resolution
+* `files` lee `/etc/hosts`
+* `mdns4_minimal` resuelve direcciones IPv4 con DNS multicast SOLO si el nombre de host solicitado termina en `.local`.
+* `[NOTFOUND=return]` detiene el proceso de resolución si no se encuentra el nombre de host `.local`.
+* `dns` probablemente realiza la resolución DNS.
 
-> you can change the the order of name resolution here.
+> Puede cambiar el orden de resolución de nombres aquí.
 
 ### getent
 
-As we said  **getent** is a Linux command that helps the user to get the entries in a number of important text files called databases. This includes the _passwd _and _the group _of databases which stores the user information. The fact is that The **getent** command displays entries from databases supported by the Name Service Switch libraries, which are configured in /etc/nsswitch.conf. 
+Como ya dijimos, **getent** es un comando de Linux que ayuda al usuario a obtener las entradas de varios archivos de texto importantes llamados bases de datos. Esto incluye la contraseña y el grupo de bases de datos que almacena la información del usuario. El comando **getent** muestra las entradas de las bases de datos compatibles con las bibliotecas de conmutación de servicios de nombres, que se configuran en /etc/nsswitch.conf.
 
-```
+```bash
 root@ubuntu16-1:~# getent hosts thisismyexample
 172.217.164.238 thisismyexample
 ```
 
-.
+- [https://www.networkworld.com/article/3268449/what-is-dns-and-how-does-it-work.html](https://www.networkworld.com/article/3268449/what-is-dns-and-how-does-it-work.html)
+- [https://computer.howstuffworks.com/dns3.htm](https://computer.howstuffworks.com/dns3.html
+- [https://linuxize.com/post/how-to-use-dig-command-to-query-dns-in-linux/](https://linuxize.com/post/how-to-use-dig-command-to-query-dns-in-linux/)
+- ****[https://www.computerhope.com/unix/host.htm](https://www.computerhope.com/unix/host.htm)
+- [https://www.geeksforgeeks.org/host-command-in-linux-with-examples/](https://www.geeksforgeeks.org/host-command-in-linux-with-examples/)
+- [https://geek-university.com/linux/etc-hosts-file/](https://geek-university.com/linux/etc-hosts-file/)
+- [https://www.shellhacks.com/setup-dns-resolution-resolvconf-example/](https://www.shellhacks.com/setup-dns-resolution-resolvconf-example/
+- [https://www.linuxtopia.org/online_books/introduction_to_linux/linux\_\_etc_nsswitch.conf.html](https://www.linuxtopia.org/online_books/introduction_to_linux/linux\_\_etc_nsswitch.conf.html
+- [https://www.reddit.com/r/linuxquestions/comments/co02ui/hosts_and_mdns_configuration_in_etcnsswitchconf/](https://www.reddit.com/r/linuxquestions/comments/co02ui/hosts_and_mdns_configuration_in_etcnsswitchconf/)
+- [https://ubuntuforums.org/showthread.php?t=971693](https://ubuntuforums.org/showthread.php?t=971693)
+- [https://www.geeksforgeeks.org/getent-command-in-linux-with-examples/](https://www.geeksforgeeks.org/getent-command-in-linux-with-examples/)
+- [https://linux.die.net/man/1/getent](https://linux.die.net/man/1/getent)
 
-.
-
-.
-
-[https://www.networkworld.com/article/3268449/what-is-dns-and-how-does-it-work.html](https://www.networkworld.com/article/3268449/what-is-dns-and-how-does-it-work.html)
-
-[https://computer.howstuffworks.com/dns3.htm](https://computer.howstuffworks.com/dns3.htm)
-
-[https://linuxize.com/post/how-to-use-dig-command-to-query-dns-in-linux/](https://linuxize.com/post/how-to-use-dig-command-to-query-dns-in-linux/)
-
-****[https://www.computerhope.com/unix/host.htm](https://www.computerhope.com/unix/host.htm)
-
-[https://www.geeksforgeeks.org/host-command-in-linux-with-examples/](https://www.geeksforgeeks.org/host-command-in-linux-with-examples/)
-
-[https://geek-university.com/linux/etc-hosts-file/](https://geek-university.com/linux/etc-hosts-file/)
-
-[https://www.shellhacks.com/setup-dns-resolution-resolvconf-example/](https://www.shellhacks.com/setup-dns-resolution-resolvconf-example/)[https://www.linuxtopia.org/online_books/introduction_to_linux/linux\_\_etc_nsswitch.conf.html](https://www.linuxtopia.org/online_books/introduction_to_linux/linux\_\_etc_nsswitch.conf.html)[https://www.reddit.com/r/linuxquestions/comments/co02ui/hosts_and_mdns_configuration_in_etcnsswitchconf/](https://www.reddit.com/r/linuxquestions/comments/co02ui/hosts_and_mdns_configuration_in_etcnsswitchconf/)
-
-[https://ubuntuforums.org/showthread.php?t=971693](https://ubuntuforums.org/showthread.php?t=971693)
-
-[https://www.geeksforgeeks.org/getent-command-in-linux-with-examples/](https://www.geeksforgeeks.org/getent-command-in-linux-with-examples/)
-
-[https://linux.die.net/man/1/getent](https://linux.die.net/man/1/getent)
-
-.

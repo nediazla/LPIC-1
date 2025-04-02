@@ -1,16 +1,16 @@
-# 108.3. Mail Transfer Agent (MTA) basics
+# 108.3. Fundamentos del Agente de Transferencia de Correo (MTA)
 
-**Weight:** 3
+**Ponderación:** 3
 
-**Description: **Candidates should be aware of the commonly available MTA programs and be able to perform basic forward and alias configuration on a client host. Other configuration files are not covered.
+**Descripción: **Los candidatos deben conocer los programas MTA más comunes y ser capaces de realizar la configuración básica de reenvío y alias en un host cliente. No se incluyen otros archivos de configuración.
 
-**Key Knowledge Areas:**
+**Áreas de conocimiento clave:**
 
-* Create e-mail aliases
-* Configure e-mail forwarding
-* Knowledge of commonly available MTA programs (postfix, sendmail, qmail, exim) (no configuration)
+* Crear alias de correo electrónico
+* Configurar el reenvío de correo electrónico
+* Conocimiento de los programas MTA más comunes (postfix, sendmail, qmail, exim) (sin configuración)
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * \~/.forward
 * sendmail emulation layer commands
@@ -24,45 +24,45 @@
 
 ### MTAs
 
-Mail transfer agents deliver mail between users and between systems. Most Internet mail uses the Simple Mail Transfer Protocol (SMTP), but local mail may be transferred through other possibilities. There are different kinds of MTAs available and each distribution might have one of them as default. As an administrator we can chose the right MTA based on our needs.
+Los agentes de transferencia de correo entregan correo entre usuarios y sistemas. La mayoría del correo de Internet utiliza el Protocolo Simple de Transferencia de Correo (SMTP), pero el correo local puede transferirse mediante otras posibilidades. Existen diferentes tipos de MTAs disponibles y cada distribución puede tener uno predeterminado. Como administrador, podemos elegir el MTA adecuado según nuestras necesidades.
 
 ### sendmail
 
-Sendmail is the oldest Linux MTA. It was originally derived from the delivermail program that was used on the ARPANET in 1979. sendmail is big  and it is not easy to configure. Over the years many vulnerabilities have been found  in sendmail although  it's a bit enhanced now.
+Sendmail es el MTA más antiguo de Linux. Originalmente se derivó del programa delivermail utilizado en ARPANET en 1979. Sendmail es grande y no es fácil de configurar. A lo largo de los años se han encontrado muchas vulnerabilidades en sendmail, aunque ahora está ligeramente mejorado.
 
-#### Other mail transfer agents
+#### Otros agentes de transferencia de correo
 
-In response to security issues with sendmail, several other mail transfer agents were developed during the 1990’s. Postfix is perhaps the most popular, but qmail and exim are also widely used.
+En respuesta a los problemas de seguridad de sendmail, se desarrollaron otros agentes de transferencia de correo durante la década de 1990. Postfix es quizás el más popular, pero qmail y exim también se utilizan ampliamente.
 
 ### qmail
 
-Qmail is the one of the most secure Linux mail server software solutions on the market today. Although unsupported, and not currently in development (Qmail hasn't been updated since 1997), Qmail has a large fan base. 
+Qmail es una de las soluciones de software de servidor de correo Linux más seguras del mercado actual. Aunque no cuenta con soporte técnico ni se encuentra actualmente en desarrollo (Qmail no se ha actualizado desde 1997), cuenta con una amplia base de seguidores.
 
-Qmail is also faster, and scales better with higher mail loads than Sendmail. However, Qmail is not easy to configure, or easy to extend.
+Qmail también es más rápido y escala mejor con cargas de correo mayores que Sendmail. Sin embargo, Qmail no es fácil de configurar ni de ampliar.
 
-> qmail is not a GPL software it is public domain.
+> qmail no es un software GPL; es de dominio público.
 
 ### exim
 
-Exim has been out since 1995, and growing in popularity ever since. The biggest strength of Exim is it's almost infinite level of customization. Exim supports the ability for a server administrator to create a custom ruleset that handles incoming and outgoing emails in any particular manner.(authentication, access control list)
+Exim existe desde 1995 y su popularidad ha ido en aumento desde entonces. Su mayor ventaja es su nivel de personalización casi infinito. Exim permite que el administrador del servidor cree un conjunto de reglas personalizado que gestione los correos electrónicos entrantes y salientes de una forma específica (autenticación, lista de control de acceso).
 
-Although Exim was not designed for performance, Exim can be configured to run as a high performance mail server. Exim is an excellent MTA if you need to create a complex or custom mail configuration. 
+Aunque Exim no fue diseñado para el alto rendimiento, puede configurarse para funcionar como un servidor de correo de alto rendimiento. Exim es un excelente MTA si necesita crear una configuración de correo compleja o personalizada.
 
 ### postfix
 
-Postfix is possibly the fastest growing MTA on the market today. Postfix is extremely popular because of it's performance, and it's past security history. It is far harder (or almost impossible) to compromise the root user on a server that runs Postfix, than for instance Sendmail or Exim. 
+Postfix es posiblemente el MTA de más rápido crecimiento en el mercado actual. Postfix es extremadamente popular gracias a su rendimiento y a su historial de seguridad. Es mucho más difícil (o casi imposible) comprometer al usuario root en un servidor que ejecuta Postfix que, por ejemplo, Sendmail o Exim.
 
-Postfix also runs faster with less system resources than most other MTAs (or at least, with standard configurations).Standard configurations are easy to create, but if you need a unique setup, it can be a pain with Postfix. 
+Postfix también funciona más rápido con menos recursos del sistema que la mayoría de los demás MTA (o al menos, con configuraciones estándar). Las configuraciones estándar son fáciles de crear, pero si necesitas una configuración única, puede ser un problema con Postfix.
 
-### sendmail emulation layer
+### Capa de emulación de Sendmail
 
- As sendmail has been around so long , no matter which email server we use, it comes with send mail emulation layer. In other words, all of other MTAs include tools which are backward compatible.  so if we type `sendmail `or `mailq `commands they  respond and act as if sendmail is installed.
+Dado que Sendmail lleva tanto tiempo disponible, independientemente del servidor de correo electrónico que usemos, incluye una capa de emulación de Sendmail. En otras palabras, todos los demás MTA incluyen herramientas compatibles con versiones anteriores. Por lo tanto, si escribimos los comandos `sendmail` o `mailq`, responden y actúan como si Sendmail estuviera instalado.
 
-### Mail aliases <a href="mail-aliases" id="mail-aliases"></a>
+### Alias ​​de correo <a href="mail-aliases" id="mail-aliases"></a>
 
-Sometimes you might want all the mail for a user to go to some other place. For example, you may have a server farm and want all the root mail to go to a central system administrator. Or you may want to create a mailing list where mail goes to several people. To do this, we use aliases that allow us to define one or more destinations for a given user name. 
+A veces, es posible que desee que todo el correo de un usuario se envíe a otra ubicación. Por ejemplo, puede tener una granja de servidores y desear que todo el correo raíz se envíe a un administrador central del sistema. O puede crear una lista de correo donde el correo se envía a varias personas. Para ello, utilizamos alias que nos permiten definir uno o más destinos para un nombre de usuario determinado.
 
-mail aliases are located in `/etc/aliases . `You must first become root before modifying this file: (CentOS7, output has been truncate)
+Los alias de correo se encuentran en `/etc/aliases`. `Primero debe convertirse en root antes de modificar este archivo: (CentOS7, la salida ha sido truncada)
 
 ```
 [root@centos7-1 ~]# cat /etc/aliases
@@ -106,24 +106,24 @@ decode:		root
 root:    payam   ###<-----------
 ```
 
-So it if there is a message for `"lpic1"` it will be sent to the `root `user. 
+Por lo tanto, si hay un mensaje para `"lpic1"`, se enviará al usuario `root`.
 
-The last line tell that `payam` is reading `root` emails  . This let `payam `to read `root `emails without login with root.
+La última línea indica que `payam` está leyendo los correos `root`. Esto permite que `payam` lea los correos `root` sin iniciar sesión como root.
 
 ### newaliases
 
- Modifications to the `/etc/aliases` file are not complete until the `newaliases` command is run to build `/etc/aliases.db`.
+Las modificaciones al archivo `/etc/aliases` no se completan hasta que se ejecuta el comando `newaliases` para compilar `/etc/aliases.db`.
 
 ```
 [root@centos7-1 ~]# newaliases
 [root@centos7-1 ~]# 
 ```
 
-### mail command
+### Comando mail
 
-There are plenty of ways for sending email while using GUI , using browser or with an email client. But options are limited when it comes to command line interface.
+Existen muchas maneras de enviar correos electrónicos usando la interfaz gráfica de usuario, el navegador o un cliente de correo electrónico. Sin embargo, las opciones son limitadas en lo que respecta a la interfaz de línea de comandos.
 
-   The `mail` command is an old standby that can be used to script the sending of mail as well as receive and manage your incoming mail. (CentOS: install mailx)
+El comando `mail` es un recurso clásico que permite programar el envío de correo, así como recibir y administrar el correo entrante. (CentOS: instalar mailx)
 
 | mail command example                                | usage                     |
 | --------------------------------------------------- | ------------------------- |
@@ -131,9 +131,9 @@ There are plenty of ways for sending email while using GUI , using browser or wi
 | mail -s “subject” user1@domain.com < /root/test.txt | send an email from a file |
 | mail -s “subject” user1@domain.com -a /path/to/file | add an attachment         |
 
-> It also can send email from within the scripts like 'echo -e "email content" | mail -s "email subject" "example@example.com"'
+También se puede enviar correos electrónicos desde scripts como 'echo -e "contenido del correo" | mail -s "asunto del correo" "ejemplo@ejemplo.com"'.
 
-We can use `mail` interactively to send messages by passing a list of addressees, or with no arguments you can use it to look at your incoming mail.
+Podemos usar `mail` de forma interactiva para enviar mensajes pasando una lista de destinatarios, o bien, sin argumentos, para revisar el correo entrante.
 
 ```
 [user1@centos7-1 ~]$ mail lpic1@localhost
@@ -143,7 +143,7 @@ I am sending it to lpic1 email address.
 EOT
 ```
 
-Because of aliases we have modified, Any email which is sent to lpic1 email address would be forwarded to root,  as we have define payam as a person who should get root's emails :
+Debido a los alias que hemos modificado, cualquier correo electrónico que se envíe a la dirección de correo electrónico lpic1 se r&eenviará a root, ya que hemos definido a payam como una persona que debe recibir los correos electrónicos de root:
 
 ```
 [payam@centos7-1 ~]$ mail
@@ -171,11 +171,11 @@ I am sending it to lpic1 email address.
 & q
 ```
 
-> Whenever a mail is sent, initially the mail command calls the mail binary, which in turns connects to the local MTA to send the mail to its destination. The local MTA is a locally running smtp server that accepts mails on port 25.
+Al enviar un correo, el comando "mail" llama inicialmente al binario de correo, que a su vez se conecta al MTA local para enviar el correo a su destino. El MTA local es un servidor SMTP que se ejecuta localmente y acepta correos en el puerto 25.
 
 ### \~/.forward
 
-The aliases file must be managed by a system administrator. Individual users can enable forwarding of their own mail using a .forward file in their own home directory. You can put anything in your .forward file that is allowed on the right side of the aliases file. The file contains plain text and does not need to be compiled. When mail is destined for you, sendmail checks for a .forward file in your home directory and processes the entries the same way it processes aliases.
+El archivo de alias debe ser administrado por un administrador del sistema. Los usuarios pueden habilitar el reenvío de su propio correo mediante un archivo .forward en su directorio personal. Puede incluir cualquier elemento permitido en su archivo .forward, a la derecha del archivo de alias. El archivo contiene texto sin formato y no necesita compilarse. Cuando el correo se dirige a usted, sendmail busca un archivo .forward en su directorio personal y procesa las entradas de la misma manera que procesa los alias.
 
 ```
 [user1@centos7-1 ~]$ pwd
@@ -186,7 +186,7 @@ The aliases file must be managed by a system administrator. Individual users can
 user2
 ```
 
-now lets end an email to user1 and check its mail box:
+Ahora, enviemos un correo electrónico al usuario1 y verifiquemos su casilla de correo:
 
 ```
 [payam@centos7-1 ~]$ mail user1@localhost
@@ -229,7 +229,7 @@ Hello!!!
 
 ### mailq
 
- Linux mail handling uses a store-and-forward model. You have already seen that your incoming mail is stored in a file in /var/mail until you read it. Outgoing mail is also stored until a receiving server connection is available. You use the `mailq` command to see what mail is queued.
+La gestión de correo en Linux utiliza un modelo de almacenamiento y reenvío. Ya has visto que el correo entrante se almacena en un archivo en /var/mail hasta que lo lees. El correo saliente también se almacena hasta que se establece una conexión con el servidor receptor. Usa el comando `mailq` para ver qué correo está en cola.
 
 ```
 [root@centos7-1 ~]# mailq
@@ -243,13 +243,8 @@ E085461E470C      473 Wed Feb 19 06:39:07  payam@centos7-1.localdomain
 -- 0 Kbytes in 1 Request.
 ```
 
-Obviously in a health system mailq should be always empty.
+Obviamente en un sistema de salud mailq debe estar siempre vacío.
 
-.
-
-.
-
-.
 
 [https://en.wikipedia.org/wiki/Message_transfer_agent](https://en.wikipedia.org/wiki/Message_transfer_agent)
 

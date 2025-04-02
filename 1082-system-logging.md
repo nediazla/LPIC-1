@@ -1,17 +1,17 @@
-# 108.2. System logging
+# 108.2. Registro del sistema
 
-**Weight: **3
+**Puntuación: **3
 
-**Description:** Candidates should be able to configure the syslog daemon. This objective also includes configuring the logging daemon to send log output to a central log server or accept log output as a central log server. Use of the systemd journal subsystem is covered. Also, awareness of rsyslog and syslog-ng as alternative logging systems is included.
+**Descripción:** Los candidatos deben ser capaces de configurar el demonio de syslog. Este objetivo también incluye la configuración del demonio de registro para enviar la salida del registro a un servidor de registro central o aceptarla como tal. Se aborda el uso del subsistema de registro systemd. Además, se incluye el conocimiento de rsyslog y syslog-ng como sistemas de registro alternativos.
 
-**Key Knowledge Areas:**
+**Áreas de conocimiento clave:**
 
-* Configuration of the syslog daemon
-* Understanding of standard facilities, priorities and actions
-* Configuration of logrotate
-* Awareness of rsyslog and syslog-ng
+* Configuración del demonio syslog
+* Conocimiento de las funciones, prioridades y acciones estándar
+* Configuración de logrotate
+* Conocimiento de rsyslog y syslog-ng
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * syslog.conf
 * syslogd
@@ -25,50 +25,50 @@
 * /etc/systemd/journald.conf
 * /var/log/journal/
 
-#### Why Logging?
+#### ¿Por qué registrar?
 
-A Linux system has many subsystems and applications running. We use system logging to gather data about our running system from the moment it boots. Sometimes we just need to know that all is well. At other times we use this data for auditing, debugging, knowing when a disk or other resource is running out of capacity, and many other purposes. 
+Un sistema Linux tiene muchos subsistemas y aplicaciones en ejecución. Usamos el registro del sistema para recopilar datos sobre nuestro sistema en ejecución desde el momento en que arranca. A veces, simplemente necesitamos saber que todo está bien. Otras veces, usamos estos datos para auditorías, depuración, para saber cuándo un disco u otro recurso se está quedando sin capacidad y para muchos otros fines.
 
 ### syslog
 
- Syslog is a standard for sending and receiving notification messages–in a particular format–from various network devices. The messages include time stamps, event messages, severity, host IP addresses, diagnostics and more.
+Syslog es un estándar para enviar y recibir mensajes de notificación (en un formato específico) desde varios dispositivos de red. Los mensajes incluyen marcas de tiempo, mensajes de eventos, gravedad, direcciones IP del host, diagnósticos y más.
 
 ### syslogd
 
-The syslog daemon is a server process that provides a message logging facility for application and system processes.Unfortunately linux logging is one of aspects of linux which is transition fase. The traditional syslog facility and its syslogd daemon  has been supplemented by other logging facilities such as rsyslog, syslog-ng, and the systemd journal subsystem.
+El demonio syslog es un proceso de servidor que proporciona una función de registro de mensajes para aplicaciones y procesos del sistema. Desafortunadamente, el registro de Linux es uno de los aspectos de Linux que se encuentra en fase de transición. La función tradicional de syslog y su demonio syslogd se han complementado con otras funciones de registro como rsyslog, syslog-ng y el subsistema de registro systemd.
 
 ### syslog.conf
 
- The syslog.conf file is the main configuration file for the **syslogd. **Whenever syslogd   receives a log message, it acts based on the message's type (or facility) and its priority (called selector fields).
+El archivo syslog.conf es el archivo de configuración principal de **syslogd**. Cada vez que syslogd recibe un mensaje de registro, actúa según el tipo (o función) del mensaje y su prioridad (denominados campos selectores).
 
 ```
 type (facility).priority (severity)  destination(where to send the log)
 ```
 
-**Facilities** are simply categories. Some facilities in Linux are: **`auth, user, kern, cron, daemon, mail, local1, local2, ...`**
+**Las instalaciones** son simplemente categorías. Algunas instalaciones en Linux son: **`auth, user, kern, cron, daemon, mail, local1, local2, ...`**
 
-* **`auth`**` `: Security/authentication messages
-* **`user `**: User-level messages
-* **`kern `**: Kernel messages
-* **`corn `**: Clock daemon
-* **`daemon `**: System daemons
-* **`mail `**: Mail system
-* **`local0 – local7`** : Locally used facilities
+* **`auth`**` `: Mensajes de seguridad/autenticación
+* **`user `**: Mensajes a nivel de usuario
+* **`kern `**: Mensajes del kernel
+* **`corn `**: Daemon de reloj
+* **`daemon `**: Daemons del sistema
+* **`mail `**: Sistema de correo
+* **`local0 – local7`**: Instalaciones de uso local
 
-**priorities **Unlike facilities, which have no relationship to each other, priorities are hierarchical. Possible priorities in Linux are:**` emerg/panic, alert, crit, err/error, warn/warning, notice, info, debug`**
+**prioridades **A diferencia de las instalaciones, que no guardan relación entre sí, las prioridades son jerárquicas. Las posibles prioridades en Linux son: **` emerg/panic, alert, crit, err/error, warn/warning, notice, info, debug`**
 
-1. **`emerg : `**System is unusable
-2. **`alert : `**Action must be taken immediately
-3. **`critical : `**Critical conditions
-4. **`err : `**Error conditions
-5. **`warning : `**Warning conditions
-6. **`notice : `**Normal but significant conditions
-7. **`info : `**Informational messages 
-8. **`debug : `**Debug-level messages
+1. **`emerg: **El sistema no se puede usar
+2. **`alert: **Se debe tomar una acción inmediata
+3. **`critical: **Condiciones críticas
+4. **`err: **Condiciones de error
+5. **`warning: **Condiciones de advertencia
+6. **`notice: **Condiciones normales pero significativas
+7. **`info: **Mensajes informativos
+8. **`debug: **Mensajes de depuración
 
-> if we log some specific priority , all the more important things will be logged too
+> Si registramos una prioridad específica, también se registrarán los datos más importantes.
 
-**Action:** Each line in this file specifies one or more facility/priority selectors followed by an action . On the action field we can have things like:
+**Acción:** Cada línea de este archivo especifica uno o más selectores de facilidad/prioridad seguidos de una acción. En el campo de acción podemos incluir elementos como:
 
 | action   | example           | notes                                                                                                  |
 | -------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
@@ -76,13 +76,13 @@ type (facility).priority (severity)  destination(where to send the log)
 | username | user2             | Will notify that person on the screen                                                                  |
 | @ip      | @192.168.10.42    | Will send logs to specified log server and that server decides how to treat logs based on its configs. |
 
- In the following syslog.conf line, mail.notice is the selector and /var/log/mail is the action (i.e., “write messages to /var/log/mail”):
+En la siguiente línea syslog.conf, mail.notice es el selector y /var/log/mail es la acción (es decir, “escribir mensajes en /var/log/mail”):
 
 ```
 mail.notice     /var/log/mail
 ```
 
-Within the selector, “mail” is the facility (message category) and “notice” is the level of priority. You can see part of syslog.conf (CentOS6)  :
+Dentro del selector, «mail» representa la función (categoría del mensaje) y «notice» el nivel de prioridad. Puede ver parte de syslog.conf (CentOS6):
 
 ```
 #### RULES ####
@@ -116,21 +116,21 @@ local7.*                                                /var/log/boot.log
 
 ```
 
-> `*`: wildcard .  signifying “any facility” or "any priority"
+> `*`: wildcard. que significa "cualquier instalación" o "cualquier prioridad".
 >
-> dash - : means it can use memory cache (:don't waist time constantly writing to the disk )
+> Guión -: significa que puede usar la caché de memoria (para no perder tiempo escribiendo constantemente en el disco).
 >
-> equal sign = : to log ONLY one specific level of priority.` facility.=priority action`
+> Signo igual =: para registrar SOLO un nivel específico de prioridad. `instalación.=acción de prioridad`
 
-There is also  /etc/rsyslog.d/ directory and it is better for different softwares and admins to add their specific configs there, instead of editing the main configuration file (See Ubuntu16).
+También existe el directorio /etc/rsyslog.d/, y es mejor que los diferentes programas y administradores agreguen sus configuraciones específicas allí, en lugar de editar el archivo de configuración principal (véase Ubuntu 16).
 
 ### klogd
 
- How do boot-time kernel messages get logged before a file system is even mounted? The kernel stores messages in a ring buffer in memory. The `klogd` daemon processes these messages directly to a console, or a file such as /var/log/dmesg, or through the syslog facility.
+¿Cómo se registran los mensajes del kernel durante el arranque, incluso antes de que se monte un sistema de archivos? El kernel almacena los mensajes en un búfer circular en memoria. El demonio `klogd` procesa estos mensajes directamente en una consola, en un archivo como /var/log/dmesg o a través de la función syslog.
 
 ### /var/log
 
-Almost all logfiles are located under /var/log directory and its sub-directories on Linux(CentOS6).
+Casi todos los archivos de registro se encuentran en el directorio /var/log y sus subdirectorios en Linux (CentOS6).
 
 ```
 [root@centos6-1 ~]# ls /var/log
@@ -148,11 +148,11 @@ btmp-20200217         maillog-20200217  spooler            yum.log
 ConsoleKit            messages          spooler-20200217   yum.log-20200217
 ```
 
-You can use your favorite text editor or less or tail commands in conjunction with grep to read these log files.
+Puedes usar tu editor de texto favorito o los comandos less o tail junto con grep para leer estos archivos de registro.
 
-### creating rsyslog listener
+### Creando un receptor de rsyslog
 
-We can creating rsyslog listener and catch other systems log messages. That is pretty easy. 
+Podemos crear un receptor de rsyslog y capturar los mensajes de registro de otros sistemas. Es bastante sencillo.
 
 ```
 ###CentOS 6
@@ -180,11 +180,11 @@ RSYSLOGD_OPTIONS=""
 RSYSLOGD_OPTIONS="-r"
 ```
 
-and finally do not forget to restart the service `systemctl restart rsyslog` .
+Y por último, no olvides reiniciar el servicio `systemctl restart rsyslog`.
 
 ### journalctl
 
-Systemd also has its own  journaling program called **journald  **and it stores things in binary files. We can't go and see text files (like what we did in syslog/rsyslog), so  we have to use special tool called journalctl to access them(CentOS7):
+Systemd también tiene su propio programa de registro llamado **journald**, que almacena información en archivos binarios. No podemos acceder a los archivos de texto (como hicimos con syslog/rsyslog), por lo que debemos usar la herramienta especial journalctl para acceder a ellos (CentOS7).
 
 ```
 [root@centos7-1 ~]# journalctl 
@@ -202,11 +202,11 @@ Feb 10 02:51:48 localhost.localdomain kernel: BIOS-e820: [mem 0x000000000009ec00
 Feb 10 02:51:48 localhost.localdomain kernel: BIOS-e820: [mem 0x00000000000dc000-0x0000
 ```
 
-As we mentioned earlier ,  linux logging is one of aspects of linux which is in  under change. Distributions with systemd has journald, beside that some of them still preserve rsyslog and some other not. Try to find out your linux logging system
+Como mencionamos anteriormente, el registro de Linux es uno de los aspectos que está cambiando. Las distribuciones con systemd incluyen journald, aunque algunas aún conservan rsyslog y otras no. Intenta averiguar cuál es el sistema de registro de tu Linux.
 
 ### /etc/systemd/journald.conf
 
-The config file of journalctl is located at /etc/systemd/journald.conf (CentOS7)
+El archivo de configuración de journalctl se encuentra en /etc/systemd/journald.conf (CentOS7).
 
 ```
 [root@centos7-1 ~]# cat  /etc/systemd/journald.conf 
@@ -253,13 +253,13 @@ The config file of journalctl is located at /etc/systemd/journald.conf (CentOS7)
 
 ### logger
 
-The Linux logger command provides an easy way to generate some logs(centOS6)
+El comando logger de Linux proporciona una manera sencilla de generar algunos registros (centOS6)
 
 ```
 [root@centos6-1 ~]# logger local1.emerg Hello! This is my log!
 ```
 
- and it will appear at /var/log/syslog (or /var/log/messages):
+ y aparecerá en /var/log/syslog (o /var/log/messages):
 
 ```
 [root@centos6-1 ~]# tail -5 /var/log/messages
@@ -273,19 +273,19 @@ Feb 18 06:59:34 server1 payam: Hello! This is my log!
 
 ### logrotate
 
- With the amount of logging that is possible, we need to be able to control the size of log files. This is done using the `logrotate`utility , which is usually run as a cron job.
+Con la cantidad de registros posibles, necesitamos controlar el tamaño de los archivos de registro. Esto se realiza mediante la utilidad `logrotate`, que suele ejecutarse como una tarea cron.
 
-The important files to pay attention to are:
+Los archivos importantes a tener en cuenta son:
 
-* /usr/sbin/logrotate -- the logrotate command itself (the executable)
-* /etc/cron.daily/logrotate -- the shell script that runs logrotate on a daily basis (note that it might be /etc/cron.daily/logrotate.cron on some systems)
-* /etc/logrotate.conf -- the log rotation configuration file
+* /usr/sbin/logrotate: el comando logrotate (el ejecutable)
+* /etc/cron.daily/logrotate: el script de shell que ejecuta logrotate a diario (tenga en cuenta que podría ser /etc/cron.daily/logrotate.cron en algunos sistemas)
+* /etc/logrotate.conf: el archivo de configuración de rotación de registros
 
-Another important file is /etc/logrotate.d, included in the process through this line in the /etc/logrotate.conf file:
+Otro archivo importante es /etc/logrotate.d, incluido en el proceso mediante esta línea en el archivo /etc/logrotate.conf:
 
 ### /etc/logrotate.conf
 
-Use the /etc/logrotate.conf configuration file to specify how your log rotating and archiving should happen.
+Utilice el archivo de configuración /etc/logrotate.conf para especificar cómo debe realizarse la rotación y el archivado de registros.
 
 ```
 [root@centos6-1 ~]# cat /etc/logrotate.conf 
@@ -326,22 +326,23 @@ include /etc/logrotate.d
 # system-specific logs may be also be configured here.
 ```
 
-Each log file may be handled daily, weekly, monthly, or when it grows too large. 
+Cada archivo de registro se puede manejar diariamente, semanalmente, mensualmente o cuando crezca demasiado.
 
-| parameter                    | meaning                                                                                                                         |
+| parámetro | significado |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| missingok                    | don’t write an error message if the log file is missing                                                                         |
-| daily, weekly, monthly       | rotate logs daily, weekly, monthly                                                                                              |
-| rotate _N_                   | keep the latest _N_ logs and delete the older ones                                                                              |
-| compress                     | compress the log (creates  gz files)                                                                                            |
-|  **create** mode owner group |  Immediately after rotation (before the **postrotate** script is run) the log file is created with this acces and owner         |
-| minsize N                    | Log files are rotated when they grow bigger than size bytes, but not before the additionally specified time interval(daily,...) |
+| missingok | no escribir un mensaje de error si falta el archivo de registro |
+| diario, semanal, mensual | rotar registros diario, semanal, mensual |
+| rotar _N_ | conservar los _N_ registros más recientes y eliminar los más antiguos |
+| comprimir | comprimir el registro (crea archivos gz) |
+| **crear** modo grupo propietario | Inmediatamente después de la rotación (antes de ejecutar el script **postrotate**) se crea el archivo de registro con este acceso y propietario |
+| minsize N | Los archivos de registro se rotan cuando superan el tamaño de bytes, pero no antes del intervalo de tiempo especificado adicionalmente (diario,...) |
+Este archivo contiene algunas configuraciones predeterminadas y configura la rotación de algunos registros que no pertenecen a ningún paquete del sistema. También utiliza una instrucción `include` para extraer la configuración de cualquier archivo en el directorio `/etc/logrotate.d` (CentOS6).
 
-this file contains some default settings and sets up rotation for a few logs that are not owned by any system packages. It also uses an `include` statement to pull in configuration from any file in the `/etc/logrotate.d` directory(CentOS6).
 
 ### /etc/logrotate.d
 
-Any packages we install that need help with log rotation will place their Logrotate configuration here.
+
+Cualquier paquete que instalemos que necesite ayuda con la rotación de registros guardará aquí su configuración de Logrotate.
 
 ```
 [root@centos6-1 ~]# ls /etc/logrotate.d/
@@ -359,24 +360,16 @@ ConsoleKit  cups  dracut  httpd  named  ppp  psacct  syslog  wpa_supplicant  yum
 }
 ```
 
-These are the meaning of some of these parameters:
+Estos son el significado de algunos de estos parámetros:
 
-| parameter      | meaning                                                                           |
+| parámetro | significado |
 | -------------- | --------------------------------------------------------------------------------- |
-| missingok      | don’t write an error message if the log file is missing                           |
-| notifempty     | don’t rotate the log file if it is empty.                                         |
-| shared scripts |  Run **prerotate** and **postrotate** scripts for every log file which is rotated |
-| delaycompress  | Postpone compression of the previous log file to the next rotation cycle          |
+| missingok | no escribir un mensaje de error si falta el archivo de registro |
+| notifempty | no rotar el archivo de registro si está vacío. |
+| scripts compartidos | ejecutar scripts **prerotate** y **postrotate** para cada archivo de registro rotado |
+| delaycompress | posponer la compresión del archivo de registro anterior hasta el siguiente ciclo de rotación |
 
-That's all!
-
-.
-
-.
-
-.
-
-.
+¡Eso es todo!
 
 [https://developer.ibm.com/tutorials/l-lpic1-108-2/](https://developer.ibm.com/tutorials/l-lpic1-108-2/)
 

@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Introduction](README.md)
-* [101.1. Determine and configure hardware settings](1011-determine-and-configure-hardware-settings.md)
-* [101.2. Boot the system](1012-boot-the-system.md)
+* [101.1. Determine and configure hardware settings](1011.md)
+* [101.2. Boot the system](1012.md)
 * [101.3. Change runlevels / boot targets and shutdown or reboot system](1013-change-runlevels-boot-targets-and-shutdown-or-reboot-system.md)
 * [102.1. Design hard disk layout](1021-design-hard-disk-layout.md)
 * [102.2. Install a boot manager](1022-install-a-boot-manager.md)
@@ -41,7 +41,7 @@
 * [109.2. Basic network configuration](1092-basic-network-configuration.md)
 * [109.3. Basic network troubleshooting](1093-basic-network-troubleshooting.md)
 * [109.4. Configure client side DNS](1094-configure-client-side-dns.md)
-* [110.1. Perform security administration tasks](1101-perform-security-administration-tasks.md)
-* [110.2. Setup host security](1102-setup-host-security.md)
-* [110.3. Securing data with encryption](1103-securing-data-with-encryption.md)
+* [110.1. Perform security administration tasks](LPIC-1/1101.md)
+* [110.2. Setup host security](LPIC-1/1102.md)
+* [110.3. Securing data with encryption](LPIC-1/1103.md)
 

@@ -1,16 +1,16 @@
-# 109.3. Basic network troubleshooting
+# 109.3. Solución básica de problemas de red
 
-**Weight:** 4
+**Posición:** 4
 
-Description: Candidates should be able to troubleshoot networking issues on client hosts.
+Descripción: Los candidatos deben ser capaces de solucionar problemas de red en hosts cliente.
 
-**Key Knowledge Areas:**
+**Áreas clave de conocimiento:**
 
-* Manually and automatically configure network interfaces and routing tables to include adding, starting, stopping, restarting, deleting or reconfiguring network interfaces
-* Change, view, or configure the routing table and correct an improperly set default route manually
-* Debug problems associated with the network configuration
+* Configurar de forma manual y automática interfaces de red y tablas de enrutamiento, incluyendo agregar, iniciar, detener, reiniciar, eliminar o reconfigurar interfaces de red.
+* Cambiar, ver o configurar la tabla de enrutamiento y corregir manualmente una ruta predeterminada incorrecta.
+* Depurar problemas asociados con la configuración de red.
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * ifconfig
 * ip
@@ -29,11 +29,11 @@ Description: Candidates should be able to troubleshoot networking issues on clie
 * tracepath6
 * netcat
 
-Till now we have learned about fundamentals of internet protocols and we have get familiar with some of network configuration files and utilities. The truth is that some times things doesn't work as we expected and need troubleshooting. In this section  we try to show some steps to resolve the problem, additionally some new commands will be introduced.
+Hasta ahora, hemos aprendido los fundamentos de los protocolos de Internet y nos hemos familiarizado con algunos archivos y utilidades de configuración de red. Lo cierto es que a veces las cosas no funcionan como esperábamos y es necesario solucionar el problema. En esta sección, intentaremos mostrar algunos pasos para resolver el problema y, además, se presentarán nuevos comandos.
 
-### ifconfig & ip (interface or ip address problems)
+### ifconfig & ip (problemas de interfaz o dirección IP)
 
-The first command we have learned is ifconfig . Some times there might be an inactive interface which doesn't appear in results:
+El primer comando que hemos aprendido es ifconfig. A veces, puede haber una interfaz inactiva que no aparezca en los resultados:
 
 ```
 root@ubuntu16-1:~# ifconfig
@@ -47,7 +47,7 @@ lo        Link encap:Local Loopback
           RX bytes:318 (318.0 B)  TX bytes:318 (318.0 B)
 ```
 
-use -a with ifconfig or ip command instead:
+Utilice -a con el comando ifconfig o ip en su lugar:
 
 ```
 root@ubuntu16-1:~# ifconfig -a
@@ -79,19 +79,19 @@ root@ubuntu16-1:~# ip a s
 
 ```
 
-Bring up the interface with` ifup ens33` or` ifconfig ens33` up , and next check for your ip address.  
+Abra la interfaz con `ifup ens33` o `ifconfig ens33` up y, a continuación, verifique su dirección IP. 
 
 ```
 root@ubuntu16-1:~# ifup ens33
 ```
 
-> You can check your ip address either from GUI or trough config files.If you are on Automatic ip assignment use`  dhclient -r  `and `dhclient` to release and renew your ip address.
+Puedes comprobar tu dirección IP desde la interfaz gráfica o a través de los archivos de configuración. Si tienes activada la asignación automática de IP, usa `dhclient -r` y `dhclient` para liberar y renovar tu dirección IP.
 
-### ping (detecting the problem)
+### ping (detección del problema)
 
-ping is our best friend when we are troubleshooting network problems.
+El ping es nuestro mejor aliado para solucionar problemas de red.
 
-Check whether you can ping another computer in the same network? 
+Comprueba si puedes hacer ping a otro ordenador en la misma red.
 
 ```
 root@ubuntu16-1:~# ping 172.16.43.127 -c 2
@@ -104,7 +104,7 @@ PING 172.16.43.127 (172.16.43.127) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.748/0.751/0.755/0.027 ms
 ```
 
-from a simple ping command we can determine whether the target is up and running or not. Also there might be a firewall in your network, which filters out ICMP packets, check for host firewall first and then hardware firewall if there are any. 
+Con un simple comando ping, podemos determinar si el objetivo está activo o no. Además, es posible que su red cuente con un firewall que filtre los paquetes ICMP. Compruebe primero el firewall del host y luego el firewall de hardware, si lo hay.
 
 ```
 root@ubuntu16-1:~# ping 172.16.43.126 -c 2
@@ -117,15 +117,15 @@ From 172.16.43.135 icmp_seq=2 Destination Host Unreachable
 pipe 2
 ```
 
-Some times you might ping a wrong ip address or the server might have two interfaces or two ip adresses.
+A veces, podría hacer ping a una dirección IP incorrecta o el servidor podría tener dos interfaces o dos direcciones IP.
 
 ### ping6
 
-Regular ping command only works with IPv4 address. Use ping6 command to send ICMPv6 ECHO_REQUEST packets to network hosts from a host or gateway.
+El comando ping normal solo funciona con direcciones IPv4. Use el comando ping6 para enviar paquetes ICMPv6 ECHO_REQUEST a los hosts de la red desde un host o una puerta de enlace.
 
-### route (gateway and routing problems)
+### ruta (problemas de puerta de enlace y enrutamiento)
 
-If you cant reach any network except computers you are in the same subnet with, you should doubt about you gateway.
+Si no puede acceder a ninguna red, excepto a los equipos que están en la misma subred, debería dudar de su puerta de enlace.
 
 ```
 root@ubuntu16-1:~# route
@@ -136,7 +136,7 @@ link-local      *               255.255.0.0     U     1000   0        0 ens33
 172.16.43.0     *               255.255.255.0   U     0      0        0 ens33
 ```
 
-we can also use netstat -rn command to see current gateway:
+También podemos usar el comando netstat -rn para ver la puerta de enlace actual:
 
 ```
 root@ubuntu16-1:~# netstat -rn
@@ -147,7 +147,7 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 172.16.43.0     0.0.0.0         255.255.255.0   U         0 0          0 ens33
 ```
 
-If there were no default gate way, you should use `route add default gw x.x.x.x` to  add a default gateway. Next check the gate way, and make sure packets are going out from the right interface:
+Si no hubiera una puerta de enlace predeterminada, debería usar `route add default gw x.x.x.x` para agregar una. A continuación, verifique la puerta de enlace y asegúrese de que los paquetes salgan de la interfaz correcta:
 
 ```
 root@ubuntu16-1:~# ping -c 3 172.16.43.2
@@ -161,11 +161,11 @@ PING 172.16.43.2 (172.16.43.2) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.166/0.326/0.434/0.116 ms
 ```
 
-Every thing seems okey, but you cant reach specific ip address in another building. Hmm there might be routing problems in physical routers! how to check that?
+Todo parece estar bien, pero no se puede acceder a una dirección IP específica en otro edificio. ¡Podría haber problemas de enrutamiento en los routers físicos! ¿Cómo comprobarlo?
 
 ### traceroute
 
-The traceroute command maps the journey that a packet of information undertakes from its source to its destination.  This tool uses **ICMP** messages, but unlike _ping_, identifies every router in the path. **traceroute** is useful when troubleshooting network problems because it can help you to localize problems in network connectivity (you might need to install it `apt install traceroute`):
+El comando traceroute mapea el recorrido que realiza un paquete de información desde su origen hasta su destino. Esta herramienta utiliza mensajes **ICMP**, pero a diferencia de _ping_, identifica todos los routers en la ruta. **traceroute** es útil para solucionar problemas de red, ya que puede ayudar a localizar problemas de conectividad (quizás necesite instalarlo `apt install traceroute`).
 
 ```
 root@ubuntu16-1:~# traceroute google.com
@@ -187,19 +187,15 @@ traceroute to google.com (172.217.18.142), 30 hops max, 60 byte packets
 15  arn02s05-in-f142.1e100.net (172.217.18.142)  45.783 ms  45.708 ms  4
 ```
 
-> use -i to Specifies the interface through which traceroute should send packets.
-
+> use -i para especificar la interfaz a través de la cual traceroute debe enviar paquetes.
 ### traceroute6
 
-traceroute with option `-6` supports ipv6, instead we can use traceroute6 command.
+Traceroute con la opción `-6` es compatible con IPv6; en su lugar, podemos usar el comando traceroute6.
 
-{% hint style="info" %}
-What is MTU ? , the maximum transmission unit is the size of the largest protocol data unit that can be communicated in a single network layer transaction.
-{% endhint %}
-
+¿Qué es la MTU? La unidad máxima de transmisión (MTU) es el tamaño de la unidad de datos de protocolo más grande que se puede comunicar en una sola transacción de capa de red.
 ### tracepath
 
-Tracepath traces a path to a designated network address, reporting on the "time to live" or TTL lag and maximum transmission units (MTU) along the way. This command can be run by any user other with access to the command line prompt.
+Tracepath rastrea una ruta a una dirección de red designada, informando sobre el tiempo de vida (TTL) y las unidades máximas de transmisión (MTU) a lo largo del camino. Este comando puede ser ejecutado por cualquier usuario que no tenga acceso a la línea de comandos.
 
 ```
 root@ubuntu16-1:~# tracepath google.com
@@ -224,17 +220,18 @@ root@ubuntu16-1:~# tracepath google.com
 
 ```
 
-> Traceroute is essentially the same as Tracepath except that by default, it will only give the TTL value.
+Traceroute es básicamente igual que Tracepath, excepto que, por defecto, solo proporciona el valor TTL.
 
 ### tracepath6
 
- **tracepath6** is good replacement for **traceroute6.**
+**tracepath6** es un buen sustituto de **traceroute6**.
 
 ### dig
 
- **Dig** stands for (**Domain Information Groper**) is a network administration command-line tool for querying **Domain Name System** (**DNS**) name servers. It is useful for verifying and troubleshooting **DNS** problems and also to perform **DNS** lookups and displays the answers that are returned from the name server that were queried.
+**Dig** (**Domain Information Groper**) es una herramienta de línea de comandos de administración de red para consultar servidores de nombres del **Sistema de Nombres de Dominio** (**DNS**). Es útil para verificar y solucionar problemas de **DNS**, así como para realizar búsquedas de **DNS** y mostrar las respuestas del servidor de nombres consultado.
 
-> By default, dig sends the DNS query to name servers listed in the resolver(/etc/resolv.conf) unless it is asked to query a specific name server.
+
+Por defecto, dig envía la consulta DNS a los servidores de nombres listados en el resolver (/etc/resolv.conf), a menos que se le solicite consultar un servidor de nombres específico.
 
 ```
 root@ubuntu16-1:~# dig aol.com
@@ -263,7 +260,7 @@ aol.com.		587	IN	A	106.10.218.150
 ;; MSG SIZE  rcvd: 116
 ```
 
-The dig command output has several sections sections , to have just Answer section use +short switch :
+La salida del comando dig tiene varias secciones, para tener solo la sección de Respuesta use el interruptor corto +:
 
 ```
 root@ubuntu16-1:~# dig aol.com +short
@@ -274,7 +271,7 @@ root@ubuntu16-1:~# dig aol.com +short
 67.195.231.10
 ```
 
-to query specific  Name server use `@NameServerIP` :
+Para consultar un servidor de nombres específico, utilice `@NameServerIP`:
 
 ```
 root@ubuntu16-1:~# dig aol.com  @64.6.65.6 +short
@@ -287,9 +284,9 @@ root@ubuntu16-1:~# dig aol.com  @64.6.65.6 +short
 
 ### netstat
 
-  **netstat** (network statistics) is a command-line tool that displays network connections (both incoming and outgoing), routing tables,  number of network interface and even network protocol statistics.
+**netstat** (estadísticas de red) es una herramienta de línea de comandos que muestra las conexiones de red (entrantes y salientes), las tablas de enrutamiento, el número de interfaces de red e incluso las estadísticas de protocolos de red.
 
-> By default, netstat displays a list of open sockets .( A socket is one end-point of a two-way communication link between two programs running on the network.) as an example X11:
+> Por defecto, netstat muestra una lista de sockets abiertos. (Un socket es un extremo de un enlace de comunicación bidireccional entre dos programas que se ejecutan en la red). Por ejemplo, X11:
 
 ```
 root@ubuntu16-1:~# netstat  | grep X11 | head -n3
@@ -299,64 +296,47 @@ unix  3      [ ]         STREAM     CONNECTED     32753    @/tmp/.X11-unix/X0
 
 ```
 
-So we usually use a combination of switches with netstat :
+Por lo general, utilizamos una combinación de conmutadores con netstat:
 
-| netstat command example  | usage                                                      |
-| ------------------------ | ---------------------------------------------------------- |
-| netstat -a               | Listing all the LISTENING Ports of TCP and UDP connections |
-| netstat -na              | all LISTENING  ports, but shows numerical addresses        |
-| netstat -at              | Listing TCP Ports connections                              |
-| netstat -au              | Listing UDP Ports connections                              |
-| netstat -l               | Listing all LISTENING(TCP\&UDP) Connections                |
-| netstat -s               | Showing Statistics by Protocol(TCP\&UDP&...)               |
-| netstat -tp              | Displaying Service name with PID                           |
-| netstat -rn              | Displaying Kernel IP routing                               |
-
-> use netstat in conjunction with grep to get a better results.
+| Ejemplo del comando netstat | Uso |
+| ----------------------- | ---------------------------------------------------------- |
+| netstat -a | Listado de todos los puertos de escucha de las conexiones TCP y UDP |
+| netstat -na | Todos los puertos de escucha, pero con direcciones numéricas |
+| netstat -at | Listado de conexiones de puertos TCP |
+| netstat -au | Listado de conexiones de puertos UDP |
+| netstat -l | Listado de todas las conexiones de escucha (TCP\&UDP) |
+| netstat -s | Visualización de estadísticas por protocolo (TCP\&UDP&...) |
+| netstat -tp | Visualización del nombre del servicio con PID |
+| netstat -rn | Visualización del enrutamiento IP del kernel |
+> Use netstat junto con grep para obtener mejores resultados.
 
 ### netcat
 
-The `nc `(or netcat) utility is used for just about anything under the sun involving TCP or UDP. It can open TCP connections, send UDP packets, listen on arbitrary TCP and UDP ports, do port scanning, and deal with both IPv4 and IPv6. Unlike telnet, nc scripts nicely, and separates error messages onto standard error instead of sending them to standard output, as telnet does with some.
+La utilidad `nc` (o netcat) se utiliza para prácticamente cualquier aplicación que involucre TCP o UDP. Puede abrir conexiones TCP, enviar paquetes UDP, escuchar en puertos TCP y UDP arbitrarios, escanear puertos y gestionar tanto IPv4 como IPv6. A diferencia de Telnet, `nc` se ejecuta correctamente en scripts y separa los mensajes de error en la salida estándar en lugar de enviarlos a la salida estándar, como hace Telnet con algunos.
 
 ```
 root@ubuntu16-1:~# netcat -l 8888
 ```
 
-The -l parameter means that netcat is in listen (server) mode, and 8888 is the port it listens to; netcat will create a socket server and wait for connections on port 8888 . The terminal will remain on hold for a client to connect to the open server with netcat. We can verify that a host service listens on port 8888.We need to open a new terminal to the host station and run the command:
+
 
 ```
 root@ubuntu16-1:~# netstat -na | grep 8888
 tcp        0      0 0.0.0.0:8888            0.0.0.0:*               LISTEN 
 ```
 
+El parámetro -l significa que netcat está en modo de escucha (servidor) y el puerto al que escucha es 8888. netcat creará un servidor de sockets y esperará conexiones en el puerto 8888. La terminal permanecerá en espera a que un cliente se conecte al servidor abierto con netcat. Podemos verificar que un servicio host escucha en el puerto 8888. Necesitamos abrir una nueva terminal en la estación host y ejecutar el comando:
 
 
-
-
-.
-
-.
-
-.
-
-[https://www.cyberciti.biz/faq/howto-test-ipv6-network-with-ping6-command/](https://www.cyberciti.biz/faq/howto-test-ipv6-network-with-ping6-command/)
-
-[https://www.lifewire.com/traceroute-linux-command-4092586](https://www.lifewire.com/traceroute-linux-command-4092586)
-
-[https://geek-university.com/linux/traceroute-command/](https://geek-university.com/linux/traceroute-command/)
-
-[https://www.techwalla.com/articles/differences-between-traceroute-tracepath](https://www.techwalla.com/articles/differences-between-traceroute-tracepath)
-
-[http://netstat.net/](http://netstat.net)
-
-[http://journals.ecs.soton.ac.uk/java/tutorial/networking/sockets/definition.html](http://journals.ecs.soton.ac.uk/java/tutorial/networking/sockets/definition.html)
-
-[https://www.geeksforgeeks.org/netstat-command-linux/](https://www.geeksforgeeks.org/netstat-command-linux/)
-
-[https://www.tecmint.com/20-netstat-commands-for-linux-network-management/](https://www.tecmint.com/20-netstat-commands-for-linux-network-management/)
-
-[https://linux.die.net/man/1/nc](https://linux.die.net/man/1/nc)
-
-[https://www.mvps.net/docs/what-is-netcat-and-how-to-use-it/](https://www.mvps.net/docs/what-is-netcat-and-how-to-use-it/)
+- [https://www.cyberciti.biz/faq/howto-test-ipv6-network-with-ping6-command/](https://www.cyberciti.biz/faq/howto-test-ipv6-network-with-ping6-command/)
+- [https://www.lifewire.com/traceroute-linux-command-4092586](https://www.lifewire.com/traceroute-linux-command-4092586)
+- [https://geek-university.com/linux/traceroute-command/](https://geek-university.com/linux/traceroute-command/)
+- [https://www.techwalla.com/articles/differences-between-traceroute-tracepath](https://www.techwalla.com/articles/differences-between-traceroute-tracepath)
+- [http://netstat.net/](http://netstat.net)
+- [http://journals.ecs.soton.ac.uk/java/tutorial/networking/sockets/definition.html](http://journals.ecs.soton.ac.uk/java/tutorial/networking/sockets/definition.html)
+- [https://www.geeksforgeeks.org/netstat-command-linux/](https://www.geeksforgeeks.org/netstat-command-linux/)
+- [https://www.tecmint.com/20-netstat-commands-for-linux-network-management/](https://www.tecmint.com/20-netstat-commands-for-linux-network-management/)
+- [https://linux.die.net/man/1/nc](https://linux.die.net/man/1/nc)
+- [https://www.mvps.net/docs/what-is-netcat-and-how-to-use-it/](https://www.mvps.net/docs/what-is-netcat-and-how-to-use-it/)
 
 .

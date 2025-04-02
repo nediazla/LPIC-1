@@ -1,16 +1,16 @@
-# 109.2. Basic network configuration
+# 109.2. Configuración básica de red
 
-**Weight:** 4
+**Puntuación:** 4
 
-**Description:** Candidates should be able to view, change and verify configuration settings on client hosts.
+**Descripción:** Los candidatos deben ser capaces de ver, cambiar y verificar la configuración de los hosts cliente.
 
-**Key Knowledge Areas:**
+**Áreas clave de conocimiento:**
 
-* Manually and automatically configure network interfaces
-* Basic TCP/IP host configuration
-* Setting a default route
+* Configurar interfaces de red de forma manual y automática
+* Configuración básica de host TCP/IP
+* Establecer una ruta predeterminada
 
-**Terms and Utilities:**
+**Términos y utilidades:**
 
 * /etc/hostname
 * /etc/hosts
@@ -22,17 +22,17 @@
 * route
 * ping
 
-In this tutorial, we learn hat make network configurations persistent in linux.
+En este tutorial, aprenderemos cómo hacer que las configuraciones de red sean persistentes en Linux.
 
 ### ifconfig
 
- **ifconfig** ( **interface configuration)** utility is used to configure, or view the configuration of, a network interface via command line interface(CentOS6).
+La utilidad **ifconfig** (**configuración de interfaz)** se utiliza para configurar o ver la configuración de una interfaz de red mediante la interfaz de línea de comandos (CentOS6).
 
 ```
 ifconfig [...OPTIONS] [INTERFACE]
 ```
 
- The “**ifconfig**” command with no option, displays  current network configuration information:
+El comando “**ifconfig**” sin opción muestra la información de configuración de red actual:
 
 ```
 [root@centos6-1 ~]# 
@@ -56,7 +56,7 @@ lo        Link encap:Local Loopback
           RX bytes:386271 (377.2 KiB)  TX bytes:386271 (377.2 KiB)
 ```
 
-> the lo is the loopback adapter , with ip address 127.0.0.1 which is used by operating system for its own internal communications.
+> el lo es el adaptador de bucle invertido, con dirección IP 127.0.0.1 que utiliza el sistema operativo para sus propias comunicaciones internas.
 
 | ifconfig option | description                                                  |
 | --------------- | ------------------------------------------------------------ |
@@ -64,26 +64,24 @@ lo        Link encap:Local Loopback
 | -s              | display a short list (like netstat -i)                       |
 | -v              | be more verbose for some error conditions                    |
 
-We can use ifconfig to change network configurations, but this will require root access:
+Podemos usar ifconfig para cambiar las configuraciones de red, pero esto requerirá acceso root:
 
-| ifconfig command                                    | description          |
+| Comando ifconfig | Descripción |
 | --------------------------------------------------- | -------------------- |
-| ifconfig eth0 172.16.43.155                         | Assign a IP Address  |
-| ifconfig eth0 netmask 255.255.255.224               | Assign a Netmask     |
-| ifconfig eth0 172.16.43.155 netmask 255.255.255.224 | Assign a IP, Netmask |
+| ifconfig eth0 172.16.43.155 | Asignar una dirección IP |
+| ifconfig eth0 netmask 255.255.255.224 | Asignar una máscara de red |
+| ifconfig eth0 172.16.43.155 netmask 255.255.255.224 | Asignar una IP, máscara de red |
 
-ifconfig can be used to  turn an interface up and down ,again  this will need root access:
+ifconfig puede usarse para activar y desactivar una interfaz. Para ello, se requiere acceso root:
 
-* ifconfig _interface_ up:  used to activate the driver for the given interface
-* ifconfig _interface _down:   used to deactivate the driver for the given interface
+* ifconfig _interface_ up: se usa para activar el controlador de la interfaz dada.
+* ifconfig _interface _down: se usa para desactivar el controlador de la interfaz dada.
 
-{% hint style="danger" %}
-If you're still using ifconfig, you're living in the past! ifconfig command  is deprecated and replaced by ip command.
-{% endhint %}
+Si todavía usas ifconfig, ¡estás en el pasado! El comando ifconfig está obsoleto y se ha reemplazado por el comando ip.
 
-### ifup , ifdown
+### ifup, ifdown
 
-Same as previous commands, ifup and ifdown are used to enable and disable an interface.
+Al igual que los comandos anteriores, ifup e ifdown se utilizan para habilitar y deshabilitar una interfaz.
 
 ```
 [root@centos6-1 ~]# ifdown eth0
@@ -95,23 +93,23 @@ state: activated
 Connection activated
 ```
 
-### gateway
+### Puerta de enlace
 
-One benefit of chopping ip addresses into classes and subnets is controlling broad casts.This happens using subnetmask.  But what is two compuyers from two different networks wants to communicate with each other?
+Una ventaja de dividir las direcciones IP en clases y subredes es controlar las transmisiones. Esto se realiza mediante la máscara de subred. Pero, ¿qué ocurre si dos computadoras de dos redes diferentes desean comunicarse entre sí?
 
-A **gateway **is a node or a router that acts as an access point to passes network data from local networks to remote networks.
+Una **puerta de enlace** es un nodo o enrutador que actúa como punto de acceso para transferir datos de red desde redes locales a redes remotas.
 
-the address which is used as a gateway to reach to other networks outside our local network is called **default gateway**. There are different ways to set gateway.
+La dirección que se utiliza como puerta de enlace para acceder a otras redes fuera de nuestra red local se denomina **puerta de enlace predeterminada**. Hay diferentes maneras de configurar una puerta de enlace.
 
-### Network Configuration files
+### Archivos de configuración de red
 
-The bad news is that all configurations that we have done using ifconfig command are not persistent and got vanished whe system restarts ot the interface turns up and down. So we should find out a way to make our setting persistent and the only way we can achieve that by using network configuration files.
+La mala noticia es que todas las configuraciones que hemos realizado con el comando `ifconfig` no son persistentes y desaparecen al reiniciar el sistema o al activarse y desactivarse la interfaz. Por lo tanto, debemos encontrar una manera de que nuestra configuración sea persistente, y la única manera de lograrlo es mediante archivos de configuración de red.
 
-Unfortunately the network configuration files in linux are placed in different places and it depend on the distribution which we are talking about.
+Desafortunadamente, los archivos de configuración de red en Linux se ubican en diferentes lugares y dependen de la distribución de la que estemos hablando.
 
-#### RedHat Based systems 
+Sistemas basados ​​en Red Hat
 
-In Redhat , CentOS, and fedora the files are located at  `/etc/sysconfig/network-scripts/` . 
+En Red Hat, CentOS y Fedora, los archivos se encuentran en `/etc/sysconfig/network-scripts/`.
 
 ```
 [root@server1 ~]# ls /etc/sysconfig/network-scripts/
@@ -125,7 +123,7 @@ ifdown-ib    ifdown-routes  ifup-eth       ifup-plusb  ifup-wireless
 
 ```
 
-and the default gateway is configured via file:  `/etc/sysconfig/network`
+y la puerta de enlace predeterminada se configura a través del archivo: `/etc/sysconfig/network`
 
 ```
 [root@server1 Desktop]# cat /etc/sysconfig/network
@@ -134,7 +132,7 @@ HOSTNAME=server1
 GATEWAY=172.16.43.2
 ```
 
-lets take a look at  eth0 configuration file:
+Echemos un vistazo al archivo de configuración eth0:
 
 ```
 [root@server1 ~]# cat  /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -161,9 +159,9 @@ IPV6_PEERROUTES=yes
 LAST_CONNECT=1582381005
 ```
 
-#### Debian Based Systems
+Sistemas basados ​​en Debian
 
-In debian based systems line Ubuntu , ... the main network configuration file location is  `/etc/network/interfaces` and there is no separated file for gateway configuration :
+En sistemas basados ​​en Debian, como Ubuntu, el archivo principal de configuración de red se encuentra en `/etc/network/interfaces` y no existe un archivo separado para la configuración de la puerta de enlace.
 
 ```
 auto lo
@@ -178,15 +176,15 @@ gateway 172.16.43.2
 dns-nameservers 8.8.8.8
 ```
 
-there might be `/etc/network/interfaces.d `directory for configuration files.
+Podría existir el directorio `/etc/network/interfaces.d` para los archivos de configuración.
 
-> ifdown and ifup commands use this configuration file.
+> Los comandos ifdown e ifup usan este archivo de configuración.
 
-#### DNS configuration  file
+#### Archivo de configuración DNS
 
 ### /etc/resolv.conf:
 
-As you have noticed DNS configuration is in the same file that interface configuration is located but there is another place in linux which contains DNS information `/etc/resolv.conf` :
+Como habrás notado, la configuración DNS se encuentra en el mismo archivo que la configuración de la interfaz, pero existe otro lugar en Linux que contiene información DNS, `/etc/resolv.conf`:
 
 ```
 [root@server1 Desktop]# cat /etc/resolv.conf 
@@ -194,11 +192,11 @@ As you have noticed DNS configuration is in the same file that interface configu
 nameserver 8.8.8.8
 ```
 
-Again setting in this file are not permanent and it is not recommended to change this file by hand , except for temporary  tests.
+Nuevamente, la configuración de este archivo no es permanente y no se recomienda modificarlo manualmente, excepto para pruebas temporales.
 
-### hostname
+### nombre de host
 
- **Hostname** is the program that is used to either set or display the current host, domain or node name of the system (we are usiong centOS).
+**Nombre de host** es el programa que se utiliza para configurar o mostrar el nombre actual del host, dominio o nodo del sistema (usamos centOS).
 
 ```
 [root@server1 Desktop]# hostname
@@ -208,14 +206,14 @@ server1
 centos6-1
 ```
 
-The new hostname will appear if you open a new terminal but get vanished if you restart the system. To configure hostname permanently there are a couple of other places which should be changed
+El nuevo nombre de host aparecerá al abrir una nueva terminal, pero desaparecerá al reiniciar el sistema. Para configurar el nombre de host de forma permanente, hay un par de lugares que deben modificarse:
 
-1. `/etc/hostname `(Ubuntu) OR` /etc/sysconfig/network` (CentOS)
-2. `/etc/hosts` (both Ubuntu , CentOS)
+1. `/etc/hostname` (Ubuntu) O `/etc/sysconfig/network` (CentOS)
+2. `/etc/hosts` (Ubuntu y CentOS)
 
 ### /etc/hostname
 
-/etc/hostname contains name of the machine and is one of the configuration files that should be modified  in order to make a new hostname persistent in Debian based systems.(ubuntu16 here)
+/etc/hostname contiene el nombre de la máquina y es uno de los archivos de configuración que deben modificarse para que el nuevo nombre de host sea persistente en sistemas basados ​​en Debian (ubuntu16 aquí).
 
 ```
 root@ubuntu16-1:~# cat /etc/hostname 
@@ -224,7 +222,7 @@ ubuntu16-1
 
 ### /etc/sysconfig/network
 
-Another place which contains hostname and should be changed in RedHat based systems to have persistent hostname(CentOS6)
+Otro lugar que contiene el nombre de host y que debe cambiarse en los sistemas basados ​​en RedHat para tener un nombre de host persistente (CentOS6)
 
 ```
 [root@server1 Desktop]# cat /etc/sysconfig/network
@@ -235,7 +233,7 @@ GATEWAY=172.16.43.2
 
 ### /etc/hosts
 
- The **/etc/hosts** is an operating system file that translate hostnames or domain names to IP addresses , it do the same thing that DNS do. We can using for testing purposes or when DNS server is absent. Do not forget that it has a highr priority than DNS, (means that operating system first look inside /etc/hosts file to gain the ip address of a host, if it wasn't successful then it would query DNS Server).
+ **/etc/hosts** es un archivo del sistema operativo que traduce nombres de host o de dominio a direcciones IP. Su función es similar a la del DNS. Se puede usar para realizar pruebas o cuando el servidor DNS no está disponible. Recuerde que tiene mayor prioridad que el DNS (lo que significa que el sistema operativo primero consulta el archivo /etc/hosts para obtener la dirección IP de un host; si no lo consigue, consulta al servidor DNS).
 
 ```
 [root@server1 Desktop]# cat /etc/hosts
@@ -244,17 +242,15 @@ GATEWAY=172.16.43.2
 
 ```
 
-For making new hostname permanent it is another file which should be modified.
+Para que el nuevo nombre de host sea permanente, se debe modificar otro archivo.
 
 ### route
 
-All network devices, whether they are hosts, routers, or other types of network nodes such as network attached printers, need to make decisions about where to route TCP/IP data packets. The routing table provides the configuration information required to make those decisions. the **route **command is used to view and make changes to the kernel routing table. 
+Todos los dispositivos de red, ya sean hosts, enrutadores u otros tipos de nodos de red, como impresoras conectadas a la red, deben decidir dónde enrutar los paquetes de datos TCP/IP. La tabla de enrutamiento proporciona la información de configuración necesaria para tomar estas decisiones. El comando **route** se utiliza para ver y modificar la tabla de enrutamiento del kernel.
 
-{% hint style="danger" %}
-route command make temporary setting, use config files instead!
-{% endhint %}
+El comando route crea una configuración temporal; en su lugar, utiliza los archivos de configuración.
 
- Running **route**  command  without any options displays the routing table entries:
+Al ejecutar el comando **route** sin ninguna opción, se muestran las entradas de la tabla de enrutamiento:
 
 ```
 [root@server1 Desktop]# route
@@ -264,13 +260,13 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 default         172.16.43.2     0.0.0.0         UG    0      0        0 eth0
 ```
 
-> This shows us how the system is currently configured. If a packet comes into the system and has a destination in the range **172.16.43.0 **through **172.16.43.255**, then it is forwarded to the gateway **\***, which is **0.0.0.0** — a special address which represents an invalid or non-existant destination. So, in this case, our system will not route these packets.
->
-> If the destination is not in this IP address range, it is forwarded to the default gateway (in this case, **172.16.43.2**, and that system will determine how to forward the traffic on to the next step towards its destination.
+Esto nos muestra la configuración actual del sistema. Si un paquete llega al sistema y tiene un destino en el rango **172.16.43.0** a **172.16.43.255**, se reenvía a la puerta de enlace **\***, que es **0.0.0.0**, una dirección especial que representa un destino no válido o inexistente. Por lo tanto, en este caso, nuestro sistema no enrutará estos paquetes.
 
-By default route command displays the host name in its output. We can request it to display the numerical IP address using `-n `option:
+Si el destino no está en este rango de direcciones IP, se reenvía a la puerta de enlace predeterminada (en este caso, **172.16.43.2**), y ese sistema determinará cómo reenviar el tráfico al siguiente paso hacia su destino.
 
-```
+Por defecto, el comando `route` muestra el nombre del host en su salida. Podemos solicitarle que muestre la dirección IP numérica usando la opción `-n`:
+
+```bash
 [root@server1 Desktop]# route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
@@ -278,7 +274,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         172.16.43.2     0.0.0.0         UG    0      0        0 eth0
 ```
 
- The following route add command will set the default gateway as 172.16.43.2:
+ El siguiente comando de adición de ruta establecerá la puerta de enlace predeterminada como 172.16.43.2:
 
 ```
 [root@server1 ~]# route add default gw 172.16.43.1
@@ -291,7 +287,7 @@ default         172.16.43.1     0.0.0.0         UG    0      0        0 eth0
 default         172.16.43.2     0.0.0.0         UG    0      0        0 eth0
 ```
 
-use route del for deleting:
+Utilice la ruta del para eliminar:
 
 ```
 [root@server1 ~]# route del  default gw 172.16.43.1
@@ -303,40 +299,40 @@ link-local      *               255.255.0.0     U     1002   0        0 eth0
 default         172.16.43.2     0.0.0.0         UG    0      0        0 eth0
 ```
 
-> Kernel maintains the routing cache information to route the packets faster. We can list the kernel’s routing cache information by using the -C flag.
+El kernel mantiene la información de la caché de enrutamiento para enrutar los paquetes más rápido. Podemos listar la información de la caché de enrutamiento del kernel usando la opción -C.
 
-> `netstat -rn` also shows routing table.
+`netstat -rn` también muestra la tabla de enrutamiento.
 
 ### ip
 
-This command replaces old good and now deprecated ifconfig command, however, **ifconfig ** command is still works and available for most of the Linux distributions.
+Este comando reemplaza al antiguo y obsoleto comando ifconfig. Sin embargo, el comando **ifconfig** sigue funcionando y disponible para la mayoría de las distribuciones de Linux.
 
-It can be used to assign and remove addresses , bring interfaces up or down,  manipulate routing,  and many more things.
+Se puede usar para asignar y eliminar direcciones, activar o desactivar interfaces, manipular el enrutamiento y mucho más.
 
 ```
 ip [ OPTIONS ] OBJECT { COMMAND | help }
 ```
 
-| ip command example                                     | description                                             |
+| Ejemplo de comando ip | Descripción |
 | ------------------------------------------------------ | ------------------------------------------------------- |
-| ip address show                                        | show all IP addresses associated on all network devices |
-| ip address show eth0                                   | view the information of any particular interface        |
-| ip addr add 192.168.50.5/24 dev eth0                   | Assign a IP Address to Specific Interface               |
-| ip addr del 192.168.50.5/24 dev eth0                   | Remove an IP Address                                    |
-| ip link show                                           | Display Network Interface(s)                            |
-| ip link set eth0 up                                    | Enable Network Interface                                |
-| ip link set eth0 down                                  | Disable Network Interface                               |
-| ip route show                                          | Show routing table information                          |
-| ip route add 10.10.20.0/24 via 192.168.50.100 dev eth0 | Add static route                                        |
-| ip route del 10.10.20.0/24                             | Remove static route                                     |
+| ip address show | Mostrar todas las direcciones IP asociadas a todos los dispositivos de red |
+| ip address show eth0 | Ver la información de cualquier interfaz |
+| ip addr add 192.168.50.5/24 dev eth0 | Asignar una dirección IP a una interfaz específica |
+| ip addr del 192.168.50.5/24 dev eth0 | Eliminar una dirección IP |
+| ip link show | Mostrar interfaces de red |
+| ip link set eth0 up | Habilitar interfaz de red |
+| ip link set eth0 down | Deshabilitar interfaz de red |
+| ip route show | Mostrar información de la tabla de enrutamiento |
+| ip route add 10.10.20.0/24 via 192.168.50.100 dev eth0 | Agregar ruta estática |
+| ip route del 10.10.20.0/24 | Eliminar ruta estática |
 
-> All the above settings  will be lost after a system restart. use config files instead.
+> Toda la configuración anterior se perderá al reiniciar el sistema. En su lugar, utilice los archivos de configuración.
 
-### ping 
+### ping
 
-The `ping` command is one of the most used utilities for troubleshooting, testing, and diagnosing network connectivity issues.
+El comando `ping` es una de las utilidades más utilizadas para solucionar, probar y diagnosticar problemas de conectividad de red.
 
-Ping works by sending one or more ICMP (Internet Control Message Protocol) Echo Request packages to a specified destination IP on the network and waits for a reply. When the destination receives the package, it will respond back with an ICMP echo reply.
+Ping funciona enviando uno o más paquetes de solicitud de eco ICMP (Protocolo de mensajes de control de Internet) a una dirección IP de destino específica en la red y espera una respuesta. Cuando el destino recibe el paquete, responde con una respuesta de eco ICMP.
 
 ```
 [root@server1 ~]# ping 8.8.8.8 -c3
@@ -350,22 +346,22 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 rtt min/avg/max/mdev = 40.262/44.107/47.040/2.851 ms
 ```
 
-With the `ping` command, we can determine whether a remote destination IP is active or inactive. You can also find the round-trip delay in communicating with the destination and check whether there is a packet loss.
+Con el comando `ping`, podemos determinar si una IP de destino remota está activa o inactiva. También puede calcular el retardo de ida y vuelta en la comunicación con el destino y comprobar si hay pérdida de paquetes.
 
-| ping command switch | description                                        |
+| comando ping | descripción |
 | ------------------- | -------------------------------------------------- |
-|  **-n**             | Numeric output only.do not try to resolve hostname |
-|  **-i interval**    | Wait interval seconds between sending each packet  |
-|  **-I interface**   | Set source address to specified interface address  |
-| **-a**              | Audible ping                                       |
+| **-n** | Solo salida numérica. No intente resolver el nombre de host |
+| **-i intervalo** | Segundos de intervalo de espera entre el envío de cada paquete |
+| **-I interfaz** | Establecer la dirección de origen en la dirección de interfaz especificada |
+| **-a** | Ping audible |
 
-> for ipv6 environment use ping6 command.
+> Para entornos IPv6, utilice el comando ping6.
 
 ### /etc/nsswitch
 
-This file determines where the system finds things like host names, passwords, and protocol numbers:
+Este archivo determina dónde encuentra el sistema información como nombres de host, contraseñas y números de protocolo:
 
-Here’s a snippet from a sample /etc/nsswitch.conf file
+A continuación, se muestra un fragmento de un archivo de ejemplo /etc/nsswitch.conf
 
 ```
 passwd:   files nis
@@ -374,72 +370,39 @@ group:    files nis
 hosts:    files dns myhostname
 ```
 
-In this example, user information (the passwd and group services) come first from “files” (like /etc/passwd or /etc/group), and if no entries are found there, a query to an NIS server (configured elsewhere) will be used. 
+En este ejemplo, la información del usuario (los servicios de contraseña y grupo) proviene primero de "archivos" (como /etc/passwd o /etc/group). Si no se encuentran entradas allí, se utilizará una consulta a un servidor NIS (configurado en otro lugar).
 
-Host information first comes from /etc/hosts (files), then a DNS server (dns), and if neither of those work, at least a fallback of “myhostname” so that the local machine has _some_ name.
+La información del host proviene primero de /etc/hosts (archivos), luego de un servidor DNS (dns) y, si ninguno de estos funciona, se utiliza al menos un recurso alternativo de "myhostname" para que la máquina local tenga _algún_ nombre.
 
-> The non-complexity comes in the “and if that doesn’t work” rule. When multiple services are listed, they’re tried in order, and a sevice either succeeds or fails. If it fails, the next is tried, etc.
+> La simplicidad reside en la regla "y si eso no funciona". Cuando se listan varios servicios, se prueban en orden, y un servicio puede tener éxito o fallar. Si falla, se prueba el siguiente, y así sucesivamente.
 
-that's all.
+Eso es todo.
 
-.
+### Nomenclatura consistente de dispositivos de red
 
-.
+Red Hat Enterprise Linux ofrece métodos para una nomenclatura consistente y predecible de dispositivos de red para interfaces de red. Estas funciones modifican el nombre de las interfaces de red en un sistema para facilitar su localización y diferenciación.
 
-.
+Tradicionalmente, las interfaces de red en Linux se enumeran como `eth[0123…]`, pero estos nombres no corresponden necesariamente a las etiquetas reales del chasis. Las plataformas de servidor modernas con múltiples adaptadores de red pueden encontrar una nomenclatura no determinista y contraria a la intuición para estas interfaces. Esto afecta tanto a los adaptadores de red integrados en la placa base (_Lan-on-Motherboard_ o _LOM_) como a los adaptadores adicionales (monopuerto y multipuerto).
 
-{% hint style="info" %}
-### Consistent network device naming
+En Red Hat Enterprise Linux, **udev** admite diversos esquemas de nomenclatura. El valor predeterminado es asignar nombres fijos basados ​​en el firmware, la topología y la información de ubicación. Esto tiene la ventaja de que los nombres son completamente automáticos y predecibles, se mantienen fijos incluso si se añade o se quita hardware (no se realiza ninguna reenumeración) y el hardware dañado se puede reemplazar sin problemas. La desventaja es que a veces son más difíciles de leer que los nombres eth0 o wlan0 que se usan tradicionalmente. Por ejemplo: enp5s0.
 
- Red Hat Enterprise Linux provides methods for consistent and predictable network device naming for network interfaces. These features change the name of network interfaces on a system in order to make locating and differentiating the interfaces easier.
-
-Traditionally, network interfaces in Linux are enumerated as `eth[0123…]`, but these names do not necessarily correspond to actual labels on the chassis. Modern server platforms with multiple network adapters can encounter non-deterministic and counter-intuitive naming of these interfaces. This affects both network adapters embedded on the motherboard (_Lan-on-Motherboard_, or _LOM_) and add-in (single and multiport) adapters.
-
-In Red Hat Enterprise Linux, **udev** supports a number of different naming schemes. The default is to assign fixed names based on firmware, topology, and location information. This has the advantage that the names are fully automatic, fully predictable, that they stay fixed even if hardware is added or removed (no re-enumeration takes place), and that broken hardware can be replaced seamlessly. The disadvantage is that they are sometimes harder to read than the eth0 or wlan0 names traditionally used. For example: enp5s0.
-
-* for disabling that (how ever it is not recommanded Add both `net.ifnames=0` and `biosdevname=0` as kernel parameter values to the `GRUB_CMDLINE_LINUX` variable  )
-{% endhint %}
+* Para deshabilitar esto (sin embargo, no se recomienda agregar `net.ifnames=0` y `biosdevname=0` como valores de parámetros del kernel a la variable `GRUB_CMDLINE_LINUX`).
 
 
-
-.
-
-.
-
-[https://developer.ibm.com/tutorials/l-lpic1-109-2/](https://developer.ibm.com/tutorials/l-lpic1-109-2/)
-
-[https://www.computerhope.com/unix/uifconfi.htm](https://www.computerhope.com/unix/uifconfi.htm)
-
-[https://www.tecmint.com/ifconfig-command-examples/](https://www.tecmint.com/ifconfig-command-examples/)
-
-[https://www.geeksforgeeks.org/ifconfig-command-in-linux-with-examples/](https://www.geeksforgeeks.org/ifconfig-command-in-linux-with-examples/)
-
-[https://www.unixmen.com/how-to-find-default-gateway-in-linux/](https://www.unixmen.com/how-to-find-default-gateway-in-linux/)
-
-[https://jadi.gitbooks.io/lpic1/content/1092\_basic_network_configuration.html](https://jadi.gitbooks.io/lpic1/content/1092\_basic_network_configuration.html)
-
-[https://www.tecmint.com/setup-local-dns-using-etc-hosts-file-in-linux/](https://www.tecmint.com/setup-local-dns-using-etc-hosts-file-in-linux/)
-
-[https://opensource.com/business/16/8/introduction-linux-network-routing](https://opensource.com/business/16/8/introduction-linux-network-routing)
-
-[https://www.computerhope.com/unix/route.htm](https://www.computerhope.com/unix/route.htm)
-
-[https://www.thegeekstuff.com/2012/04/route-examples/](https://www.thegeekstuff.com/2012/04/route-examples/)
-
-[https://linuxize.com/post/linux-ip-command/](https://linuxize.com/post/linux-ip-command/)
-
-[https://www.geeksforgeeks.org/ip-command-in-linux-with-examples/](https://www.geeksforgeeks.org/ip-command-in-linux-with-examples/)
-
-[https://www.tecmint.com/ip-command-examples/](https://www.tecmint.com/ip-command-examples/)
-
-[https://linuxize.com/post/linux-ping-command/](https://linuxize.com/post/linux-ping-command/)
-
-[https://linux.die.net/man/8/ping](https://linux.die.net/man/8/ping)
-
-[https://developers.redhat.com/blog/2018/11/26/etc-nsswitch-conf-non-complexity/](https://developers.redhat.com/blog/2018/11/26/etc-nsswitch-conf-non-complexity/)
-
-.
-
-[https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-consistent_network_device_naming](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-consistent_network_device_naming)
-
-.
+- [https://developer.ibm.com/tutorials/l-lpic1-109-2/](https://developer.ibm.com/tutorials/l-lpic1-109-2/)
+- [https://www.computerhope.com/unix/uifconfi.htm](https://www.computerhope.com/unix/uifconfi.htm)
+- [https://www.tecmint.com/ifconfig-command-examples/](https://www.tecmint.com/ifconfig-command-examples/)
+- [https://www.geeksforgeeks.org/ifconfig-command-in-linux-with-examples/](https://www.geeksforgeeks.org/ifconfig-command-in-linux-with-examples/)
+- [https://www.unixmen.com/how-to-find-default-gateway-in-linux/](https://www.unixmen.com/how-to-find-default-gateway-in-linux/)
+- [https://jadi.gitbooks.io/lpic1/content/1092\_basic_network_configuration.html](https://jadi.gitbooks.io/lpic1/content/1092\_basic_network_configuration.html)
+- [https://www.tecmint.com/setup-local-dns-using-etc-hosts-file-in-linux/](https://www.tecmint.com/setup-local-dns-using-etc-hosts-file-in-linux/)
+- [https://opensource.com/business/16/8/introduction-linux-network-routing](https://opensource.com/business/16/8/introduction-linux-network-routing)
+- [https://www.computerhope.com/unix/route.htm](https://www.computerhope.com/unix/route.htm)
+- [https://www.thegeekstuff.com/2012/04/route-examples/](https://www.thegeekstuff.com/2012/04/route-examples/)
+- [https://linuxize.com/post/linux-ip-command/](https://linuxize.com/post/linux-ip-command/)
+- [https://www.geeksforgeeks.org/ip-command-in-linux-with-examples/](https://www.geeksforgeeks.org/ip-command-in-linux-with-examples/)
+- [https://www.tecmint.com/ip-command-examples/](https://www.tecmint.com/ip-command-examples/)
+- [https://linuxize.com/post/linux-ping-command/](https://linuxize.com/post/linux-ping-command/
+- [https://linux.die.net/man/8/ping](https://linux.die.net/man/8/ping)
+- [https://developers.redhat.com/blog/2018/11/26/etc-nsswitch-conf-non-complexity/](https://developers.redhat.com/blog/2018/11/26/etc-nsswitch-conf-non-complexity/)
+- [https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-consistent_network_device_naming](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-consistent_network_device_naming)
